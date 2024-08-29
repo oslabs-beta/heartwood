@@ -1,0 +1,11 @@
+{
+  "name": "heartwood",
+  "version": "1.0.0",
+  "description": "will be updated later. (Yoshi)",
+  "main": "webpack.config.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
