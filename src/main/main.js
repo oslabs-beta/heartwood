@@ -7,11 +7,16 @@ const { app, BrowserWindow } = require('electron');
 // 'path' is used to handle and transform file paths
 const path = require('node:path');
 
+const { fork } = require('child_process');
+
+let mainWindow;
+let serverProcess;
+
 // Declare a 'createWindow' function that loads 'index.html' into a new BrowserWindow instance
 // This function is responsible for creating the main application window
 const createWindow = () => {
   // Create a new BrowserWindow instance with specified width and height
-  const win = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
     webPreferences: {
@@ -21,13 +26,22 @@ const createWindow = () => {
 
   // Load the 'index.html' file into the BrowserWindow
   // The bundled HTML file is located in the 'dist' directory, two levels up from the current directory
-  win.loadFile(path.join(__dirname, '..', '..', 'dist', 'index.html')); 
+  mainWindow.loadFile(path.join(__dirname, '..', '..', 'dist', 'index.html')); 
 }
 
-// Wait for 'ready' event and invoke createWindow function
+function startServer() {
+  serverProcess = fork(path.join(__dirname, '..', 'server', 'server.js'));
+  
+  serverProcess.on('message', (message) => {
+    console.log('Message from server:', message);
+  });
+}
+
+// Wait for 'ready' event and invoke createWindow and startServer function
 // 'app.whenReady()' ensures that the code runs only when Electron has fully initialized
 app.whenReady().then(() => {
-  createWindow()
+  createWindow();
+  startServer();
 
   // Open a window if none are open on macOS when the application is activated
   app.on('activate', () => {
