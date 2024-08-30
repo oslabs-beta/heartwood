@@ -3,11 +3,11 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
     mode: 'development',
-    entry: './client/index.js',
+    entry: './src/renderer/index.js',
     output: {
         filename: 'bundle.js',
-        path: path.resolve(__dirname, 'build'),
-      },
+        path: path.resolve(__dirname, 'dist'),
+    },
     module: {
         rules: [
             {
@@ -26,11 +26,11 @@ module.exports = {
     plugins: [
         new HtmlWebpackPlugin({
             title: 'Development',
-            template: './client/index.html',
+            template: './public/index.html',
         })
     ],
     devServer: {
-        static: path.resolve(__dirname, 'build'),
+        static: path.resolve(__dirname, 'dist'),
         port: 8080, // Port for the dev server
         proxy: {
             context: ['/api'],
