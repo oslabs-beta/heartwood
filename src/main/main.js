@@ -20,8 +20,8 @@ const createWindow = () => {
   })
 
   // Load the 'index.html' file into the BrowserWindow
-  // The HTML file is located in the 'public' directory, two levels up from the current directory
-  win.loadFile(path.join(__dirname, '..', '..', 'public', 'index.html')); 
+  // The bundled HTML file is located in the 'dist' directory, two levels up from the current directory
+  win.loadFile(path.join(__dirname, '..', '..', 'dist', 'index.html')); 
 }
 
 // Wait for 'ready' event and invoke createWindow function
