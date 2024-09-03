@@ -9,6 +9,16 @@ const path = require('node:path');
 
 const { fork } = require('child_process');
 
+// [To do] Add this block for auto-reloading in development 
+// if (process.env.NODE_ENV === 'development') {
+//   try {
+//     require('electron-reloader')(module, {
+//       debug: true,
+//       watchRenderer: false
+//     });
+//   } catch (_) { console.log('Error'); }
+// }
+
 let mainWindow;
 let serverProcess;
 
