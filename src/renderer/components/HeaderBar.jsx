@@ -1,32 +1,3 @@
-// import React from "react";
-// import '../styles.css';
-// const HeaderBar = ({ toggleDarkMode, isDarkMode, onNotificationClick, user }) => {
-//   return (
-//     <header className="header-bar">
-//       <div className="app-logo">
-//         Heartwood
-//         {/* <img src= image goes here alt="App Logo" /> */}
-//       </div>
-//       <div className="header-controls">
-//         <button className="dark-mode-toggle" onClick={toggleDarkMode}>
-//             {/* button image for dark/light goes here */}
-//           {isDarkMode ? "dark" : "light"}
-//         </button>
-//         <button className="notification-bell" onClick={onNotificationClick}>
-//             {/* button image for notification bell goes here */}
-//           notifcation
-//         </button>
-//         <div className="user-icon">
-//             {/* user profile image or basic user image goes here */}
-//           user
-//         </div>
-//       </div>
-//     </header>
-//   );
-// };
-
-// export default HeaderBar;
-
 import React from 'react';
 
 const HeaderBar = ({ toggleDarkMode, isDarkMode, onNotificationClick }) => {
