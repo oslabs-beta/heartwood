@@ -33,6 +33,11 @@ app.get('/awstest', awsTestController.awsTest, (req, res) => {
   res.send('sent from awstest route');
 });
 
+// this is a test route to test 
+app.get('/awstest2', awsTestController.testGetMetricsData, (req, res) => {
+  res.send('sent from awstest2 route')
+})
+
 // Catch-all route handler for any requests to an unknown route
 app.use('*', (req, res) => {
   res.sendFile(path.join(__dirname, '..', '..', 'dist', 'index.html'));
