@@ -100,6 +100,30 @@ awsTestController.testGetMetricsData = async(req, res, next) => {
         // Period: Number("3600"),
         // AccountId: "STRING_VALUE",
       },
+      { // MetricDataQuery
+        Id: "inTheoryAnythingElse", // required
+        MetricStat: { // MetricStat
+          Metric: { // Metric
+            Namespace: "AWS/Lambda", 
+            MetricName: "Throttles",
+            Dimensions: [ // Dimensions
+              { // Dimension
+                Name: "FunctionName", // required
+                Value: "http-function-url-tutorial", // required
+              },
+            ],
+          },
+          Period: Number("3600"), // required
+          Stat: "Sum", // required
+          Unit: "Count",
+          // Unit: "Seconds" || "Microseconds" || "Milliseconds" || "Bytes" || "Kilobytes" || "Megabytes" || "Gigabytes" || "Terabytes" || "Bits" || "Kilobits" || "Megabits" || "Gigabits" || "Terabits" || "Percent" || "Count" || "Bytes/Second" || "Kilobytes/Second" || "Megabytes/Second" || "Gigabytes/Second" || "Terabytes/Second" || "Bits/Second" || "Kilobits/Second" || "Megabits/Second" || "Gigabits/Second" || "Terabits/Second" || "Count/Second" || "None",
+        },
+        // Expression: "STRING_VALUE", // Don't need Expresssion if we have "MetricStat"
+        // Label: "STRING_VALUE",
+        ReturnData: true,
+        // Period: Number("3600"),
+        // AccountId: "STRING_VALUE",
+      },
       // We can have up to 500 queries in this MetricDataQueries array
     ],
     StartTime: new Date(Date.now() - 24 * 60 * 60 * 1000), // required
@@ -119,6 +143,7 @@ awsTestController.testGetMetricsData = async(req, res, next) => {
     const response = await client.send(command);
     // Print out the response's datapoints to console 
     console.log("Lambda metrics:", response.MetricDataResults[0].Values);
+    console.log("Lambda metrics -throttle:", response.MetricDataResults[1].Values);
     console.log('response is', response);
     next();
   } catch (error) {
