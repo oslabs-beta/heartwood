@@ -12,9 +12,10 @@ app.use(express.json());
 app.use(cookieParser());
 
 const connectDB = require('./config/db'); // Import the database connection function
+const { readFileSync } = require('fs');
 
 // Connect to MongoDB
-// connectDB();
+connectDB();
 
 // Routes
 app.get('/', (req, res) => {
@@ -29,14 +30,21 @@ app.post('/test', userController.createUser,(req, res) => {
 }); 
 
 // this is a test route to test AWS Cloud Watch SDK 
-app.get('/awstest', awsTestController.awsTest, (req, res) => {
-  res.send('sent from awstest route');
-});
+// app.get('/awstest', awsTestController.awsTest, (req, res) => {
+//   res.send('sent from awstest route');
+// });
 
-// this is a test route to test 
+// // this is a test route to test 
 app.get('/awstest2', awsTestController.testGetMetricsData, (req, res) => {
   res.send('sent from awstest2 route')
 })
+
+app.get('/awstest3', awsTestController.testGetMetricsData2, (req, res) => {
+  console.log('awstest3');
+  res.send('sent from awstest3');
+});
+
+// route to 
 
 // Catch-all route handler for any requests to an unknown route
 app.use('*', (req, res) => {
