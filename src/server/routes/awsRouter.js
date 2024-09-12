@@ -31,7 +31,7 @@ router.get('/metric/error', getLambdaMetrics.getErrorCount, (req, res) => {
 
 // Route to get AWS lambda's throttle count 
 router.get('/metric/throttle', getLambdaMetrics.getThrottleCount, (req, res) => {
-  return res.status(200).send('TBD - message from metric/throttle route');
+  return res.status(200).send(res.locals.throttleData);
 });
 
 
