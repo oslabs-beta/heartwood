@@ -108,7 +108,7 @@ getLambdaMetrics.getErrorCount = async (req, res, next) => {
     data: randomData,
   }
 
-  res.locals.invocationData = data;
+  res.locals.errorData = data;
 
   next();
 
@@ -160,7 +160,7 @@ getLambdaMetrics.getThrottleCount = async (req, res, next) => {
     data: randomData,
   }
 
-  res.locals.invocationData = data;
+  res.locals.throttleData = data;
 
   next();
 
