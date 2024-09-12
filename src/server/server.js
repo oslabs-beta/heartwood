@@ -1,49 +1,101 @@
+// -----------------------------------------
+// Imports and Configuration
+// -----------------------------------------
+
 const express = require('express');
 const app = express();
 const PORT = 3000;
 const path = require('path');
 const cookieParser = require('cookie-parser');
+const { readFileSync } = require('fs');
+
+// Import controllers and routers
 const userController = require('./controller/createUser');
 const awsTestController = require('./controller/awsTest.js');
+const awsRouter = require('./routes/awsRouter.js');
 
-// Middlewares (To be updated)
-app.use(express.static(path.resolve(__dirname, '..', '..', 'dist')));
-app.use(express.json());
-app.use(cookieParser());
-
+// Import database connection function
 const connectDB = require('./config/db'); // Import the database connection function
 
-// Connect to MongoDB
-// connectDB();
 
+// -----------------------------------------
+// Middleware Setup
+// -----------------------------------------
+
+// Serve static files from the dist directory
+app.use(express.static(path.resolve(__dirname, '..', '..', 'dist')));
+// Parse JSON bodies
+app.use(express.json());
+// Parse cookies 
+app.use(cookieParser());
+
+
+// -----------------------------------------
+// Database Connection
+// -----------------------------------------
+connectDB();
+
+
+// -----------------------------------------
 // Routes
+// -----------------------------------------
+
+// Main route - serve the main HTML file
 app.get('/', (req, res) => {
   console.log('line 19')
   res.sendFile(path.join(__dirname, '..', '..', 'dist', 'index.html'))
 }); 
 
-// this is test route to test mongoDB connection 
+// Test route for MongoDB connection
 app.post('/test', userController.createUser,(req, res) => {
   console.log('test success')
   res.sendStatus(200)
 }); 
 
-// this is a test route to test AWS Cloud Watch SDK 
-app.get('/awstest', awsTestController.awsTest, (req, res) => {
-  res.send('sent from awstest route');
-});
+// Test routes for AWS Cloud Watch SDK
+// app.get('/awstest', awsTestController.awsTest, (req, res) => {
+//   res.send('sent from awstest route');
+// });
 
-// this is a test route to test 
-app.get('/awstest2', awsTestController.testGetMetricsData, (req, res) => {
-  res.send('sent from awstest2 route')
-})
+// app.get('/awstest2', awsTestController.testGetMetricsData, (req, res) => {
+//   res.send('sent from awstest2 route')
+// })
+
+// app.get('/awstest3', awsTestController.testGetMetricsData2, (req, res) => {
+//   console.log('awstest3');
+//   res.send('sent from awstest3');
+// });
+
+// AWS Routes  
+app.use('/aws', awsRouter);
 
 // Catch-all route handler for any requests to an unknown route
 app.use('*', (req, res) => {
   res.sendFile(path.join(__dirname, '..', '..', 'dist', 'index.html'));
 });
 
-// Start server 
+
+// -----------------------------------------
+// Error Handling
+// -----------------------------------------
+
+// Global error handler
+app.use((err, req, res, next) => {
+  const defaultErr = {
+    log: 'Express error handler caught unknown error',
+    status: 500,
+    message: { err: 'An error occurred' },
+  };
+  const errorObj = Object.assign({}, defaultErr, err);
+  console.log(errorObj.log);
+  return res.status(errorObj.status).json(errorObj.message);
+});
+
+
+// -----------------------------------------
+// Server Initialization
+// -----------------------------------------
+
 app.listen(PORT, () => {
   console.log(`Listening on PORT: ${PORT}`);
 });

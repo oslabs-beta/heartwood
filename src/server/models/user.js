@@ -6,6 +6,21 @@ const mongoose = require('mongoose');
 const userSchema = new mongoose.Schema({
     name: String,
     email: String,
+    // AWS Credential
+    awsCredential: {
+      AWS_ACCESS_KEY_ID: {
+        type: String,
+        trim: true
+      },
+      AWS_SECRET_ACCESS_KEY: {
+        type: String,
+        trim: true
+      },
+      AWS_REGION: {
+        type: String,
+        trim: true
+      },
+    },
   });
   
 // const User = mongoose.model('User', userSchema);
