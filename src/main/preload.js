@@ -16,6 +16,8 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 })
 
+
+
 contextBridge.exposeInMainWorld('api', {
   startGitHubAuth: () => ipcRenderer.invoke('start-github-auth'),
   //startAuth: () => ipcRenderer.invoke('start-auth'),

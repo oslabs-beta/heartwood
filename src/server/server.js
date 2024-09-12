@@ -30,6 +30,8 @@ app.use(express.json());
 app.use(cookieParser());
 
 
+
+
 // -----------------------------------------
 // Database Connection
 // -----------------------------------------
@@ -67,6 +69,22 @@ app.post('/login', userController.login,(req, res) => {
   res.sendStatus(200)
 }); 
 
+// Test routes for AWS Cloud Watch SDK
+// app.get('/awstest', awsTestController.awsTest, (req, res) => {
+//   res.send('sent from awstest route');
+// });
+
+// app.get('/awstest2', awsTestController.testGetMetricsData, (req, res) => {
+//   res.send('sent from awstest2 route')
+// })
+
+// app.get('/awstest3', awsTestController.testGetMetricsData2, (req, res) => {
+//   console.log('awstest3');
+//   res.send('sent from awstest3');
+// });
+
+// AWS Routes  
+app.use('/aws', awsRouter);
 
 // Catch-all route handler for any requests to an unknown route
 app.use('*', (req, res) => {

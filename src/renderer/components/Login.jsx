@@ -15,7 +15,7 @@ const userSubmit = async (username, password) => {
     try {
         console.log(username, password)
         const result = await window.api.login(username, password);
-        console.log('Login success:', result);
+        console.log('Login success, token value is:', result);
       } catch (error) {
         console.error('Login error:', error);
       }
