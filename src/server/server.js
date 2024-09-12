@@ -1,9 +1,10 @@
 const express = require('express');
 const app = express();
-const PORT = 8080;
+const PORT = 3000;
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const userController = require('./controller/createUser');
+const awsTestController = require('./controller/awsTest.js');
 
 // Middlewares (To be updated)
 app.use(express.static(path.resolve(__dirname, '..', '..', 'dist')));
@@ -13,7 +14,7 @@ app.use(cookieParser());
 const connectDB = require('./config/db'); // Import the database connection function
 
 // Connect to MongoDB
-connectDB();
+// connectDB();
 
 // Routes
 app.get('/', (req, res) => {
@@ -27,6 +28,15 @@ app.post('/test', userController.createUser,(req, res) => {
   res.sendStatus(200)
 }); 
 
+// this is a test route to test AWS Cloud Watch SDK 
+app.get('/awstest', awsTestController.awsTest, (req, res) => {
+  res.send('sent from awstest route');
+});
+
+// this is a test route to test 
+app.get('/awstest2', awsTestController.testGetMetricsData, (req, res) => {
+  res.send('sent from awstest2 route')
+})
 
 // Catch-all route handler for any requests to an unknown route
 app.use('*', (req, res) => {
