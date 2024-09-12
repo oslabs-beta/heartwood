@@ -113,7 +113,7 @@ awsTestController.testGetMetricsData = async(req, res, next) => {
               },
             ],
           },
-          Period: Number("3600"), // required
+          Period: Number("1200"), // required
           Stat: "Sum", // required
           Unit: "Count",
           // Unit: "Seconds" || "Microseconds" || "Milliseconds" || "Bytes" || "Kilobytes" || "Megabytes" || "Gigabytes" || "Terabytes" || "Bits" || "Kilobits" || "Megabits" || "Gigabits" || "Terabits" || "Percent" || "Count" || "Bytes/Second" || "Kilobytes/Second" || "Megabytes/Second" || "Gigabytes/Second" || "Terabytes/Second" || "Bits/Second" || "Kilobits/Second" || "Megabits/Second" || "Gigabits/Second" || "Terabits/Second" || "Count/Second" || "None",
@@ -142,8 +142,8 @@ awsTestController.testGetMetricsData = async(req, res, next) => {
     // Send the command to AWS CloudWatch and await the response
     const response = await client.send(command);
     // Print out the response's datapoints to console 
-    console.log("Lambda metrics:", response.MetricDataResults[0].Values);
-    console.log("Lambda metrics -throttle:", response.MetricDataResults[1].Values);
+    console.log("Lambda metrics:", response.MetricDataResults[0]);
+    console.log("Lambda metrics -throttle:", response.MetricDataResults[1]);
     console.log('response is', response);
     next();
   } catch (error) {
@@ -152,8 +152,75 @@ awsTestController.testGetMetricsData = async(req, res, next) => {
 
 }
 
+// 
 
 
+
+awsTestController.testGetMetricsData2 = async(req, res, next) => {
+  // Check if necessary AWS environment variables are set 
+  if (!process.env.AWS_ACCESS_KEY_ID || !process.env.AWS_SECRET_ACCESS_KEY || !process.env.AWS_REGION) {
+    throw new Error('AWS credentials or region are not set in environment variables');
+  }
+
+  // Initialize a new cloudWatch client with credentials from environment variables
+  const client = new CloudWatchClient({ 
+    region: process.env.AWS_REGION,
+    credentials: {
+      accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
+    }
+  });
+
+  // TO DO: Configure Input object
+  const loopingInput = { MetricDataQueries: []}
+  //MetricDataQuery Creator
+  console.log(req.body)
+  console.log(typeof req.body);
+  for(const query in req.body){
+    console.log(query)
+    loopingInput.MetricDataQueries.push(
+        { // MetricDataQuery
+          Id: query.id, // required => "anything"
+          MetricStat: { // MetricStat
+            Metric: { // Metric
+              Namespace: "AWS/Lambda", 
+              MetricName: query.metric,
+              Dimensions: [ // Dimensions
+                { // Dimension
+                  Name: "FunctionName", // required
+                  Value: "http-function-url-tutorial", // required
+                },
+              ],
+            },
+            Period: query.period, // required
+            Stat: query.operation, // required
+            Unit: query.unit,
+            // Unit: "Seconds" || "Microseconds" || "Milliseconds" || "Bytes" || "Kilobytes" || "Megabytes" || "Gigabytes" || "Terabytes" || "Bits" || "Kilobits" || "Megabits" || "Gigabits" || "Terabits" || "Percent" || "Count" || "Bytes/Second" || "Kilobytes/Second" || "Megabytes/Second" || "Gigabytes/Second" || "Terabytes/Second" || "Bits/Second" || "Kilobits/Second" || "Megabits/Second" || "Gigabits/Second" || "Terabits/Second" || "Count/Second" || "None",
+          },
+          // Expression: "STRING_VALUE", // Don't need Expresssion if we have "MetricStat"
+          // Label: "STRING_VALUE",
+          ReturnData: true,
+          // Period: Number("3600"),
+          // AccountId: "STRING_VALUE",
+        },
+      )
+    }
+  loopingInput.StartTime = new Date(Date.now() - 24 * 60 * 60 * 1000), // required
+  loopingInput.EndTime = new Date()
+  const command = new GetMetricDataCommand(loopingInput);
+
+  try {
+    // Send the command to AWS CloudWatch and await the response
+    const response = await client.send(command);
+    // Print out the response's datapoints to console 
+    console.log("Lambda metrics:", response.MetricDataResults[0].Values);
+    console.log("Lambda metrics -throttle:", response.MetricDataResults[1].Values);
+    console.log('response is', response);
+    next();
+  } catch (error) {
+    console.error("Error fetching Lambda metrics:", error);
+  }
+}
 
 module.exports = awsTestController;
 
