@@ -7,8 +7,8 @@ const path = require('path');
 const router = express.Router();
 
 // Import AWS credential controller
-const awsCredential = require('../controller/aws/credentialsController.js')
-
+const awsCredential = require('../controller/aws/credentialsController.js');
+const getLambdaMetrics = require('../controller/aws/metricsController.js');
 
 // -----------------------------------------
 // AWS Credential Routes
@@ -16,10 +16,25 @@ const awsCredential = require('../controller/aws/credentialsController.js')
 
 // Route to add AWS credential information
 router.post('/credential/add',awsCredential.addAWSCredential, (req, res) => {
-  return res.status(200).send('TBD - message from aws credential route');
+  return res.status(200).send('message');
 });
 
-// TO DO: Add more routes to handle AWS operations
+// Route to get AWS lambda's invocation count 
+router.get('/metric/invocation', getLambdaMetrics.getInvocationCount, (req, res) => {
+  return res.status(200).json(res.locals.invocationData);
+});
+
+// Route to get AWS lambda's error count 
+router.get('/metric/error', getLambdaMetrics.getErrorCount, (req, res) => {
+  return res.status(200).send('TBD - message from metric/error route');
+});
+
+// Route to get AWS lambda's throttle count 
+router.get('/metric/throttle', getLambdaMetrics.getThrottleCount, (req, res) => {
+  return res.status(200).send('TBD - message from metric/throttle route');
+});
+
+
 
 
 module.exports = router;

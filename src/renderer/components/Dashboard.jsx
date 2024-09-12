@@ -4,16 +4,47 @@ import DonutChart from "./DonutChart";
 
 const Dashboard = () => {
   // Sample data for the line chart
-  const data = [65, 59, 80, 81, 56, 55, 40]; // Metrics data (y-axis values)
+  // const data = [65, 59, 80, 81, 56, 55, 40]; // Metrics data (y-axis values)
+  const data = [
+    67, 23, 88, 42, 15, 79, 95, 31, 52, 9, 
+    73, 48, 20, 61, 36, 84, 5, 97, 28, 54, 
+    70, 13, 39, 82
+  ];
+  // const labels = [
+  //   "January",
+  //   "February",
+  //   "March",
+  //   "April",
+  //   "May",
+  //   "June",
+  //   "July",
+  // ]; // Corresponding x-axis labels
   const labels = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-  ]; // Corresponding x-axis labels
+    "2024-09-11T00:00:00Z",
+    "2024-09-11T01:00:00Z",
+    "2024-09-11T02:00:00Z",
+    "2024-09-11T03:00:00Z",
+    "2024-09-11T04:00:00Z",
+    "2024-09-11T05:00:00Z",
+    "2024-09-11T06:00:00Z",
+    "2024-09-11T07:00:00Z",
+    "2024-09-11T08:00:00Z",
+    "2024-09-11T09:00:00Z",
+    "2024-09-11T10:00:00Z",
+    "2024-09-11T11:00:00Z",
+    "2024-09-11T12:00:00Z",
+    "2024-09-11T13:00:00Z",
+    "2024-09-11T14:00:00Z",
+    "2024-09-11T15:00:00Z",
+    "2024-09-11T16:00:00Z",
+    "2024-09-11T17:00:00Z",
+    "2024-09-11T18:00:00Z",
+    "2024-09-11T19:00:00Z",
+    "2024-09-11T20:00:00Z",
+    "2024-09-11T21:00:00Z",
+    "2024-09-11T22:00:00Z",
+    "2024-09-11T23:00:00Z"
+  ]
 
   // Sample data for the donut chart
   const donutChartData = [300, 50, 100, 150, 250]; // Sample metric data for donut chart
