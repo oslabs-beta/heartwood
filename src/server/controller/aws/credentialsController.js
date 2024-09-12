@@ -11,8 +11,8 @@ const awsCredential = {};
 
 // Middleware to store AWS credentials for a specified user in database 
 awsCredential.addAWSCredential = async (req, res, next) => {
-  // TO DO: Get User's ssid from cookie 
-  const userId = '66d38dd4300649b12a4ca215'; // Currently hardcode an id 
+  // TO DO: Get User's ssid from cookie or JWT 
+  const userId = '66d38dd4300649b12a4ca215'; // Currently hardcode a user id 
 
   // Get Access Key, Secret Access Key, and Region from request body 
   const { accessKey, secretAccessKey, region } = req.body; 
