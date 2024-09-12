@@ -1,5 +1,7 @@
 import React from 'react';
 
+
+
 const HeaderBar = ({ toggleDarkMode, isDarkMode, onNotificationClick }) => {
   return (
     <header className="flex justify-between items-center p-4 bg-base-100 shadow-md">
