@@ -28,8 +28,12 @@
     "webpack-dev-server": "^5.0.4"
   },
   "dependencies": {
+    "@aws-sdk/client-cloudwatch": "^3.650.0",
+    "@aws-sdk/client-sts": "^3.637.0",
+    "@aws-sdk/credential-providers": "^3.637.0",
     "@reduxjs/toolkit": "^2.2.6",
     "autoprefixer": "^10.4.20",
+    "aws-sdk": "^2.1691.0",
     "axios": "^1.7.7",
     "bcryptjs": "^2.4.3",
     "cookie-parser": "^1.4.6",

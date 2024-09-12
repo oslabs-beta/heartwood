@@ -2,11 +2,22 @@ import React, { useState } from 'react';
 
 const SignUp = () => {
 
-    const [userName, setUserName] = useState('');
+    const [username, setUserName] = useState('');
     const [password, setPassword] = useState('');  
     const [email, setEmail] = useState('');  
 
-    const createUser = () => {}
+    const createUser = async (username, password, email) => {
+
+        try {
+            console.log(username, password, email)
+            const result = await window.api.signUp(username, password, email);
+            console.log('Login success:', result);
+          } catch (error) {
+            console.error('Login error:', error);
+          }
+
+
+    }
 
     return (
         <div className="min-h-screen flex flex-col items-center justify-center">
@@ -24,7 +35,7 @@ const SignUp = () => {
                 d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM12.735 14c.618 0 1.093-.561.872-1.139a6.002 6.002 0 0 0-11.215 0c-.22.578.254 1.139.872 1.139h9.47Z"
                 />
             </svg>
-            <input type="text" className="grow" placeholder="Username" value={userName} onChange={(e) => setUserName(e.target.value)}/>
+            <input type="text" className="grow" placeholder="Username" value={username} onChange={(e) => setUserName(e.target.value)}/>
             </label>
 
 
@@ -62,7 +73,7 @@ const SignUp = () => {
             
 
             <label className="submit flex items-center gap-2">
-                <button className="btn  w-full rounded" onClick={createUser}>Sign Up</button>
+                <button className="btn  w-full rounded" onClick={() => createUser(username, password, email)}>Sign Up</button>
             </label>
 
     

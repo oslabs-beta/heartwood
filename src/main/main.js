@@ -97,13 +97,31 @@ ipcMain.handle('login', async (event, { username, password }) => {
   try {
     console.log('main.js')
     const response = await axios.post('http://localhost:3000/login', { username, password });
+    console.log(response)
     return response.data;
+    
   } catch (error) {
     console.error('Login failed:', error);
     throw error;
   }
 
 });
+
+ipcMain.handle('signUp', async (event, { username, password, email }) => {
+
+  try {
+    console.log('main.js, sign up')
+    const response = await axios.post('http://localhost:3000/signUp', { username, password, email });
+    console.log(response)
+    return response.data;
+    
+  } catch (error) {
+    console.error('Sign up failed:', error);
+    throw error;
+  }
+
+});
+
 
 
 

@@ -4,14 +4,14 @@ const userController = {
 
     async createUser(req, res) {
   
-      const {name, email} = req.body;
+      const {username, email, password} = req.body;
   
-      if (!name || !email) return res.status(500).send('Error: missing information');
+      if (!username || !email || !password) return res.status(500).send('Error: missing information');
     
   
       try{
         // Example of creating a new user
-        const newUser = new User({name, email});
+        const newUser = new User({username, email, password});
         console.log(newUser)
         await newUser.save()
         // const newUser = await User.create({name, email});
