@@ -207,6 +207,24 @@ ipcMain.handle('signUp', async (event, { username, password, email }) => {
 
 });
 
+ipcMain.handle('getInvocations', async () => {
+  try {
+    const response = await fetch('http://localhost:3000/aws/metric/invocation');
+    return response;
+  } catch (error) {
+    console.log('error in getinvocation', error);
+  }
+});
+ipcMain.handle('getErrors', async () => {
+  try {
+    const response = await fetch('http://localhost:3000/aws/metric/error');
+    return response;
+  } catch (error) {
+    console.log('error in getErrors', error);
+  }
+});
+
+
 // Use 'process' globals's platform attribute to run code for each opearting system 
 
 // Handle the 'window-all-closed' event

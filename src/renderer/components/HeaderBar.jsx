@@ -34,16 +34,8 @@ const HeaderBar = ({ toggleDarkMode, isDarkMode, onNotificationClick }) => {
         <div 
           className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
         >
-          <div 
-           
-          >
-            <button 
-              onClick={toggleSignUp} 
-              className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
-            >
-              X
-            </button>
-            <SignUp onSignUpSuccess={handleSignUpSuccess} />
+          <div>
+            <SignUp onSignUpSuccess={handleSignUpSuccess} toggleSignUp ={toggleSignUp} />
           </div>
         </div>
       )}

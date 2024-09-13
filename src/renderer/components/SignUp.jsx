@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const SignUp = ({ onSignUpSuccess }) => {
+const SignUp = ({ onSignUpSuccess , toggleSignUp}) => {
     const [username, setUserName] = useState('');
     const [password, setPassword] = useState('');  
     const [email, setEmail] = useState('');  
@@ -97,6 +97,13 @@ const SignUp = ({ onSignUpSuccess }) => {
                         Sign Up
                     </button>
                 </label>
+
+                <button 
+              onClick={toggleSignUp} 
+              className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
+            >
+              X
+            </button>
             </div>
         </div>
     );
