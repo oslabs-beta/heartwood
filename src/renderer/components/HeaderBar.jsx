@@ -1,4 +1,8 @@
 import React from 'react';
+import Login from "./Login";
+import SignUp from "./SignUp";
+
+
 
 const HeaderBar = ({ toggleDarkMode, isDarkMode, onNotificationClick }) => {
   return (
@@ -11,10 +15,16 @@ const HeaderBar = ({ toggleDarkMode, isDarkMode, onNotificationClick }) => {
         <button onClick={onNotificationClick} className="btn btn-secondary">
           Notifications
         </button>
-        <div className="avatar">
-          <div className="w-10 rounded-full">
-            user
-          </div>
+        <div className="avatar flex space-x-2">
+
+        <button onClick = {()=>{}} className="btn btn-secondary">
+          Login
+        </button>
+        <button onClick = {()=>{}} className="btn btn-secondary">
+          SignUp
+        </button>
+
+
         </div>
       </div>
     </header>

@@ -30,6 +30,8 @@ app.use(express.json());
 app.use(cookieParser());
 
 
+
+
 // -----------------------------------------
 // Database Connection
 // -----------------------------------------
@@ -47,8 +49,23 @@ app.get('/', (req, res) => {
 }); 
 
 // Test route for MongoDB connection
-app.post('/test', userController.createUser,(req, res) => {
-  console.log('test success')
+/* send body in this format in Postman
+{"name":"connect",
+"email":"connect.gmail"}
+*/
+app.post('/signUp', userController.createUser,(req, res) => {
+  console.log('sign up success')
+  res.sendStatus(200)
+}); 
+
+// this is test route to test Github Oauth
+app.get('/home', (req, res) => {
+  console.log('github oauth success')
+  res.sendFile(path.join(__dirname, '..', '..', 'dist', 'index.html'))
+}); 
+
+app.post('/login', userController.login,(req, res) => {
+  console.log('login success, server.js')
   res.sendStatus(200)
 }); 
 
