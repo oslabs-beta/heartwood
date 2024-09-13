@@ -16,10 +16,6 @@ const HeaderBar = ({ toggleDarkMode, isDarkMode, onNotificationClick }) => {
           Notifications
         </button>
         <div className="avatar flex space-x-2">
-
-        <button onClick = {()=>{}} className="btn btn-secondary">
-          Login
-        </button>
         <button onClick = {()=>{}} className="btn btn-secondary">
           SignUp
         </button>

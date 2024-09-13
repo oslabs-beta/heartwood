@@ -26,8 +26,7 @@ const { fork } = require('child_process');
 const express = require('express');
 
 
-const server = express();
-server.use(express.static(path.join(__dirname, '..', '..', 'dist')));
+// const server = express();server.use(express.static(path.join(__dirname, '..', '..', 'dist')));
 
 // const http = require('http');
 // const httpServer = http.createServer(server);
@@ -37,18 +36,7 @@ server.use(express.static(path.join(__dirname, '..', '..', 'dist')));
 
 let mainWindow;
 let serverProcess;
-// github Oauth config, specific to our application 
-const githubOAuthConfig = {
-    clientId:  process.env.GITHUB_CLIENTID,
-    clientSecret: process.env.GITHUB_CLIENT_SECRET ,
-    authorizationUrl: 'https://github.com/login/oauth/authorize',
-    tokenUrl: 'https://github.com/login/oauth/access_token',
-    useBasicAuthorizationHeader: false,
-    redirectUri: 'http://localhost:3000'
-};
-// create oauth instance 
-const oauth2 = new OAuth2(githubOAuthConfig);
-//const githubOAuth = oauth2(githubOAuthConfig);
+
 
 // Declare a 'createWindow' function that loads 'index.html' into a new BrowserWindow instance
 // This function is responsible for creating the main application window
@@ -65,7 +53,7 @@ const createWindow = () => {
   // Load the 'index.html' file into the BrowserWindow
   // The bundled HTML file is located in the 'dist' directory, two levels up from the current directory
   mainWindow.loadFile(path.join(__dirname, '..', '..', 'dist', 'index.html')); 
-  //mainWindow.loadURL(`http://localhost:3000/`);
+  //mainWindow.loadURL(`http://localhost:8080/`);
 }
 
 function startServer() {
@@ -80,21 +68,21 @@ function startServer() {
 // 'app.whenReady()' ensures that the code runs only when Electron has fully initialized
 app.whenReady().then(() => {
 
-  
-
   // Open a window if none are open on macOS when the application is activated
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow()
   })
-
+  
   session.defaultSession.cookies.get({ name: 'auth_token' })
   .then(cookies => {
     if (cookies.length > 0) {
       console.log('User is already logged in');
-    
+
+      mainWindow.webContents.send('login-status', { loggedIn: true });
     } else {
       console.log('No token found. User is not logged in.');
-  
+
+      mainWindow.webContents.send('login-status', { loggedIn: false });
     }
   })
   .catch(err => {
@@ -105,6 +93,23 @@ app.whenReady().then(() => {
   startServer();
 })
 
+// -----------------------------------------
+// handles github oAuth
+// -----------------------------------------
+
+// github Oauth config, specific to our application 
+const githubOAuthConfig = {
+  clientId:  process.env.GITHUB_CLIENTID,
+  clientSecret: process.env.GITHUB_CLIENT_SECRET ,
+  authorizationUrl: 'https://github.com/login/oauth/authorize',
+  tokenUrl: 'https://github.com/login/oauth/access_token',
+  useBasicAuthorizationHeader: false,
+  redirectUri: 'http://localhost:3000'
+};
+// create oauth instance 
+const oauth2 = new OAuth2(githubOAuthConfig);
+//const githubOAuth = oauth2(githubOAuthConfig);
+
 ipcMain.handle('start-github-auth', async () => {
   try {
     console.log('hit github oauth');
@@ -112,13 +117,26 @@ ipcMain.handle('start-github-auth', async () => {
 
     // Store the token in a cookie
     session.defaultSession.cookies.set({
-      url: 'http://localhost',
+      url: 'http://localhost3000',
       name: 'auth_token',
       value: token.accessToken,
       expirationDate: Date.now() / 1000 + 3600, // expires in 1 hour
       httpOnly: true,
     });
 
+        // Make a request to GitHub API to get the logged-in user's information
+        // const userInfoResponse = await axios.get('https://api.github.com/user', {
+        //   headers: {
+        //     Authorization: `Bearer ${token.accessToken}`,
+        //   },
+        // });
+    
+        // // Extract user information
+        // const userInfo = userInfoResponse.data;
+        
+        // console.log(userInfo)
+
+    console.log(token)
     return token;
   } catch (err) {
     console.error('OAuth error:', err);
@@ -126,7 +144,9 @@ ipcMain.handle('start-github-auth', async () => {
   }
 });
 
-
+// -----------------------------------------
+// handle login
+// -----------------------------------------
 ipcMain.handle('login', async (event, { username, password }) => {
 
   try {
@@ -158,6 +178,10 @@ ipcMain.handle('login', async (event, { username, password }) => {
   }
 
 });
+
+// -----------------------------------------
+// handle sign up
+// -----------------------------------------
 
 ipcMain.handle('signUp', async (event, { username, password, email }) => {
 
