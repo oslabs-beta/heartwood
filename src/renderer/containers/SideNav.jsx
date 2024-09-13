@@ -27,12 +27,6 @@ const SideNav = () => {
             <li>
               <Link to="/settings">Settings</Link>
             </li>
-            <li>
-              <Link to="/login">Login</Link>
-            </li>
-            <li>
-              <Link to="/signUp">Sign Up</Link>
-            </li>
           </ul>
         </div>
 
@@ -43,8 +37,6 @@ const SideNav = () => {
             <Route path="functions" element={<Functions />} />
             <Route path="logs" element={<Logs />} />
             <Route path="settings" element={<Settings />} />
-            <Route path="login" element={<Login />} />
-            <Route path="signUp" element={<SignUp />} />
             
           </Routes>
         </div>

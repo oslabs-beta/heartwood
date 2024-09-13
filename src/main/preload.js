@@ -22,10 +22,14 @@ contextBridge.exposeInMainWorld('api', {
   startGitHubAuth: () => ipcRenderer.invoke('start-github-auth'),
   //startAuth: () => ipcRenderer.invoke('start-auth'),
   login: (username, password) => ipcRenderer.invoke('login', { username, password }),
-  signUp: (username, password, email) => ipcRenderer.invoke('signUp', { username, password, email })
+  signUp: (username, password, email) => ipcRenderer.invoke('signUp', { username, password, email }),
+  onLoginStatus: (callback) => ipcRenderer.on('login-status', (event, status) => {
+    callback(status);
+  }),
   
 
 });
+
 
 
 
