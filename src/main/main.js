@@ -116,7 +116,15 @@ ipcMain.handle('start-github-auth', async () => {
 
     try{
       const token = await oauth2.getAccessToken({ scope: 'read:user' });
-      console.log(token)
+      access_token = token.access_token;
+
+      try {
+        const response = await axios.post('http://localhost:3000/saveToken', { access_token});
+        return 
+      } catch (error) {
+        console.log('save token error', error);
+      }
+      
           // Store the token in a cookie
       session.defaultSession.cookies.set({
       url: 'http://localhost3000',
@@ -127,6 +135,9 @@ ipcMain.handle('start-github-auth', async () => {
     });
 
     console.log(token)
+
+
+
     return token;
     }
     catch{ return

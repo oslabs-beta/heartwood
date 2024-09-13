@@ -7,6 +7,7 @@ const userSchema = new mongoose.Schema({
     username: String,
     password: String,
     email: String,
+    access_token: String,
     // AWS Credential
     awsCredential: {
       AWS_ACCESS_KEY_ID: {
