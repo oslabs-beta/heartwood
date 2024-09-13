@@ -113,16 +113,26 @@ const oauth2 = new OAuth2(githubOAuthConfig);
 ipcMain.handle('start-github-auth', async () => {
   try {
     console.log('hit github oauth');
-    const token = await oauth2.getAccessToken({ scope: 'read:user' });
 
-    // Store the token in a cookie
-    session.defaultSession.cookies.set({
+    try{
+      const token = await oauth2.getAccessToken({ scope: 'read:user' });
+      console.log(token)
+          // Store the token in a cookie
+      session.defaultSession.cookies.set({
       url: 'http://localhost3000',
       name: 'auth_token',
       value: token.accessToken,
       expirationDate: Date.now() / 1000 + 3600, // expires in 1 hour
       httpOnly: true,
     });
+
+    console.log(token)
+    return token;
+    }
+    catch{ return
+
+    }
+
 
         // Make a request to GitHub API to get the logged-in user's information
         // const userInfoResponse = await axios.get('https://api.github.com/user', {
@@ -136,8 +146,7 @@ ipcMain.handle('start-github-auth', async () => {
         
         // console.log(userInfo)
 
-    console.log(token)
-    return token;
+
   } catch (err) {
     console.error('OAuth error:', err);
     throw err;
@@ -197,33 +206,6 @@ ipcMain.handle('signUp', async (event, { username, password, email }) => {
   }
 
 });
-
-  // Function to fetch invocation metrics from the backend
-ipcMain.handle('getInvocations', async () => {
-  try {
-    const response = await fetch('http://localhost:3000/aws/metric/invocation'); 
-    const result = await response.json();
-    return result;
-  } catch (error) {
-    console.log("Error fetching invocation data:", error)
-  }
-});
-
-  // Function to fetch Error count metrics from the backend
-  ipcMain.handle('getErrors', async () => {
-    try {
-      const response = await fetch('http://localhost:3000/aws/metric/error'); 
-      console.log('hit error fetch');
-      const result = await response.json();
-      return result;
-    } catch (error) {
-      console.log("Error fetching errors data:", error)
-    }
-  });
-  
-
-
-
 
 // Use 'process' globals's platform attribute to run code for each opearting system 
 

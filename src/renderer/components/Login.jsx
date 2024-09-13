@@ -1,28 +1,28 @@
 import React, { useState } from 'react';
 
 
-const githubOauth = () => {
-  window.api.startGitHubAuth()
-    .then(token => {
-      console.log('GitHub Token:', token);
-    })
-    .catch(err => {
-      console.error('GitHub Auth Error:', err);
-    });
-};
+// const githubOauth = () => {
+//   window.api.startGitHubAuth()
+//     .then(token => {
+//       console.log('GitHub Token:', token);
+//     })
+//     .catch(err => {
+//       console.error('GitHub Auth Error:', err);
+//     });
+// };
 
-const userSubmit = async (username, password) => {
+// const userSubmit = async (username, password) => {
 
-    try {
-        console.log(username, password)
-        const result = await window.api.login(username, password);
-        console.log('Login success, token value is:', result);
-      } catch (error) {
-        console.error('Login error:', error);
-      }
-}
+//     try {
+//         console.log(username, password)
+//         const result = await window.api.login(username, password);
+//         console.log('Login success, token value is:', result);
+//       } catch (error) {
+//         console.error('Login error:', error);
+//       }
+// }
 
-const Login = () => {
+const Login = ({githubOauth, userSubmit}) => {
 
     const [username, setUserName] = useState('');
     const [password, setPassword] = useState('');  
