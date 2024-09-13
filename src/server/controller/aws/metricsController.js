@@ -74,8 +74,8 @@ getLambdaMetrics.getInvocationCount = async (req, res, next) => {
       // Print out the response's datapoints to console
       console.log(response.MetricDataResults)
       res.locals.invocationData = {
-        TimeStamps: response.MetricDataResults[0].Timestamps,
-        Values: response.MetricDataResults[0].Values,
+        label: response.MetricDataResults[0].Timestamps,
+        data: response.MetricDataResults[0].Values
       }
       // next();
     } catch (error) {
@@ -146,8 +146,8 @@ try {
   const response = await client.send(command);
   // Print out the response's datapoints to console 
   res.locals.errorData = {
-    TimeStamps: response.MetricDataResults[0].Timestamps,
-    Values: response.MetricDataResults[0].Values,
+    label: response.MetricDataResults[0].Timestamps,
+    data: response.MetricDataResults[0].Values,
   }
 } catch (error) {
   console.error("Error fetching Lambda metrics:", error);
@@ -217,8 +217,8 @@ getLambdaMetrics.getThrottleCount = async (req, res, next) => {
     const response = await client.send(command);
     // Print out the response's datapoints to console 
     res.locals.throttleData = {
-      TimeStamps: response.MetricDataResults[0].Timestamps,
-      Values: response.MetricDataResults[0].Values,
+      label: response.MetricDataResults[0].Timestamps,
+      data: response.MetricDataResults[0].Values,
     }
   } catch (error) {
     console.error("Error fetching Lambda metrics:", error);
