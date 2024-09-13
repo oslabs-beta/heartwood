@@ -37,6 +37,7 @@
     "axios": "^1.7.7",
     "bcryptjs": "^2.4.3",
     "chart.js": "^4.4.4",
+    "chartjs-adapter-date-fns": "^3.0.0",
     "cookie-parser": "^1.4.6",
     "dotenv": "^16.4.5",
     "electron-oauth2": "^3.0.0",

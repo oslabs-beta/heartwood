@@ -1,6 +1,7 @@
 import React from "react";
 import { Line } from "react-chartjs-2";
-import { Chart, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
+import { Chart, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, TimeScale } from 'chart.js';
+import 'chartjs-adapter-date-fns';
 
 const LineChart = ({ data, labels }) => {
  // ^ change this to pass in props later
@@ -14,7 +15,8 @@ const LineChart = ({ data, labels }) => {
         LineElement,
         Title,
         Tooltip,
-        Legend
+        Legend,
+        TimeScale
     );
     
   // Define the chart data and configuration
@@ -22,8 +24,8 @@ const LineChart = ({ data, labels }) => {
     labels, // X-axis labels (timestamps, dates, etc.)
     datasets: [
       {
-        label: 'Metrics', // Label for the dataset
-        data, // Data for the line chart (y-axis values) 
+        label: 'count', // Label for the dataset, TO DO: Pass in label from props later
+        data: data, // Data for the line chart (y-axis values) 
         borderColor: 'rgba(75, 192, 192, 1)', // Line color
         backgroundColor: 'rgba(75, 192, 192, 0.2)', // Fill under the line
         borderWidth: 2, // Line thickness
@@ -41,15 +43,22 @@ const LineChart = ({ data, labels }) => {
         display: true, // Show/hide the legend
         position: 'top',
       },
-      title: {
-        display: true,
-        text: 'Metrics Over Time', // Title of the chart, pass in props later 
-      },
+    //   title: {
+    //     display: true,
+    //     text: 'Metrics Over Time', // Title of the chart, pass in props later 
+    //   },
     },
     scales: {
       y: {
         beginAtZero: true, // Start y-axis at 0
       },
+      x: {
+        type: 'time', // enables time/date handling
+        time: {
+          unit: 'hour',
+          tooltipFormat: 'PPpp', // pretty print date 
+        },
+      }
     },
   };
 

@@ -174,9 +174,29 @@ ipcMain.handle('signUp', async (event, { username, password, email }) => {
 
 });
 
+  // Function to fetch invocation metrics from the backend
+ipcMain.handle('getInvocations', async () => {
+  try {
+    const response = await fetch('http://localhost:3000/aws/metric/invocation'); 
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    console.log("Error fetching invocation data:", error)
+  }
+});
 
-
-
+  // Function to fetch Error count metrics from the backend
+  ipcMain.handle('getErrors', async () => {
+    try {
+      const response = await fetch('http://localhost:3000/aws/metric/error'); 
+      console.log('hit error fetch');
+      const result = await response.json();
+      return result;
+    } catch (error) {
+      console.log("Error fetching errors data:", error)
+    }
+  });
+  
 
 
 
