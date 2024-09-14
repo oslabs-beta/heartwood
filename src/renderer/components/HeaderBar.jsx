@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import SignUp from "./SignUp";
+import { FaMoon, FaSun, FaBell } from 'react-icons/fa';
 
 const HeaderBar = ({ toggleDarkMode, isDarkMode, onNotificationClick }) => {
   const [isSignUpOpen, setIsSignUpOpen] = useState(false);
@@ -19,10 +20,10 @@ const HeaderBar = ({ toggleDarkMode, isDarkMode, onNotificationClick }) => {
       <div className="text-xl font-bold">Heartwood</div>
       <div className="flex items-center space-x-4">
         <button onClick={toggleDarkMode} className="btn btn-primary">
-          {isDarkMode ? 'Light' : 'Dark'}
+        {isDarkMode ? <FaSun /> : <FaMoon />}
         </button>
         <button onClick={onNotificationClick} className="btn btn-secondary">
-          Notifications
+        <FaBell />
         </button>
         <div className="avatar flex space-x-2">
           <button onClick={toggleSignUp} className="btn btn-secondary">

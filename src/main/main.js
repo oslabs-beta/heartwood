@@ -23,7 +23,7 @@ const { fork } = require('child_process');
 //     });
 //   } catch (_) { console.log('Error'); }
 // }
-const express = require('express');
+// const express = require('express');
 
 
 // const server = express();server.use(express.static(path.join(__dirname, '..', '..', 'dist')));
@@ -220,20 +220,48 @@ ipcMain.handle('signUp', async (event, { username, password, email }) => {
 
 ipcMain.handle('getInvocations', async () => {
   try {
-    const response = await fetch('http://localhost:3000/aws/metric/invocation');
-    return response;
+    const response = await axios.get('http://localhost:3000/aws/metric/invocation');
+    console.log('Invocations response:', response.data);
+    return response.data;
   } catch (error) {
-    console.log('error in getinvocation', error);
+    console.error('Error in getInvocations:', error.message);
+    throw error;
   }
 });
+
 ipcMain.handle('getErrors', async () => {
   try {
-    const response = await fetch('http://localhost:3000/aws/metric/error');
-    return response;
+    const response = await axios.get('http://localhost:3000/aws/metric/error');
+    console.log('Errors response:', response.data);
+    return response.data;
   } catch (error) {
-    console.log('error in getErrors', error);
+    console.error('Error in getErrors:', error.message);
+    throw error;
   }
 });
+
+ipcMain.handle('getThrottles', async () => {
+  try {
+    const response = await axios.get('http://localhost:3000/aws/metric/throttle');
+    return response.data;
+  } catch (error) {
+    console.error('Error in getThrottles:', error.message);
+    throw error;
+  }
+});
+ipcMain.handle('addCredential', async (event, accessKey, secretAccessKey, region) => {  
+  try {
+    console.log('main js, awsCredential')
+    const response = await axios.post('http://localhost:3000/aws/credential/add', {
+      accessKey,
+      secretAccessKey,
+      region
+    });   
+  } catch(error) {
+    // console.error('Aws Signup Fail:', error);
+    throw error;
+  }
+})
 
 
 // Use 'process' globals's platform attribute to run code for each opearting system 
