@@ -229,6 +229,15 @@ ipcMain.handle('getErrors', async () => {
   }
 });
 
+ipcMain.handle('getThrottles', async () => {
+  try {
+    const response = await axios.get('http://localhost:3000/aws/metric/throttle');
+    return response.data;
+  } catch (error) {
+    console.error('Error in getThrottles:', error.message);
+    throw error;
+  }
+});
 ipcMain.handle('addCredential', async (event, accessKey, secretAccessKey, region) => {  
   try {
     console.log('main js, awsCredential')

@@ -7,6 +7,8 @@ const Dashboard = () => {
   const [invocationsDataLabels, setInvocationsLabels] = useState([]);
   const [errorData, setErrors] = useState([]);
   const [errorDataLabels, setErrorLabels] = useState([]);
+  const [throttleData, setThrottles] = useState([]);
+  const [throttleDataLabels, setThrottleDataLabels] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -42,11 +44,27 @@ const Dashboard = () => {
     }
   };
 
+  const getThrottleMetrics = async () => {
+    try {
+      const result = await window.api.getThrottles();
+      console.log('Raw getThrottles result:', result);
+      if (result && result.data && result.label) {
+        setThrottles(result.data);
+        setThrottleDataLabels(result.label);
+      } else {
+        throw new Error('Invalid data structure returned from getErrors');
+      }
+    } catch (error) {
+      console.error("Error in dashboard throttles data:", error);
+      setError(error.message);
+    }
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        await Promise.all([getInvocationMetrics(), getErrorMetrics()]);
+        await Promise.all([getInvocationMetrics(), getErrorMetrics(), getThrottleMetrics()]);
       } catch (error) {
         console.error("Error fetching data:", error);
         setError("Failed to fetch dashboard data");
@@ -70,12 +88,39 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
+      <div className="flex justify-end w-full px-4 mt-10">
+  <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-2 w-80">
+    {/* Total Invocations */}
+    <div className="card bg-base-200 shadow-lg p-4">
+      <p className="text-md font-semibold mb-2">Total Invocations</p>
+      <p className="text-2xl font-bold">123</p>
+    </div>
+
+    {/* Total Throttles */}
+    <div className="card bg-base-200 shadow-lg p-4">
+      <p className="text-md font-semibold mb-2">Total Throttles</p>
+      <p className="text-2xl font-bold">123</p>
+    </div>
+
+    {/* Total Errors */}
+    <div className="card bg-base-200 shadow-lg p-4">
+      <p className="text-md font-semibold mb-2">Total Errors</p>
+      <p className="text-2xl font-bold">123</p>
+    </div>
+
+    {/* Total Duration */}
+    <div className="card bg-base-200 shadow-lg p-4">
+      <p className="text-md font-semibold mb-2">Total Duration</p>
+      <p className="text-2xl font-bold">123 ms</p>
+    </div>
+  </div>
+</div>
       <div className="flex flex-col lg:flex-row justify-center gap-8 mt-10">
         {/* Line Chart Section */}
         <div className="lg:w-1/2">
           <div className="card shadow-lg bg-base-200 p-6">
             <p className="text-lg font-semibold text-base-content mb-4">
-              Invocation Count
+              Invocations
             </p>
             <div className="w-full h-96">
               <LineChart data={invocationsData} labels={invocationsDataLabels} />
@@ -85,10 +130,20 @@ const Dashboard = () => {
         <div className="lg:w-1/2">
           <div className="card shadow-lg bg-base-200 p-6">
             <p className="text-lg font-semibold text-base-content mb-4">
-              Error count
+              Errors
             </p>
             <div className="w-full h-96">
               <LineChart data={errorData} labels={errorDataLabels}/>
+            </div>
+          </div>
+        </div>
+        <div className="lg:w-1/2">
+          <div className="card shadow-lg bg-base-200 p-6">
+            <p className="text-lg font-semibold text-base-content mb-4">
+              Throttles
+            </p>
+            <div className="w-full h-96">
+              <LineChart data={throttleData} labels={throttleDataLabels}/>
             </div>
           </div>
         </div>

@@ -78,6 +78,7 @@ getLambdaMetrics.getInvocationCount = async (req, res, next) => {
         label: response.MetricDataResults[0].Timestamps,
         data: response.MetricDataResults[0].Values
       }
+      console.log('res locals inv data:', res.locals.invocationData);
       // next();
     } catch (error) {
       console.error("Error fetching Lambda metrics:", error);
