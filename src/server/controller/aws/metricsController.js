@@ -13,6 +13,7 @@ const getLambdaMetrics = {};
 
 // Middleware to get a selected Lambda function's invocation count 
 getLambdaMetrics.getInvocationCount = async (req, res, next) => {
+    console.log('getInvocationCount middleware is hit')
 
     // Check if necessary AWS environment variables are set 
     if (!process.env.AWS_ACCESS_KEY_ID || !process.env.AWS_SECRET_ACCESS_KEY || !process.env.AWS_REGION) {
@@ -40,7 +41,7 @@ getLambdaMetrics.getInvocationCount = async (req, res, next) => {
               Dimensions: [ // Dimensions
                 { // Dimension
                   Name: "FunctionName", // required
-                  Value: "http-function-url-tutorial", // required
+                  Value: "myNewFunction", // required
                 },
               ],
             },
@@ -185,7 +186,7 @@ getLambdaMetrics.getThrottleCount = async (req, res, next) => {
             Dimensions: [ // Dimensions
               { // Dimension
                 Name: "FunctionName", // required
-                Value: "http-function-url-tutorial", // required
+                Value: "myNewFunction", // required
               },
             ],
           },

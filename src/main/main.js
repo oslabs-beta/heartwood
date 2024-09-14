@@ -23,7 +23,7 @@ const { fork } = require('child_process');
 //     });
 //   } catch (_) { console.log('Error'); }
 // }
-const express = require('express');
+// const express = require('express');
 
 
 // const server = express();server.use(express.static(path.join(__dirname, '..', '..', 'dist')));
@@ -238,6 +238,21 @@ ipcMain.handle('getThrottles', async () => {
     throw error;
   }
 });
+ipcMain.handle('addCredential', async (event, accessKey, secretAccessKey, region) => {  
+  try {
+    console.log('main js, awsCredential')
+    const response = await axios.post('http://localhost:3000/aws/credential/add', {
+      accessKey,
+      secretAccessKey,
+      region
+    });   
+  } catch(error) {
+    // console.error('Aws Signup Fail:', error);
+    throw error;
+  }
+})
+
+
 // Use 'process' globals's platform attribute to run code for each opearting system 
 
 // Handle the 'window-all-closed' event
