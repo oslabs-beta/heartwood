@@ -4,6 +4,8 @@ import Dashboard from "../components/Dashboard";
 import Functions from "../components/Functions";
 import Logs from "../components/Logs";
 import Settings from "../components/Settings";
+import Login from "../components/Login";
+import SignUp from "../components/SignUp";
 
 const SideNav = () => {
   return (
@@ -35,6 +37,7 @@ const SideNav = () => {
             <Route path="functions" element={<Functions />} />
             <Route path="logs" element={<Logs />} />
             <Route path="settings" element={<Settings />} />
+            
           </Routes>
         </div>
       </div>
