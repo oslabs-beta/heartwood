@@ -207,6 +207,37 @@ ipcMain.handle('signUp', async (event, { username, password, email }) => {
 
 });
 
+ipcMain.handle('getInvocations', async () => {
+  try {
+    const response = await axios.get('http://localhost:3000/aws/metric/invocation');
+    console.log('Invocations response:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error in getInvocations:', error.message);
+    throw error;
+  }
+});
+
+ipcMain.handle('getErrors', async () => {
+  try {
+    const response = await axios.get('http://localhost:3000/aws/metric/error');
+    console.log('Errors response:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error in getErrors:', error.message);
+    throw error;
+  }
+});
+
+ipcMain.handle('getThrottles', async () => {
+  try {
+    const response = await axios.get('http://localhost:3000/aws/metric/throttle');
+    return response.data;
+  } catch (error) {
+    console.error('Error in getThrottles:', error.message);
+    throw error;
+  }
+});
 // Use 'process' globals's platform attribute to run code for each opearting system 
 
 // Handle the 'window-all-closed' event
