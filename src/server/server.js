@@ -58,6 +58,11 @@ app.post('/signUp', userController.createUser,(req, res) => {
   res.sendStatus(200)
 }); 
 
+app.post('/saveToken', userController.saveToken,(req, res) => {
+  console.log('save token success')
+  res.sendStatus(200)
+}); 
+
 // this is test route to test Github Oauth
 app.get('/home', (req, res) => {
   console.log('github oauth success')

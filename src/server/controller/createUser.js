@@ -44,6 +44,27 @@ const userController = {
     } catch (err) {
       return res.status(500).send(`Error in login controller: ${err}`);
     }
+  },
+
+  async saveToken(req, res) {
+    console.log("req.body", req.body)
+    const {access_token } = req.body;
+
+    if (!access_token) {
+      return res.status(500).send('Error: missing information in save toke');
+    }
+
+    try {
+      const newUser = new User({ access_token });
+      await newUser.save();
+
+      // const token = jwt.sign({ id: newUser._id, username: newUser.username }, secretKey, { expiresIn: '1h' });
+      // res.cookie('token', username, { httpOnly: true, secure: true });
+
+      return res.status(200).send(newUser);
+    } catch (err) {
+      return res.status(500).send(`Error in create user controller: ${err}`);
+    }
   }
 };
 
