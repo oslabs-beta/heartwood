@@ -229,6 +229,21 @@ ipcMain.handle('getErrors', async () => {
   }
 });
 
+ipcMain.handle('addCredential', async (event, accessKey, secretAccessKey, region) => {  
+  try {
+    console.log('main js, awsCredential')
+    const response = await axios.post('http://localhost:3000/aws/credential/add', {
+      accessKey,
+      secretAccessKey,
+      region
+    });   
+  } catch(error) {
+    // console.error('Aws Signup Fail:', error);
+    throw error;
+  }
+})
+
+
 // Use 'process' globals's platform attribute to run code for each opearting system 
 
 // Handle the 'window-all-closed' event
