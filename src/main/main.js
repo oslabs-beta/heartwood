@@ -249,6 +249,16 @@ ipcMain.handle('getThrottles', async () => {
     throw error;
   }
 });
+
+ipcMain.handle('getDuration', async () => {
+  try {
+    const response = await axios.get('http://localhost:3000/aws/metric/duration');
+    return response.data;
+  } catch (error) {
+    console.error('Error in getDuration:', error.message);
+    throw error;
+  }
+});
 ipcMain.handle('addCredential', async (event, accessKey, secretAccessKey, region) => {  
   try {
     console.log('main js, awsCredential')

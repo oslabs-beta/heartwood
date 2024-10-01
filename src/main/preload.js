@@ -25,7 +25,8 @@ contextBridge.exposeInMainWorld('api', {
   signUp: (username, password, email) => ipcRenderer.invoke('signUp', { username, password, email }),
   getInvocations: () => ipcRenderer.invoke('getInvocations'),
   getErrors: () => ipcRenderer.invoke('getErrors'),
-  getThrottles: () => ipcRenderer.invoke('getThrottles'),  
+  getThrottles: () => ipcRenderer.invoke('getThrottles'),
+  getDuration: () => ipcRenderer.invoke('getDuration'),  
   checkAuthToken: ()=> ipcRenderer.invoke('check-auth-token'),
   addCredential: (accessKey, secretAccessKey, region) => ipcRenderer.invoke('addCredential', accessKey, secretAccessKey, region),
 });
