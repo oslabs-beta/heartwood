@@ -34,7 +34,9 @@ router.get('/metric/throttle', getLambdaMetrics.getThrottleCount, (req, res) => 
   return res.status(200).json(res.locals.throttleData);
 });
 
-
+router.get('/metric/duration', getLambdaMetrics.getDuration, (req, res) => {
+  return res.status(200).json(res.locals.durationData);
+});
 
 
 module.exports = router;
