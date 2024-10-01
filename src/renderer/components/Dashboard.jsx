@@ -9,6 +9,8 @@ const Dashboard = () => {
   const [errorDataLabels, setErrorLabels] = useState([]);
   const [throttleData, setThrottles] = useState([]);
   const [throttleDataLabels, setThrottleDataLabels] = useState([]);
+  const [durationData, setDuration] = useState([]);
+  const [durationDataLabels, setDurationDataLabels] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -60,11 +62,27 @@ const Dashboard = () => {
     }
   };
 
+  const getDurationMetrics = async () => {
+    try {
+      const result = await window.api.getDuration();
+      console.log('Raw getDuration result:', result);
+      if (result && result.data && result.label) {
+        setDuration(result.data);
+        setDurationDataLabels(result.label);
+      } else {
+        throw new Error('Invalid data structure returned from getDuration');
+      }
+    } catch (error) {
+      console.error("Error in dashboard duration data:", error);
+      setError(error.message);
+    }
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        await Promise.all([getInvocationMetrics(), getErrorMetrics(), getThrottleMetrics()]);
+        await Promise.all([getInvocationMetrics(), getErrorMetrics(), getThrottleMetrics(), getDurationMetrics()]);
       } catch (error) {
         console.error("Error fetching data:", error);
         setError("Failed to fetch dashboard data");
@@ -144,6 +162,16 @@ const Dashboard = () => {
             </p>
             <div className="w-full h-96">
               <LineChart data={throttleData} labels={throttleDataLabels}/>
+            </div>
+          </div>
+        </div>
+        <div className="lg:w-1/2">
+          <div className="card shadow-lg bg-base-200 p-6">
+            <p className="text-lg font-semibold text-base-content mb-4">
+              Duration
+            </p>
+            <div className="w-full h-96">
+              <LineChart data={durationData} labels={durationDataLabels}/>
             </div>
           </div>
         </div>
