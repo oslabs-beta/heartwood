@@ -169,6 +169,8 @@ ipcMain.handle('start-github-auth', async () => {
 // -----------------------------------------
 ipcMain.handle('login', async (event, { username, password }) => {
 
+  // TODO: get session object from backend, and set cookie to the application using 'session.defaultSession.cookie.set'. 
+
   try {
     console.log('main.js')
     const token = await axios.post('http://localhost:3000/login', { username, password });
@@ -206,16 +208,39 @@ ipcMain.handle('login', async (event, { username, password }) => {
 ipcMain.handle('signUp', async (event, { username, password, email }) => {
 
   try {
-    console.log('main.js, sign up')
     const response = await axios.post('http://localhost:3000/signUp', { username, password, email });
-    console.log(response)
+    // console.log(response)
+    const cookie = response.data; 
+
+    console.log('cookie in signup Main', cookie)
+
+    // https://www.electronjs.org/docs/latest/api/cookies
+    session.defaultSession.cookies.set(cookie)
+      .then(() => {
+        // success
+        console.log('sucess to attach cookie')
+      }, (error) => {
+        console.error(error)
+      })
+
+    // // TEST CODE: Check if cookie is attached to the application 
+    // session.defaultSession.cookies.get({ name: 'dummy_name5' })
+    //   .then((cookies) => {
+    //     // success to set cookie  
+    //     console.log('session set success')
+    //     console.log('get cookie', cookies)
+    //   })
+    //   .catch((error) => {
+    //     console.log('Error to set cookie', error)
+    //   });
+
+    // return something to trigger leaving sign up widget 
     return response.data;
     
   } catch (error) {
     console.error('Sign up failed:', error);
     throw error;
   }
-
 });
 
 ipcMain.handle('getInvocations', async () => {
@@ -246,6 +271,16 @@ ipcMain.handle('getThrottles', async () => {
     return response.data;
   } catch (error) {
     console.error('Error in getThrottles:', error.message);
+    throw error;
+  }
+});
+
+ipcMain.handle('getDuration', async () => {
+  try {
+    const response = await axios.get('http://localhost:3000/aws/metric/duration');
+    return response.data;
+  } catch (error) {
+    console.error('Error in getDuration:', error.message);
     throw error;
   }
 });
