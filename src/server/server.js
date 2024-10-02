@@ -59,8 +59,14 @@ app.post('/signUp', userController.createUser, sessionController.createSession, 
   res.status(200).json(res.locals.session);
 }); 
 
-app.post('/saveToken', userController.saveToken,(req, res) => {
+app.post('/saveToken', userController.saveToken, sessionController.createSession, (req, res) => {
   console.log('save token success')
+  res.status(200).json(res.locals.session);
+}); 
+
+
+app.post('/login', userController.login, sessionController.createSession, (req, res) => {
+  console.log('login success, server.js')
   res.sendStatus(200)
 }); 
 
@@ -68,11 +74,6 @@ app.post('/saveToken', userController.saveToken,(req, res) => {
 app.get('/home', (req, res) => {
   console.log('github oauth success')
   res.sendFile(path.join(__dirname, '..', '..', 'dist', 'index.html'))
-}); 
-
-app.post('/login', userController.login,(req, res) => {
-  console.log('login success, server.js')
-  res.sendStatus(200)
 }); 
 
 // Test routes for AWS Cloud Watch SDK

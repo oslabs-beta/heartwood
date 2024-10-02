@@ -10,18 +10,16 @@ const sessionController = {
     try {
       // Create a new session
       const session = { 
-        url: 'https://www.github.com', 
         name: 'dummy_name5', 
         value: 'dummy5', 
         expirationDate: Date.now() / 1000 + 3600 
       }
       
-      res.locals.session = session;
-  
-      // Save session to user collection 
+      // TODO: Save or update session in database  
       
-  
+      
       // Pass the session object to next middleware 
+      res.locals.session = session;
   
       return next();
 

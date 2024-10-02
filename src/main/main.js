@@ -169,6 +169,8 @@ ipcMain.handle('start-github-auth', async () => {
 // -----------------------------------------
 ipcMain.handle('login', async (event, { username, password }) => {
 
+  // TODO: get session object from backend, and set cookie to the application using 'session.defaultSession.cookie.set'. 
+
   try {
     console.log('main.js')
     const token = await axios.post('http://localhost:3000/login', { username, password });
@@ -221,14 +223,16 @@ ipcMain.handle('signUp', async (event, { username, password, email }) => {
         console.error(error)
       })
 
-    // TO BE DELETED - TEST CODE: Check if cookie is attached to the application 
-    session.defaultSession.cookies.get({ url: 'https://www.github.com' })
-      .then((cookies) => {
-        // success to set cookie  
-      })
-      .catch((error) => {
-        console.log('Error to set cookie', error)
-      });
+    // // TEST CODE: Check if cookie is attached to the application 
+    // session.defaultSession.cookies.get({ name: 'dummy_name5' })
+    //   .then((cookies) => {
+    //     // success to set cookie  
+    //     console.log('session set success')
+    //     console.log('get cookie', cookies)
+    //   })
+    //   .catch((error) => {
+    //     console.log('Error to set cookie', error)
+    //   });
 
     // return something to trigger leaving sign up widget 
     return response.data;
@@ -237,7 +241,6 @@ ipcMain.handle('signUp', async (event, { username, password, email }) => {
     console.error('Sign up failed:', error);
     throw error;
   }
-
 });
 
 ipcMain.handle('getInvocations', async () => {
