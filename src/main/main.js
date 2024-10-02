@@ -130,7 +130,7 @@ ipcMain.handle('start-github-auth', async () => {
       url: 'http://localhost3000',
       name: 'auth_token',
       value: token.accessToken,
-      expirationDate: Date.now() / 1000 + 3600, // expires in 1 hour
+      expirationDate: Date.now() / 1000 + 3600, 
       httpOnly: true,
     });
 
