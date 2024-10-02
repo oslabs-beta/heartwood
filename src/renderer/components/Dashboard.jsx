@@ -14,6 +14,21 @@ const Dashboard = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // helper function to calculate totals of each metric, using reduce to accumulate the values
+  const calculateTotals = (data) => {
+    if (!data || !Array.isArray(data)) return 0;
+    return data.reduce((total, current) => total + current, 0);
+  }
+
+// helper function to calculate average of specific metric (duration)
+  const calculateAverage = (data) => {
+
+  }
+// helper function to calculate cost
+  const calculateCost = () => {
+
+  }
+  
   const getInvocationMetrics = async () => {
     try {
       const result = await window.api.getInvocations();
@@ -97,6 +112,12 @@ const Dashboard = () => {
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
+  // calculate the totals of each metric by passing in respective data into helper function
+  const totalInvocations = calculateTotals(invocationsData);
+  const totalErrors = calculateTotals(errorData);
+  const totalThrottles = calculateTotals(throttleData);
+  const totalDuration = calculateTotals(durationData);
+
   return (
     <div className="bg-base-100 min-h-screen text-base-content">
       <div className="w-full px-14 pb-8">
@@ -106,75 +127,72 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
-      <div className="flex justify-end w-full px-4 mt-10">
-  <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-2 w-80">
-    {/* Total Invocations */}
-    <div className="card bg-base-200 shadow-lg p-4">
-      <p className="text-md font-semibold mb-2">Total Invocations</p>
-      <p className="text-2xl font-bold">123</p>
-    </div>
 
-    {/* Total Throttles */}
-    <div className="card bg-base-200 shadow-lg p-4">
-      <p className="text-md font-semibold mb-2">Total Throttles</p>
-      <p className="text-2xl font-bold">123</p>
-    </div>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 px-4 mt-10">
+        {/* Total Invocations */}
+        <div className="card bg-base-200 shadow-lg p-4">
+          <p className="text-md font-semibold mb-2">Total Invocations</p>
+          <p className="text-2xl font-bold">{totalInvocations}</p>
+        </div>
 
-    {/* Total Errors */}
-    <div className="card bg-base-200 shadow-lg p-4">
-      <p className="text-md font-semibold mb-2">Total Errors</p>
-      <p className="text-2xl font-bold">123</p>
-    </div>
+        {/* Total Throttles */}
+        <div className="card bg-base-200 shadow-lg p-4">
+          <p className="text-md font-semibold mb-2">Total Throttles</p>
+          <p className="text-2xl font-bold">{totalThrottles}</p>
+        </div>
 
-    {/* Total Duration */}
-    <div className="card bg-base-200 shadow-lg p-4">
-      <p className="text-md font-semibold mb-2">Total Duration</p>
-      <p className="text-2xl font-bold">123 ms</p>
+        {/* Total Errors */}
+        <div className="card bg-base-200 shadow-lg p-4">
+          <p className="text-md font-semibold mb-2">Total Errors</p>
+          <p className="text-2xl font-bold">{totalErrors}</p>
+        </div>
+
+        {/* Total Duration */}
+        <div className="card bg-base-200 shadow-lg p-4">
+          <p className="text-md font-semibold mb-2">Average Duration</p>
+          <p className="text-2xl font-bold"> {totalDuration} ms</p>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-8 px-4">
+        {/* Invocations Chart */}
+        <div className="card shadow-lg bg-base-200 p-6">
+          <p className="text-lg font-semibold mb-4">Invocations</p>
+          <div className="w-full h-72">
+            <LineChart data={invocationsData} labels={invocationsDataLabels} />
+          </div>
+        </div>
+
+        {/* Errors Chart */}
+        <div className="card shadow-lg bg-base-200 p-6">
+          <p className="text-lg font-semibold mb-4">Errors</p>
+          <div className="w-full h-72">
+            <LineChart data={errorData} labels={errorDataLabels} />
+          </div>
+        </div>
+
+        {/* Throttles Chart */}
+        <div className="card shadow-lg bg-base-200 p-6">
+          <p className="text-lg font-semibold mb-4">Throttles</p>
+          <div className="w-full h-72">
+            <LineChart data={throttleData} labels={throttleDataLabels} />
+          </div>
+        </div>
+
+        {/* Duration Chart */}
+        <div className="card shadow-lg bg-base-200 p-6">
+          <p className="text-lg font-semibold mb-4">Duration</p>
+          <div className="w-full h-72">
+            <LineChart data={durationData} labels={durationDataLabels} />
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
-      <div className="flex flex-col lg:flex-row justify-center gap-8 mt-10">
-        {/* Line Chart Section */}
-        <div className="lg:w-1/2">
-          <div className="card shadow-lg bg-base-200 p-6">
-            <p className="text-lg font-semibold text-base-content mb-4">
-              Invocations
-            </p>
-            <div className="w-full h-96">
-              <LineChart data={invocationsData} labels={invocationsDataLabels} />
-            </div>
-          </div>
-        </div>
-        <div className="lg:w-1/2">
-          <div className="card shadow-lg bg-base-200 p-6">
-            <p className="text-lg font-semibold text-base-content mb-4">
-              Errors
-            </p>
-            <div className="w-full h-96">
-              <LineChart data={errorData} labels={errorDataLabels}/>
-            </div>
-          </div>
-        </div>
-        <div className="lg:w-1/2">
-          <div className="card shadow-lg bg-base-200 p-6">
-            <p className="text-lg font-semibold text-base-content mb-4">
-              Throttles
-            </p>
-            <div className="w-full h-96">
-              <LineChart data={throttleData} labels={throttleDataLabels}/>
-            </div>
-          </div>
-        </div>
-        <div className="lg:w-1/2">
-          <div className="card shadow-lg bg-base-200 p-6">
-            <p className="text-lg font-semibold text-base-content mb-4">
-              Duration
-            </p>
-            <div className="w-full h-96">
-              <LineChart data={durationData} labels={durationDataLabels}/>
-            </div>
-          </div>
-        </div>
+  );
+};
+export default Dashboard;
+
+
         {/* Donut Chart Section */}
         {/* <div className="lg:w-1/2">
           <div className="card shadow-lg bg-base-200 p-6">
@@ -186,8 +204,3 @@ const Dashboard = () => {
             </div>
           </div>
         </div> */}
-      </div>
-    </div>
-  );
-};
-export default Dashboard;
