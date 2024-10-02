@@ -26,7 +26,7 @@ const userController = {
   },
 
   // Middleware to login 
-  async login(req, res) {
+  async login(req, res, next) {
 
     const { username, password } = req.body;
 
@@ -71,7 +71,7 @@ const userController = {
       // return res.status(200).send(newUser);
 
       return next();
-      
+
     } catch (err) {
       return res.status(500).send(`Error in create user controller: ${err}`);
     }
