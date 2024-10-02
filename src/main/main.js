@@ -1,7 +1,7 @@
 // Import 'app' and 'BrowserWindow' module 
 // 'app' controls the application's lifecycle
 // 'BrowserWindow' creates and manages application windows
-// ipcMain: communication between the main process and the renderer process
+// ipcMain: communication between the main process and the renderer process 
 const { app, BrowserWindow, ipcMain, session } = require('electron');
 // electron build in oauth 2.0
 const OAuth2 = require('electron-oauth2');
@@ -72,22 +72,31 @@ app.whenReady().then(() => {
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow()
   })
+
+  // // TEST: Register 'app' protocol 
+  // protocol.registerHttpProtocol('app', (request, callback) => {
+  //   callback({
+  //     url: request.url.replace('app://', 'http://')
+  //   });
+  // });
+
+  // COMMENTED OUT THE FOLLOWING FOR NOW
   
-  session.defaultSession.cookies.get({ name: 'auth_token' })
-  .then(cookies => {
-    if (cookies.length > 0) {
-      console.log('User is already logged in');
+  // session.defaultSession.cookies.get({ name: 'auth_token' })
+  // .then(cookies => {
+  //   if (cookies.length > 0) {
+  //     console.log('User is already logged in');
 
-      mainWindow.webContents.send('login-status', { loggedIn: true });
-    } else {
-      console.log('No token found. User is not logged in.');
+  //     mainWindow.webContents.send('login-status', { loggedIn: true });
+  //   } else {
+  //     console.log('No token found. User is not logged in.');
 
-      mainWindow.webContents.send('login-status', { loggedIn: false });
-    }
-  })
-  .catch(err => {
-    console.error('Error checking for auth token:', err);
-  });
+  //     mainWindow.webContents.send('login-status', { loggedIn: false });
+  //   }
+  // })
+  // .catch(err => {
+  //   console.error('Error checking for auth token:', err);
+  // });
 
   createWindow();
   startServer();
@@ -119,7 +128,7 @@ ipcMain.handle('start-github-auth', async () => {
       access_token = token.access_token;
 
       try {
-        const response = await axios.post('http://localhost:3000/saveToken', { access_token});
+        const response = await axios.post('http://localhost:3000/user/saveToken', { access_token});
         return 
       } catch (error) {
         console.log('save token error', error);
@@ -173,7 +182,7 @@ ipcMain.handle('login', async (event, { username, password }) => {
 
   try {
     console.log('main.js')
-    const token = await axios.post('http://localhost:3000/login', { username, password });
+    const token = await axios.post('http://localhost:3000/user/login', { username, password });
     console.log('response',token)
 
     const cookie = {
@@ -206,35 +215,32 @@ ipcMain.handle('login', async (event, { username, password }) => {
 // -----------------------------------------
 
 ipcMain.handle('signUp', async (event, { username, password, email }) => {
-
   try {
-    const response = await axios.post('http://localhost:3000/signUp', { username, password, email });
-    // console.log(response)
-    const cookie = response.data; 
+    // Save user information to database, and receive a session object
+    const response = await axios.post('http://localhost:3000/user/signUp', { username, password, email });
+    const sessionObject = response.data; 
 
-    console.log('cookie in signup Main', cookie)
+    console.log('sessio object in signup Main', sessionObject)
 
-    // https://www.electronjs.org/docs/latest/api/cookies
-    session.defaultSession.cookies.set(cookie)
+    // Set a cookie to the application 
+    session.defaultSession.cookies.set(sessionObject)
       .then(() => {
         // success
-        console.log('sucess to attach cookie')
+        console.log('sucess to set a cookie');
       }, (error) => {
-        console.log('failed to attach cookie', error)
+        console.log('failed to set a cookie', error);
       })
 
-    // // TEST CODE: Check if cookie is attached to the application 
-    session.defaultSession.cookies.get({ name: 'dummy_name5' })
+    // TEST CODE: Check if cookie is set to the application 
+    session.defaultSession.cookies.get({ url: 'http://localhost/' })
       .then((cookies) => {
-        // success to set cookie  
-        console.log('session set success')
+        // success to get cookie  
         console.log('get cookie', cookies)
       })
       .catch((error) => {
         console.log('Error to set cookie', error)
       });
 
-    console.log('reached to the buttom')
     // return something to trigger leaving sign up widget 
     return response.data;
     
@@ -243,6 +249,7 @@ ipcMain.handle('signUp', async (event, { username, password, email }) => {
     throw error;
   }
 });
+
 
 ipcMain.handle('getInvocations', async () => {
   try {
@@ -285,9 +292,12 @@ ipcMain.handle('getDuration', async () => {
     throw error;
   }
 });
+
 ipcMain.handle('addCredential', async (event, accessKey, secretAccessKey, region) => {  
   try {
-    console.log('main js, awsCredential')
+
+    // Get ssid cookie with `session.defaultSession.cookies.get` method , and pass in request body 
+
     const response = await axios.post('http://localhost:3000/aws/credential/add', {
       accessKey,
       secretAccessKey,
