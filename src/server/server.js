@@ -10,7 +10,8 @@ const cookieParser = require('cookie-parser');
 const { readFileSync } = require('fs');
 
 // Import controllers and routers
-const userController = require('./controller/createUser');
+const userController = require('./controller/user/userController.js');
+const sessionController = require('./controller/user/sessionController.js');
 const awsTestController = require('./controller/awsTest.js');
 const awsRouter = require('./routes/awsRouter.js');
 
@@ -53,13 +54,19 @@ app.get('/', (req, res) => {
 {"name":"connect",
 "email":"connect.gmail"}
 */
-app.post('/signUp', userController.createUser,(req, res) => {
-  console.log('sign up success')
-  res.sendStatus(200)
+app.post('/signUp', userController.createUser, sessionController.createSession, (req, res) => {
+  console.log('sign up success');
+  res.status(200).json(res.locals.session);
 }); 
 
-app.post('/saveToken', userController.saveToken,(req, res) => {
+app.post('/saveToken', userController.saveToken, sessionController.createSession, (req, res) => {
   console.log('save token success')
+  res.status(200).json(res.locals.session);
+}); 
+
+
+app.post('/login', userController.login, sessionController.createSession, (req, res) => {
+  console.log('login success, server.js')
   res.sendStatus(200)
 }); 
 
@@ -67,11 +74,6 @@ app.post('/saveToken', userController.saveToken,(req, res) => {
 app.get('/home', (req, res) => {
   console.log('github oauth success')
   res.sendFile(path.join(__dirname, '..', '..', 'dist', 'index.html'))
-}); 
-
-app.post('/login', userController.login,(req, res) => {
-  console.log('login success, server.js')
-  res.sendStatus(200)
 }); 
 
 // Test routes for AWS Cloud Watch SDK
