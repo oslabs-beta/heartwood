@@ -1,23 +1,25 @@
 const jwt = require('jsonwebtoken');
 const secretKey = 'cats';
-const User = require('../models/user');
+const User = require('../../models/user');
+// const { Next } = require('react-bootstrap/esm/PageItem');
 
 const userController = {
-  async createUser(req, res) {
+  // Middleware to create a new user 
+  async createUser(req, res, next) {
+    console.log('createUser hit')
     const { username, email, password } = req.body;
 
     if (!username || !email || !password) {
       return res.status(500).send('Error: missing information');
-    }
+    };
 
     try {
+      // Save user to database 
       const newUser = new User({ username, email, password });
       await newUser.save();
+     
+      return next();
 
-      const token = jwt.sign({ id: newUser._id, username: newUser.username }, secretKey, { expiresIn: '1h' });
-      res.cookie('token', username, { httpOnly: true, secure: true });
-
-      return res.status(200).send(newUser);
     } catch (err) {
       return res.status(500).send(`Error in create user controller: ${err}`);
     }

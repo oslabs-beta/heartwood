@@ -206,9 +206,31 @@ ipcMain.handle('login', async (event, { username, password }) => {
 ipcMain.handle('signUp', async (event, { username, password, email }) => {
 
   try {
-    console.log('main.js, sign up')
     const response = await axios.post('http://localhost:3000/signUp', { username, password, email });
-    console.log(response)
+    // console.log(response)
+    const cookie = response.data; 
+
+    console.log('cookie in signup Main', cookie)
+
+    // https://www.electronjs.org/docs/latest/api/cookies
+    session.defaultSession.cookies.set(cookie)
+      .then(() => {
+        // success
+        console.log('sucess to attach cookie')
+      }, (error) => {
+        console.error(error)
+      })
+
+    // TO BE DELETED - TEST CODE: Check if cookie is attached to the application 
+    session.defaultSession.cookies.get({ url: 'https://www.github.com' })
+      .then((cookies) => {
+        // success to set cookie  
+      })
+      .catch((error) => {
+        console.log('Error to set cookie', error)
+      });
+
+    // return something to trigger leaving sign up widget 
     return response.data;
     
   } catch (error) {
