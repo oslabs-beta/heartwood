@@ -41,7 +41,7 @@ getLambdaMetrics.getInvocationCount = async (req, res, next) => {
               Dimensions: [ // Dimensions
                 { // Dimension
                   Name: "FunctionName", // required
-                  Value: "myNewFunction", // required
+                  Value: "heartwood-test-lambda-1", // required
                 },
               ],
             },
@@ -115,7 +115,7 @@ const input = { // GetMetricDataInput
           Dimensions: [ // Dimensions
             { // Dimension
               Name: "FunctionName", // required
-              Value: "http-function-url-tutorial", // required
+              Value: "heartwood-test-lambda-1", // required
             },
           ],
         },
@@ -186,7 +186,7 @@ getLambdaMetrics.getThrottleCount = async (req, res, next) => {
             Dimensions: [ // Dimensions
               { // Dimension
                 Name: "FunctionName", // required
-                Value: "myNewFunction", // required
+                Value: "heartwood-test-lambda-1", // required
               },
             ],
           },
@@ -258,7 +258,7 @@ getLambdaMetrics.getDuration = async (req, res, next) => {
             Dimensions: [ // Dimensions
               { // Dimension
                 Name: "FunctionName", // required
-                Value: "myNewFunction", // required
+                Value: "heartwood-test-lambda-1", // required
               },
             ],
           },

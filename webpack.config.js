@@ -18,7 +18,6 @@ module.exports = {
   module: {
     rules: [
       {
-        // use babel-loader for JS and JSX files 
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
         loader: 'babel-loader',
@@ -27,13 +26,21 @@ module.exports = {
         },
       },
       {
-        // use style-loader, css-loader for CSS 
+        test: /\.(ts|tsx)$/,
+        exclude: /node_modules/,
+        use: 'ts-loader',
+      },
+      {
         test: /\.s?css$/,
         use: ['style-loader', 'css-loader', 'postcss-loader'],
       },
     ],
   },
-
+  
+  resolve: {
+    extensions: ['.js', '.jsx', '.ts', '.tsx'],
+  },
+ 
   // Configure plugins 
   plugins: [
     // Generate an HTML file that includes all webpack bundles 
@@ -61,9 +68,6 @@ module.exports = {
     // open: true, // Automatically opens the browser  
   },
 
-  resolve: {
-    extensions: ['.js', '.jsx'],
-  },
 
   // Tell webpack this is electron renderer process 
   // target: 'electron-renderer',

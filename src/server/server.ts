@@ -2,7 +2,11 @@
 // Imports and Configuration
 // -----------------------------------------
 
-const express = require('express');
+import express from 'express' // If the file has at least 1 import/export, the file is treated as 'module' and prevent variables from being added to the global scope in TypeScript. 
+// const express = require('express');
+
+// const { Request, Response, NextFunction } = require('express'); 
+const { CustomError } = require('./types');
 const app = express();
 const PORT = 3000;
 const path = require('path');
@@ -43,7 +47,7 @@ connectDB();
 // -----------------------------------------
 
 // Main route - serve the main HTML file
-app.get('/', (req, res) => {
+app.get('/', (req: Request, res: Response) => {
   console.log('line 19')
   res.sendFile(path.join(__dirname, '..', '..', 'dist', 'index.html'))
 }); 
@@ -53,23 +57,23 @@ app.get('/', (req, res) => {
 {"name":"connect",
 "email":"connect.gmail"}
 */
-app.post('/signUp', userController.createUser,(req, res) => {
+app.post('/signUp', userController.createUser,(req: Request, res: Response) => {
   console.log('sign up success')
   res.sendStatus(200)
 }); 
 
-app.post('/saveToken', userController.saveToken,(req, res) => {
+app.post('/saveToken', userController.saveToken,(req: Request, res: Response) => {
   console.log('save token success')
   res.sendStatus(200)
 }); 
 
 // this is test route to test Github Oauth
-app.get('/home', (req, res) => {
+app.get('/home', (req: Request, res: Response) => {
   console.log('github oauth success')
   res.sendFile(path.join(__dirname, '..', '..', 'dist', 'index.html'))
 }); 
 
-app.post('/login', userController.login,(req, res) => {
+app.post('/login', userController.login,(req: Request, res: Response) => {
   console.log('login success, server.js')
   res.sendStatus(200)
 }); 
@@ -92,7 +96,7 @@ app.post('/login', userController.login,(req, res) => {
 app.use('/aws', awsRouter);
 
 // Catch-all route handler for any requests to an unknown route
-app.use('*', (req, res) => {
+app.use('*', (req: Request, res: Response) => {
   res.sendFile(path.join(__dirname, '..', '..', 'dist', 'index.html'));
 });
 
@@ -102,7 +106,7 @@ app.use('*', (req, res) => {
 // -----------------------------------------
 
 // Global error handler
-app.use((err, req, res, next) => {
+app.use((err: CustomError, req: Request, res: Response, next: NextFunction) => {
   const defaultErr = {
     log: 'Express error handler caught unknown error',
     status: 500,
