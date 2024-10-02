@@ -12,6 +12,8 @@ const sessionController = {
       const session = { 
         name: 'dummy_name5', 
         value: 'dummy5', 
+        // url: 'http://localhost:3000/',
+        url: 'https://www.github.com',
         expirationDate: Date.now() / 1000 + 3600 
       }
       

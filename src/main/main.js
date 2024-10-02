@@ -220,20 +220,21 @@ ipcMain.handle('signUp', async (event, { username, password, email }) => {
         // success
         console.log('sucess to attach cookie')
       }, (error) => {
-        console.error(error)
+        console.log('failed to attach cookie', error)
       })
 
     // // TEST CODE: Check if cookie is attached to the application 
-    // session.defaultSession.cookies.get({ name: 'dummy_name5' })
-    //   .then((cookies) => {
-    //     // success to set cookie  
-    //     console.log('session set success')
-    //     console.log('get cookie', cookies)
-    //   })
-    //   .catch((error) => {
-    //     console.log('Error to set cookie', error)
-    //   });
+    session.defaultSession.cookies.get({ name: 'dummy_name5' })
+      .then((cookies) => {
+        // success to set cookie  
+        console.log('session set success')
+        console.log('get cookie', cookies)
+      })
+      .catch((error) => {
+        console.log('Error to set cookie', error)
+      });
 
+    console.log('reached to the buttom')
     // return something to trigger leaving sign up widget 
     return response.data;
     
