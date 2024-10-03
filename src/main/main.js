@@ -251,6 +251,40 @@ ipcMain.handle('signUp', async (event, { username, password, email }) => {
 });
 
 
+// -----------------------------------------
+// handle AWS credential registration 
+// -----------------------------------------
+
+ipcMain.handle('addCredential', async (event, accessKey, secretAccessKey, region) => {  
+  try {
+    // Retrieve the ssid cookie 
+    const cookies = await session.defaultSession.cookies.get({ url: 'http://localhost/' });
+    const ssid = cookies[0].value;
+
+    // Send a POST request to add AWS credentials associated with the user's session
+    const response = await axios.post('http://localhost:3000/aws/credential/add', {
+      accessKey,
+      secretAccessKey,
+      region,
+      ssid,
+    }); 
+
+    // Consider returning the response data if needed by the caller
+    // return response.data 
+
+  } catch(error) {
+    console.error('Failed to add AWS credentials:', error);
+    // Consider returning error logs if needed by the caller
+    // return { success: false, error: error.message };
+  }
+})
+
+
+// -----------------------------------------
+// handle AWS metrics
+// -----------------------------------------
+
+
 ipcMain.handle('getInvocations', async () => {
   try {
     const response = await axios.get('http://localhost:3000/aws/metric/invocation');
@@ -293,21 +327,6 @@ ipcMain.handle('getDuration', async () => {
   }
 });
 
-ipcMain.handle('addCredential', async (event, accessKey, secretAccessKey, region) => {  
-  try {
-
-    // Get ssid cookie with `session.defaultSession.cookies.get` method , and pass in request body 
-
-    const response = await axios.post('http://localhost:3000/aws/credential/add', {
-      accessKey,
-      secretAccessKey,
-      region
-    });   
-  } catch(error) {
-    // console.error('Aws Signup Fail:', error);
-    throw error;
-  }
-})
 
 
 // Use 'process' globals's platform attribute to run code for each opearting system 
