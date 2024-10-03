@@ -79,6 +79,21 @@ const userController = {
     } catch (err) {
       return res.status(500).send(`Error in create user controller: ${err}`);
     }
+  },
+
+  async github(req, res, next){
+    try {
+
+
+      console.log('github middleware hit')
+      const clientID =  process.env.GITHUB_CLIENTID;
+      const clientSecret = process.env.GITHUB_CLIENT_SECRET; 
+
+      const requestToken = req.query.code
+      console.log(requestToken)
+
+    }
+    catch(err){}
   }
 };
 

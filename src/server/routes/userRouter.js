@@ -32,6 +32,12 @@ router.post('/saveToken', userController.saveToken, sessionController.createSess
   res.status(200).json(res.locals.session);
 }); 
 
+// Route to gitHub Oauth
+router.post('/github', userController.github, sessionController.createSession, (req, res) => {
+  console.log('github Oauth success')
+})
+
+
 // Test: Route to test Github Oauth
 router.get('/home', (req, res) => {
   console.log('github oauth success')

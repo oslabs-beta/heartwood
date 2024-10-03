@@ -23,15 +23,19 @@ const { fork } = require('child_process');
 //     });
 //   } catch (_) { console.log('Error'); }
 // }
-// const express = require('express');
 
+// below code shows local host as cookie url 
+const express = require('express');
+const server = express();server.use(express.static(path.join(__dirname, '..', '..', 'dist')));
 
-// const server = express();server.use(express.static(path.join(__dirname, '..', '..', 'dist')));
-
-// const http = require('http');
-// const httpServer = http.createServer(server);
-// httpServer.listen(PORT, () => {
-//   console.log(`Server running at http://localhost:8080`);
+const http = require('http');
+const httpServer = http.createServer(server);
+httpServer.listen(3000, () => {
+  console.log(`Server running at http://localhost:3000`);
+});
+// const server = http.createServer(app);
+// server.listen(8080, () => {
+//   console.log('Server listening on http://localhost:8080');
 // });
 
 let mainWindow;
@@ -52,8 +56,8 @@ const createWindow = () => {
 
   // Load the 'index.html' file into the BrowserWindow
   // The bundled HTML file is located in the 'dist' directory, two levels up from the current directory
-  mainWindow.loadFile(path.join(__dirname, '..', '..', 'dist', 'index.html')); 
-  //mainWindow.loadURL(`http://localhost:8080/`);
+  //mainWindow.loadFile(path.join(__dirname, '..', '..', 'dist', 'index.html')); 
+  mainWindow.loadURL(`http://localhost:3000/`);
 }
 
 function startServer() {
@@ -106,72 +110,85 @@ app.whenReady().then(() => {
 // handles github oAuth
 // -----------------------------------------
 
-// github Oauth config, specific to our application 
-const githubOAuthConfig = {
-  clientId:  process.env.GITHUB_CLIENTID,
-  clientSecret: process.env.GITHUB_CLIENT_SECRET ,
-  authorizationUrl: 'https://github.com/login/oauth/authorize',
-  tokenUrl: 'https://github.com/login/oauth/access_token',
-  useBasicAuthorizationHeader: false,
-  redirectUri: 'http://localhost:3000'
-};
-// create oauth instance 
-const oauth2 = new OAuth2(githubOAuthConfig);
-//const githubOAuth = oauth2(githubOAuthConfig);
-
 ipcMain.handle('start-github-auth', async () => {
+
   try {
-    console.log('hit github oauth');
-
-    try{
-      const token = await oauth2.getAccessToken({ scope: 'read:user' });
-      access_token = token.access_token;
-
-      try {
-        const response = await axios.post('http://localhost:3000/user/saveToken', { access_token});
-        return 
-      } catch (error) {
-        console.log('save token error', error);
-      }
-      
-          // Store the token in a cookie
-      session.defaultSession.cookies.set({
-      url: 'http://localhost3000',
-      name: 'auth_token',
-      value: token.accessToken,
-      expirationDate: Date.now() / 1000 + 3600, 
-      httpOnly: true,
-    });
-
-    console.log(token)
+    const token = await axios.post('http://localhost:3000/user/github');
 
 
-
-    return token;
-    }
-    catch{ return
-
-    }
-
-
-        // Make a request to GitHub API to get the logged-in user's information
-        // const userInfoResponse = await axios.get('https://api.github.com/user', {
-        //   headers: {
-        //     Authorization: `Bearer ${token.accessToken}`,
-        //   },
-        // });
-    
-        // // Extract user information
-        // const userInfo = userInfoResponse.data;
-        
-        // console.log(userInfo)
-
-
-  } catch (err) {
-    console.error('OAuth error:', err);
-    throw err;
   }
-});
+  catch (err){
+    console.log('error for githubin main.js')
+  }
+})
+
+
+// // github Oauth config, specific to our application 
+// const githubOAuthConfig = {
+//   clientId:  process.env.GITHUB_CLIENTID,
+//   clientSecret: process.env.GITHUB_CLIENT_SECRET ,
+//   authorizationUrl: 'https://github.com/login/oauth/authorize',
+//   tokenUrl: 'https://github.com/login/oauth/access_token',
+//   useBasicAuthorizationHeader: false,
+//   redirectUri: 'http://localhost:3000'
+// };
+// // create oauth instance 
+// const oauth2 = new OAuth2(githubOAuthConfig);
+// //const githubOAuth = oauth2(githubOAuthConfig);
+
+// ipcMain.handle('start-github-auth', async () => {
+//   try {
+//     console.log('hit github oauth');
+
+//     try{
+//       const token = await oauth2.getAccessToken({ scope: 'read:user' });
+//       access_token = token.access_token;
+
+//       try {
+//         const response = await axios.post('http://localhost:3000/user/saveToken', { access_token});
+//         return 
+//       } catch (error) {
+//         console.log('save token error', error);
+//       }
+      
+//           // Store the token in a cookie
+//       session.defaultSession.cookies.set({
+//       url: 'http://localhost3000',
+//       name: 'auth_token',
+//       value: token.accessToken,
+//       expirationDate: Date.now() / 1000 + 3600, 
+//       httpOnly: true,
+//     });
+
+//     console.log(token)
+
+
+
+//     return token;
+//     }
+//     catch{ return
+
+//     }
+
+
+//         // Make a request to GitHub API to get the logged-in user's information
+//         // const userInfoResponse = await axios.get('https://api.github.com/user', {
+//         //   headers: {
+//         //     Authorization: `Bearer ${token.accessToken}`,
+//         //   },
+//         // });
+    
+//         // // Extract user information
+//         // const userInfo = userInfoResponse.data;
+        
+//         // console.log(userInfo)
+
+
+//   } catch (err) {
+//     console.error('OAuth error:', err);
+//     throw err;
+//   }
+// });
 
 // -----------------------------------------
 // handle login

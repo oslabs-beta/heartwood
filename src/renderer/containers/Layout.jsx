@@ -36,15 +36,26 @@ const Layout = () => {
   };
 
   const githubOauth = () => {
-    window.api.startGitHubAuth()
-      .then(() => {
-        console.log('GitHub Token:', token);
+    const client_id = "Ov23liX4a6wQpZlCpAu0";
+    const redirect_uri = 'http://localhost:3000'; 
+    const scope = 'user'; 
+    //const redirect_uri = window.location.href
+    //console.log(redirect_uri)
+   
+    const githubAuthUrl = `https://github.com/login/oauth/authorize?client_id=${client_id}&redirect_uri=${encodeURIComponent(redirect_uri)}&scope=${scope}`;
+  
+    window.location.href = githubAuthUrl;
+    
+    // window.api.startGitHubAuth()
+    //   .then(() => {
+    //     console.log('GitHub Token:', token);
         
-      })
-      .catch(err => {
-        console.error('GitHub Auth Error:', err);
-      });
-      setLoggedIn(true);
+    //   })
+    //   .catch(err => {
+    //     console.error('GitHub Auth Error:', err);
+    //   });
+
+    setLoggedIn(true);
   };
 
   const userSubmit = async (username, password) => {

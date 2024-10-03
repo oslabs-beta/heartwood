@@ -75,6 +75,7 @@ const Login = ({githubOauth, userSubmit}) => {
 
 
             <button id="githubBtn" className="btn btn-primary rounded flex items-center justify-center gap-2 w-full" onClick={githubOauth}>
+            
             <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
