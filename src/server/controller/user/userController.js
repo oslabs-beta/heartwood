@@ -32,6 +32,8 @@ const userController = {
   // Middleware to login 
   async login(req, res, next) {
 
+    console.log('login middleware hit')
+
     const { username, password } = req.body;
 
     if (!username || !password) {
@@ -39,7 +41,13 @@ const userController = {
     }
 
     try {
+      console.log('in login try block')
       const user = await User.findOne({ username, password });
+      console.log('user found? ', user)
+
+      const userId = user._id;
+      console.log('userId is ', userId.toString());
+      res.locals.userId = userId.toString();
 
       if (!user) {
         return res.status(404).send('User not found');

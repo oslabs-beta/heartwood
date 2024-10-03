@@ -182,24 +182,33 @@ ipcMain.handle('login', async (event, { username, password }) => {
 
   try {
     console.log('main.js')
-    const token = await axios.post('http://localhost:3000/user/login', { username, password });
-    console.log('response',token)
+    const response = await axios.post('http://localhost:3000/user/login', { username, password });
+    const sessionObject = response.data; 
 
-    const cookie = {
-      url: 'http://localhost:3000', 
-      name: 'token',
-      value: token,
-      expirationDate: Date.now() / 1000 + 3600, // 1 hour
-      httpOnly: true,
-      secure: true,
-    };
-    try {
-      await session.defaultSession.cookies.set(cookie);
-      //return 'Cookie set successfully';
-    } catch (err) {
-      console.log(err)
-      throw new Error('Failed to set cookie');
-    }
+    console.log('session Obj',sessionObject)
+
+    // TODO 
+    // Set a cookie with sessionObjectg 
+    
+
+    // COMMENT OUT BELOW
+    // console.log('response', token)
+
+    // const cookie = {
+    //   url: 'http://localhost:3000', 
+    //   name: 'token',
+    //   value: token,
+    //   expirationDate: Date.now() / 1000 + 3600, // 1 hour
+    //   httpOnly: true,
+    //   secure: true,
+    // };
+    // try {
+    //   await session.defaultSession.cookies.set(cookie);
+    //   //return 'Cookie set successfully';
+    // } catch (err) {
+    //   console.log(err)
+    //   throw new Error('Failed to set cookie');
+    // }
 
     return true;
     
