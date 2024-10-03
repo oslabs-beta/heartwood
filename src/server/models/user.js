@@ -6,6 +6,8 @@ const mongoose = require('mongoose');
 const userSchema = new mongoose.Schema({
   username: String,
   password: String,
+  // username: {type: String, unique: true},
+  // password: {type: String, unique: true},
   email: String,
   access_token: String,
   // AWS Credential
@@ -23,11 +25,16 @@ const userSchema = new mongoose.Schema({
       trim: true
     },
   },
-
-  // TODO: Add session object 
-
-  });
+  session: {
+    name: String,
+    value: String,
+    url: String,
+    expirationDate: {
+      type: Number,
+      // get: v => Math.round(v),
+      // set: v => Math.round(v)
+    }
+  }
+});
   
 module.exports =  mongoose.model('User', userSchema);
-
-
