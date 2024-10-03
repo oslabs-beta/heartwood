@@ -13,10 +13,10 @@ const awsCredential = {};
 awsCredential.addAWSCredential = async (req, res, next) => {
   console.log('addAWSCredential is hit')
   // TO DO: Get User's ssid from cookie or JWT 
-  const userId = '66e3ca87dcb33eda1e538a96'; // Currently hardcode a user id 
+  // const userId = '66e3ca87dcb33eda1e538a96'; // Currently hardcode a user id 
 
   // Get Access Key, Secret Access Key, and Region from request body 
-  const { accessKey, secretAccessKey, region } = req.body; 
+  const { accessKey, secretAccessKey, region, ssid } = req.body; 
 
   console.log('req body', req.body)
 
@@ -35,7 +35,7 @@ awsCredential.addAWSCredential = async (req, res, next) => {
   try {
     // Find a User object and update awsCredential property 
     const updatedUser = await User.findByIdAndUpdate(
-      userId,
+      ssid,
       { $set: { awsCredential: newCredentials } },
       { new: true, runValidators: true }
     );
