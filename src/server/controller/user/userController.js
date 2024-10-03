@@ -17,6 +17,10 @@ const userController = {
       // Save user to database 
       const newUser = new User({ username, email, password });
       await newUser.save();
+
+      // Store user's id in res.locals
+      // console.log('newUser id is: ', newUser._id.toString());
+      res.locals.userId = newUser._id.toString();
      
       return next();
 
@@ -71,7 +75,7 @@ const userController = {
       // return res.status(200).send(newUser);
 
       return next();
-      
+
     } catch (err) {
       return res.status(500).send(`Error in create user controller: ${err}`);
     }
