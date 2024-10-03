@@ -5,8 +5,11 @@ const sessionController = {};
 // Middleware to create session and store to user collection 
 sessionController.createSession = async (req, res, next) => {
 
+  console.log('createSession hit')
   // Get userId from previous middleware
   const userId = res.locals.userId;
+
+  console.log('userId in createSession middleware', userId);
 
   try {
     // Create a new session
@@ -27,6 +30,8 @@ sessionController.createSession = async (req, res, next) => {
     
     // Pass the session object to next middleware
     res.locals.session = updatedUser.session;
+
+    console.log('session saved in res.local ', res.locals.session)
 
     return next();
 
