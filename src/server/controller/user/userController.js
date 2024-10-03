@@ -26,7 +26,7 @@ const userController = {
   },
 
   // Middleware to login 
-  async login(req, res) {
+  async login(req, res, next) {
 
     const { username, password } = req.body;
 
