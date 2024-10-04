@@ -186,7 +186,7 @@ getLambdaMetrics.getThrottleCount = async (req, res, next) => {
             Dimensions: [ // Dimensions
               { // Dimension
                 Name: "FunctionName", // required
-                Value: "myNewFunction", // required
+                Value: "heartwood-lambda-test-1", // required
               },
             ],
           },
@@ -258,7 +258,7 @@ getLambdaMetrics.getDuration = async (req, res, next) => {
             Dimensions: [ // Dimensions
               { // Dimension
                 Name: "FunctionName", // required
-                Value: "myNewFunction", // required
+                Value: "heartwood-lambda-test-1", // required
               },
             ],
           },
@@ -303,6 +303,77 @@ getLambdaMetrics.getDuration = async (req, res, next) => {
   return next();
 }
 
+getLambdaMetrics.dynamicMetrics = async (req, res, next) => {
 
+  // Check if necessary AWS environment variables are set 
+  if (!process.env.AWS_ACCESS_KEY_ID || !process.env.AWS_SECRET_ACCESS_KEY || !process.env.AWS_REGION) {
+    throw new Error('AWS credentials or region are not set in environment variables');
+  }
+
+  // Initialize a new cloudWatch client with credentials from environment variables
+  const client = new CloudWatchClient({ 
+    region: process.env.AWS_REGION,
+    credentials: {
+      accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
+    }
+  });
+
+  // TO DO: Configure Input object
+  const input = { // GetMetricDataInput
+    MetricDataQueries: [ // MetricDataQueries // required
+      { // MetricDataQuery
+        Id: "invocations", // required
+        MetricStat: { // MetricStat
+          Metric: { // Metric
+            Namespace: "AWS/Lambda", 
+            MetricName: "Invocations",
+            Dimensions: [ // Dimensions
+              { // Dimension
+                Name: "FunctionName", // required
+                Value: "req.body.funcName", // required
+              },
+            ],
+          },
+          Period: Number("3600"), // required
+          Stat: "Sum", // required
+          Unit: "Milliseconds",
+          // Unit: "Seconds" || "Microseconds" || "Milliseconds" || "Bytes" || "Kilobytes" || "Megabytes" || "Gigabytes" || "Terabytes" || "Bits" || "Kilobits" || "Megabits" || "Gigabits" || "Terabits" || "Percent" || "Count" || "Bytes/Second" || "Kilobytes/Second" || "Megabytes/Second" || "Gigabytes/Second" || "Terabytes/Second" || "Bits/Second" || "Kilobits/Second" || "Megabits/Second" || "Gigabits/Second" || "Terabits/Second" || "Count/Second" || "None",
+        },
+        // Expression: "STRING_VALUE", // Don't need Expresssion if we have "MetricStat"
+        // Label: "STRING_VALUE",
+        ReturnData: true,
+        // Period: Number("3600"),
+        // AccountId: "STRING_VALUE",
+      },
+    ],
+    StartTime: new Date(Date.now() - 24 * 60 * 60 * 1000), // required
+    EndTime: new Date(), // required
+    // NextToken: "STRING_VALUE",
+    // ScanBy: "TimestampDescending" || "TimestampAscending",
+    // MaxDatapoints: Number("int"), // If you omit this, the default of 100,800 is used.
+    // LabelOptions: { // LabelOptions
+    //   Timezone: "STRING_VALUE",
+    // },
+  }
+
+  const command = new GetMetricDataCommand(input);
+
+  try {
+    // Send the command to AWS CloudWatch and await the response
+    const response = await client.send(command);
+    // Print out the response's datapoints to console
+    console.log(response.MetricDataResults)
+    res.locals.durationData = {
+      label: response.MetricDataResults[0].Timestamps,
+      data: response.MetricDataResults[0].Values
+    }
+    console.log('res locals inv data:', res.locals.durationData);
+    // next();
+  } catch (error) {
+    console.error("Error fetching Lambda metrics:", error);
+  }
+  return next();
+}
 
 module.exports = getLambdaMetrics;

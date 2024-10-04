@@ -9,6 +9,7 @@ const router = express.Router();
 // Import AWS credential controller
 const awsCredential = require('../controller/aws/credentialsController.js');
 const getLambdaMetrics = require('../controller/aws/metricsController.js');
+const logGetter = require('../controllers/aws/awsLogController.js');
 
 // -----------------------------------------
 // AWS Credential Routes
@@ -38,5 +39,8 @@ router.get('/metric/duration', getLambdaMetrics.getDuration, (req, res) => {
   return res.status(200).json(res.locals.durationData);
 });
 
+router.get('/logs', logGetter, (req, res) => {
+  return res.status(200).json(res.locals.logsData);
+});
 
 module.exports = router;
