@@ -176,53 +176,21 @@ ipcMain.handle('start-github-auth', async () => {
 // -----------------------------------------
 // handle login
 // -----------------------------------------
+
 ipcMain.handle('login', async (event, { username, password }) => {
 
-  // TODO: get session object from backend, and set cookie to the application using 'session.defaultSession.cookie.set'. 
-
   try {
-    console.log('main.js')
     const response = await axios.post('http://localhost:3000/user/login', { username, password });
     const sessionObject = response.data; 
 
-   // console.log('session Obj',sessionObject)
-
-    // TODO 
-    //Set a cookie with sessionObjectg 
+    // Set a cookie 
     session.defaultSession.cookies.set(sessionObject)
       .then(() =>{
-        console.log('this is login session cookie')
+        // Success
+        console.log('main.js login function - login success')
       }, (error) =>{
         console.log('login cookie is not working', error);
       })
-    // retrieving login cookies
-      session.defaultSession.cookies.get(sessionObject)
-      .then((cookies) => {
-        console.log('login cookies', cookies)
-      }).catch((error) => {
-        console.log('login cookie bug', error)
-      })
-      
-    
-
-    // COMMENT OUT BELOW
-    // console.log('response', token)
-
-    // const cookie = {
-    //   url: 'http://localhost:3000', 
-    //   name: 'token',
-    //   value: token,
-    //   expirationDate: Date.now() / 1000 + 3600, // 1 hour
-    //   httpOnly: true,
-    //   secure: true,
-    // };
-    // try {
-    //   await session.defaultSession.cookies.set(cookie);
-    //   //return 'Cookie set successfully';
-    // } catch (err) {
-    //   console.log(err)
-    //   throw new Error('Failed to set cookie');
-    // }
 
     return true;
     
@@ -255,14 +223,14 @@ ipcMain.handle('signUp', async (event, { username, password, email }) => {
       })
 
     // TEST CODE: Check if cookie is set to the application 
-    session.defaultSession.cookies.get({ url: 'http://localhost/' })
-      .then((cookies) => {
-        // success to get cookie  
-        console.log('get cookie', cookies)
-      })
-      .catch((error) => {
-        console.log('Error to set cookie', error)
-      });
+    // session.defaultSession.cookies.get({ url: 'http://localhost/' })
+    //   .then((cookies) => {
+    //     // success to get cookie  
+    //     console.log('get cookie', cookies)
+    //   })
+    //   .catch((error) => {
+    //     console.log('Error to set cookie', error)
+    //   });
 
     // return something to trigger leaving sign up widget 
     return response.data;
