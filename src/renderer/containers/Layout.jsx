@@ -21,6 +21,16 @@ const Layout = () => {
     // Set the initial theme on mount
     document.documentElement.setAttribute('data-theme', isDarkMode ? 'coffee' : 'retro');
 
+    const checkCookie = () => {
+      console.log(document.cookie)
+
+      if (document.cookie) return true 
+      return false
+    };
+
+    const isUserLoggedIn = checkCookie(); 
+    setLoggedIn(isUserLoggedIn);
+
     // Check if the user is already logged in (session or cookie check)
     // window.api.checkAuthToken()
     // .then(isAuthenticated => {
@@ -55,7 +65,7 @@ const Layout = () => {
     //     console.error('GitHub Auth Error:', err);
     //   });
 
-    setLoggedIn(true);
+    //setLoggedIn(true);
   };
 
   const userSubmit = async (username, password) => {

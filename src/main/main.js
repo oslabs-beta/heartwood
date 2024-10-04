@@ -2,9 +2,9 @@
 // 'app' controls the application's lifecycle
 // 'BrowserWindow' creates and manages application windows
 // ipcMain: communication between the main process and the renderer process 
-const { app, BrowserWindow, ipcMain, session } = require('electron');
+const { app, BrowserWindow, ipcMain, session, protocol, net } = require('electron');
 // electron build in oauth 2.0
-const OAuth2 = require('electron-oauth2');
+//const OAuth2 = require('electron-oauth2');
 require('dotenv').config();
 
 // Include the Node.js 'path' module at the top of your file
@@ -13,6 +13,8 @@ const path = require('node:path');
 const axios = require('axios');
 
 const { fork } = require('child_process');
+
+const url = require('node:url')
 
 // [To do] Add this block for auto-reloading in development 
 // if (process.env.NODE_ENV === 'development') {
@@ -44,21 +46,22 @@ let serverProcess;
 
 // Declare a 'createWindow' function that loads 'index.html' into a new BrowserWindow instance
 // This function is responsible for creating the main application window
-const createWindow = () => {
-  // Create a new BrowserWindow instance with specified width and height
-  mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
-    webPreferences: {
-      preload: path.join(__dirname, 'preload.js'), // // Preload script, useful for exposing APIs to the renderer process
-    },
-  })
 
-  // Load the 'index.html' file into the BrowserWindow
-  // The bundled HTML file is located in the 'dist' directory, two levels up from the current directory
-  mainWindow.loadFile(path.join(__dirname, '..', '..', 'dist', 'index.html')); 
-  //mainWindow.loadURL(`http://localhost:3000/`);
-}
+// const createWindow = () => {
+//   // Create a new BrowserWindow instance with specified width and height
+//   mainWindow = new BrowserWindow({
+//     width: 800,
+//     height: 600,
+//     webPreferences: {
+//       preload: path.join(__dirname, 'preload.js'), // // Preload script, useful for exposing APIs to the renderer process
+//     },
+//   })
+
+//   // Load the 'index.html' file into the BrowserWindow
+//   // The bundled HTML file is located in the 'dist' directory, two levels up from the current directory
+//   mainWindow.loadFile(path.join(__dirname, '..', '..', 'dist', 'index.html')); 
+//   //mainWindow.loadURL(`http://localhost:3000/`);
+// }
 
 function startServer() {
   serverProcess = fork(path.join(__dirname, '..', 'server', 'server.js'));
@@ -68,14 +71,28 @@ function startServer() {
   });
 }
 
+
 // Wait for 'ready' event and invoke createWindow and startServer function
 // 'app.whenReady()' ensures that the code runs only when Electron has fully initialized
 app.whenReady().then(() => {
 
-  // Open a window if none are open on macOS when the application is activated
-  app.on('activate', () => {
-    if (BrowserWindow.getAllWindows().length === 0) createWindow()
-  })
+
+
+
+    mainWindow = new BrowserWindow({
+      width: 800,
+      height: 600,
+      webPreferences: {
+        preload: path.join(__dirname, 'preload.js'), // // Preload script, useful for exposing APIs to the renderer process
+      },
+    })
+    mainWindow.loadFile(path.join(__dirname, '..', '..', 'dist', 'index.html')); 
+    //mainWindow.loadURL('localhost3000://dist/index.html');
+
+  // // Open a window if none are open on macOS when the application is activated
+  // app.on('activate', () => {
+  //   if (BrowserWindow.getAllWindows().length === 0) createWindow()
+  // })
 
   // // TEST: Register 'app' protocol 
   // protocol.registerHttpProtocol('app', (request, callback) => {
@@ -102,9 +119,20 @@ app.whenReady().then(() => {
   //   console.error('Error checking for auth token:', err);
   // });
 
-  createWindow();
+  //createWindow();
   startServer();
+  protocol.handle('localhost:3000', (request) => {
+    console.log('hit protocol')
+    
+    //const filePath = request.url.slice('localhost3000://'.length);
+    // Fetch the file from the local file system
+    //return net.fetch(url.pathToFileURL(path.join(__dirname, filePath)).toString());
+    //return mainWindow.loadFile(path.join(__dirname, '..', '..', 'dist', 'index.html')); 
+    return
+  });
 })
+
+
 
 // -----------------------------------------
 // handles github oAuth
