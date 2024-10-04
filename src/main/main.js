@@ -185,10 +185,24 @@ ipcMain.handle('login', async (event, { username, password }) => {
     const response = await axios.post('http://localhost:3000/user/login', { username, password });
     const sessionObject = response.data; 
 
-    console.log('session Obj',sessionObject)
+   // console.log('session Obj',sessionObject)
 
     // TODO 
-    // Set a cookie with sessionObjectg 
+    //Set a cookie with sessionObjectg 
+    session.defaultSession.cookies.set(sessionObject)
+      .then(() =>{
+        console.log('this is login session cookie')
+      }, (error) =>{
+        console.log('login cookie is not working', error);
+      })
+    // retrieving login cookies
+      session.defaultSession.cookies.get(sessionObject)
+      .then((cookies) => {
+        console.log('login cookies', cookies)
+      }).catch((error) => {
+        console.log('login cookie bug', error)
+      })
+      
     
 
     // COMMENT OUT BELOW
