@@ -8,9 +8,6 @@ import Login from '../components/Login.jsx';
 const Layout = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false); // Add login status state
-  
-  // const [username, setUserName] = useState('');
-  // const [password, setPassword] = useState('');
 
   const toggleDarkMode = () => {
     setIsDarkMode(!isDarkMode);
@@ -31,6 +28,13 @@ const Layout = () => {
     // });
   }, [isDarkMode]);
 
+
+  /* TODO 
+    https://trello.com/c/S1GYcGZn/55-if-a-user-is-already-logged-in-skip-the-auth-page-and-redirect-to-dashboard
+    implement function to check if a user is logged in based on session in database.
+    if there's valid session (session's expiration date is after today's date), change 'loggedIn' state to true, triggering to change the layout to sideNav
+  */
+
   const handleNotificationClick = () => {
     // Handle notification logic here
   };
@@ -39,19 +43,18 @@ const Layout = () => {
     window.api.startGitHubAuth()
       .then(() => {
         console.log('GitHub Token:', token);
-        
+
       })
       .catch(err => {
         console.error('GitHub Auth Error:', err);
       });
-      setLoggedIn(true);
+    setLoggedIn(true);
   };
 
+  // Function to make a post request to log in 
   const userSubmit = async (username, password) => {
     try {
-      console.log(username, password);
       const result = await window.api.login(username, password);
-      console.log('Login success, user value is:', result);
       setLoggedIn(true);
     } catch (error) {
       console.error('Login error:', error);
@@ -64,13 +67,15 @@ const Layout = () => {
         toggleDarkMode={toggleDarkMode}
         isDarkMode={isDarkMode}
         onNotificationClick={handleNotificationClick}
+        setLoggedIn={setLoggedIn}
       />
 
       {loggedIn ? (
-        <SideNav />  
-      ) : ( 
-        <Login githubOauth = {githubOauth}
-                userSubmit = {userSubmit}
+        <SideNav /> 
+      ) : (
+        <Login 
+          githubOauth={githubOauth}
+          userSubmit={userSubmit}
         />
       )}
 
