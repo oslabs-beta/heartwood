@@ -25,14 +25,14 @@ const { fork } = require('child_process');
 // }
 
 // below code shows local host as cookie url 
-const express = require('express');
-const server = express();server.use(express.static(path.join(__dirname, '..', '..', 'dist')));
+// const express = require('express');
+// const server = express();server.use(express.static(path.join(__dirname, '..', '..', 'dist')));
 
-const http = require('http');
-const httpServer = http.createServer(server);
-httpServer.listen(3000, () => {
-  console.log(`Server running at http://localhost:3000`);
-});
+// const http = require('http');
+// const httpServer = http.createServer(server);
+// httpServer.listen(3000, () => {
+//   console.log(`Server running at http://localhost:3000`);
+// });
 // const server = http.createServer(app);
 // server.listen(8080, () => {
 //   console.log('Server listening on http://localhost:8080');
@@ -56,8 +56,8 @@ const createWindow = () => {
 
   // Load the 'index.html' file into the BrowserWindow
   // The bundled HTML file is located in the 'dist' directory, two levels up from the current directory
-  //mainWindow.loadFile(path.join(__dirname, '..', '..', 'dist', 'index.html')); 
-  mainWindow.loadURL(`http://localhost:3000/`);
+  mainWindow.loadFile(path.join(__dirname, '..', '..', 'dist', 'index.html')); 
+  //mainWindow.loadURL(`http://localhost:3000/`);
 }
 
 function startServer() {
