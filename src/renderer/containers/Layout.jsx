@@ -28,12 +28,25 @@ const Layout = () => {
     // });
   }, [isDarkMode]);
 
-
-  /* TODO 
-    https://trello.com/c/S1GYcGZn/55-if-a-user-is-already-logged-in-skip-the-auth-page-and-redirect-to-dashboard
-    implement function to check if a user is logged in based on session in database.
-    if there's valid session (session's expiration date is after today's date), change 'loggedIn' state to true, triggering to change the layout to sideNav
-  */
+  // Function to check if a user has an active session
+  useEffect(() => {
+    async function checkLoginStatus() {
+      console.log('checking if a user is logged in')
+      try {
+        // Call a function to main.js and get true or false 
+        const isLoggedIn = await window.api.checkLoginStatus();
+        console.log('status is', isLoggedIn)
+        // If return value is true, set LoggedIn as true. 
+        if (isLoggedIn) {
+          setLoggedIn(true);
+        }
+      } catch (error) {
+        console.error('Error checking login status:', error);
+      }
+    }
+  
+    checkLoginStatus();
+  }, []);
 
   const handleNotificationClick = () => {
     // Handle notification logic here

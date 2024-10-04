@@ -241,6 +241,38 @@ ipcMain.handle('signUp', async (event, { username, password, email }) => {
   }
 });
 
+// -----------------------------------------
+// Check logged-in status
+// -----------------------------------------
+
+ipcMain.handle('checkLoginStatus', async (event) => {
+  try {
+    const cookies = await session.defaultSession.cookies.get({ url: 'http://localhost/' });
+
+    const expirationDate = cookies[0].expirationDate;
+    const expirationDateInMs = expirationDate * 1000; // Convert to Ms
+    const expirationDateTime = new Date(expirationDateInMs); // Convert to DataTime 
+    const today = new Date();
+
+    console.log('expiration date time', expirationDateTime);
+    console.log('today', today)
+
+    if (expirationDateTime >= today) {
+      console.log("The expiration date is in the future.");
+      return true;
+    } else {
+      console.log("The expiration date has passed.");
+      return false;
+    };
+    
+    // return cookies[0].expirationDate > Date.now();
+    return false; // TEST
+  } catch (error) {
+    console.error('Error checking user login status', error);
+    return false; // Return false in case of error
+  }
+});
+
 
 // -----------------------------------------
 // handle AWS credential registration 
