@@ -16,7 +16,7 @@ const App = () => {
 
   return (
     <div className="App min-h-screen" data-theme={theme}>
-    <Layout/>
+      <Layout/>
     </div>
   );
 };

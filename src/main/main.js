@@ -221,39 +221,21 @@ ipcMain.handle('start-github-auth', async () => {
 // -----------------------------------------
 // handle login
 // -----------------------------------------
+
 ipcMain.handle('login', async (event, { username, password }) => {
 
-  // TODO: get session object from backend, and set cookie to the application using 'session.defaultSession.cookie.set'. 
-
   try {
-    console.log('main.js')
     const response = await axios.post('http://localhost:3000/user/login', { username, password });
     const sessionObject = response.data; 
 
-    console.log('session Obj',sessionObject)
-
-    // TODO 
-    // Set a cookie with sessionObjectg 
-    
-
-    // COMMENT OUT BELOW
-    // console.log('response', token)
-
-    // const cookie = {
-    //   url: 'http://localhost:3000', 
-    //   name: 'token',
-    //   value: token,
-    //   expirationDate: Date.now() / 1000 + 3600, // 1 hour
-    //   httpOnly: true,
-    //   secure: true,
-    // };
-    // try {
-    //   await session.defaultSession.cookies.set(cookie);
-    //   //return 'Cookie set successfully';
-    // } catch (err) {
-    //   console.log(err)
-    //   throw new Error('Failed to set cookie');
-    // }
+    // Set a cookie 
+    session.defaultSession.cookies.set(sessionObject)
+      .then(() =>{
+        // Success
+        console.log('main.js login function - login success')
+      }, (error) =>{
+        console.log('login cookie is not working', error);
+      })
 
     return true;
     
@@ -286,14 +268,14 @@ ipcMain.handle('signUp', async (event, { username, password, email }) => {
       })
 
     // TEST CODE: Check if cookie is set to the application 
-    session.defaultSession.cookies.get({ url: 'http://localhost/' })
-      .then((cookies) => {
-        // success to get cookie  
-        console.log('get cookie', cookies)
-      })
-      .catch((error) => {
-        console.log('Error to set cookie', error)
-      });
+    // session.defaultSession.cookies.get({ url: 'http://localhost/' })
+    //   .then((cookies) => {
+    //     // success to get cookie  
+    //     console.log('get cookie', cookies)
+    //   })
+    //   .catch((error) => {
+    //     console.log('Error to set cookie', error)
+    //   });
 
     // return something to trigger leaving sign up widget 
     return response.data;
@@ -301,6 +283,40 @@ ipcMain.handle('signUp', async (event, { username, password, email }) => {
   } catch (error) {
     console.error('Sign up failed:', error);
     throw error;
+  }
+});
+
+// -----------------------------------------
+// Check logged-in status
+// -----------------------------------------
+
+ipcMain.handle('checkLoginStatus', async (event) => {
+  try {
+    //await session.defaultSession.cookies.remove('http://localhost/', 'ssid');
+
+    const cookies = await session.defaultSession.cookies.get({ url: 'http://localhost/' });
+
+    const expirationDate = cookies[0].expirationDate;
+    const expirationDateInMs = expirationDate * 1000; // Convert to Ms
+    const expirationDateTime = new Date(expirationDateInMs); // Convert to DataTime 
+    const today = new Date();
+
+    console.log('expiration date time', expirationDateTime);
+    console.log('today', today)
+
+    if (expirationDateTime >= today) {
+      console.log("The expiration date is in the future.");
+      return true;
+    } else {
+      console.log("The expiration date has passed.");
+      return false;
+    };
+    
+    // return cookies[0].expirationDate > Date.now();
+    return false; // TEST
+  } catch (error) {
+    console.error('Error checking user login status', error);
+    return false; // Return false in case of error
   }
 });
 
