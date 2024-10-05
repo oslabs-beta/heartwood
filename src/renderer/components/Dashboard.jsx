@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import LineChart from "./LineChart";
 import DonutChart from "./DonutChart";
+import { FaSatelliteDish, FaFireAlt, FaBug, FaClock } from "react-icons/fa";
 
 const Dashboard = () => {
   const [invocationsData, setInvocations] = useState([]);
@@ -22,13 +23,15 @@ const Dashboard = () => {
 
 // helper function to calculate average of specific metric (duration)
   const calculateAverage = (data) => {
-
+    if (!data || !Array.isArray(data) || data.length === 0) return 0;
+    const total = data.reduce((total, current) => total + current, 0);
+    return total / data.length;
   }
 // helper function to calculate cost
   const calculateCost = () => {
 
   }
-  
+
   const getInvocationMetrics = async () => {
     try {
       const result = await window.api.getInvocations();
@@ -116,7 +119,7 @@ const Dashboard = () => {
   const totalInvocations = calculateTotals(invocationsData);
   const totalErrors = calculateTotals(errorData);
   const totalThrottles = calculateTotals(throttleData);
-  const totalDuration = calculateTotals(durationData);
+  const averageDuration = calculateAverage(durationData);
 
   return (
     <div className="bg-base-100 min-h-screen text-base-content">
@@ -127,30 +130,50 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 px-4 mt-10">
+  
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 flex-1">
         {/* Total Invocations */}
-        <div className="card bg-base-200 shadow-lg p-4">
-          <p className="text-md font-semibold mb-2">Total Invocations</p>
-          <p className="text-2xl font-bold">{totalInvocations}</p>
+        <div className="card bg-base-200 shadow-lg p-2 flex items-center space-x-2">
+          <div className="flex items-center">
+            <FaSatelliteDish className="text-blue-500 text-2xl mr-2" /> 
+            <div>
+              <p className="text-sm font-semibold mb-1">Total Invocations</p>
+              <p className="text-xl font-bold">{totalInvocations}</p>
+            </div>
+          </div>
         </div>
 
         {/* Total Throttles */}
-        <div className="card bg-base-200 shadow-lg p-4">
-          <p className="text-md font-semibold mb-2">Total Throttles</p>
-          <p className="text-2xl font-bold">{totalThrottles}</p>
+        <div className="card bg-base-200 shadow-lg p-2 flex items-center space-x-2">
+          <div className="flex items-center">
+            <FaFireAlt className="text-red-500 text-2xl mr-2" /> 
+            <div>
+              <p className="text-sm font-semibold mb-1">Total Throttles</p>
+              <p className="text-xl font-bold">{totalThrottles}</p>
+            </div>
+          </div>
         </div>
 
         {/* Total Errors */}
-        <div className="card bg-base-200 shadow-lg p-4">
-          <p className="text-md font-semibold mb-2">Total Errors</p>
-          <p className="text-2xl font-bold">{totalErrors}</p>
+        <div className="card bg-base-200 shadow-lg p-2 flex items-center space-x-2">
+          <div className="flex items-center">
+            <FaBug className="text-green-500 text-2xl mr-2" /> 
+            <div>
+              <p className="text-sm font-semibold mb-1">Total Errors</p>
+              <p className="text-xl font-bold">{totalErrors}</p>
+            </div>
+          </div>
         </div>
 
-        {/* Total Duration */}
-        <div className="card bg-base-200 shadow-lg p-4">
-          <p className="text-md font-semibold mb-2">Average Duration</p>
-          <p className="text-2xl font-bold"> {totalDuration} ms</p>
+        {/* Average Duration */}
+        <div className="card bg-base-200 shadow-lg p-2 flex items-center space-x-2">
+          <div className="flex items-center">
+            <FaClock className="text-yellow-500 text-2xl mr-2" /> 
+            <div>
+              <p className="text-sm font-semibold mb-1">Average Duration</p>
+              <p className="text-xl font-bold">{averageDuration.toFixed(2)} ms</p>
+            </div>
+          </div>
         </div>
       </div>
 
