@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const secretKey = 'cats';
 const User = require('../../models/user');
+const axios = require('axios');
 // const { Next } = require('react-bootstrap/esm/PageItem');
 
 const userController = {
@@ -65,44 +66,74 @@ const userController = {
     }
   },
 
-  async saveToken(req, res, next) {
-    // console.log("req.body", req.body)
-    const { access_token } = req.body;
+  // async saveToken(req, res, next) {
+  //   // console.log("req.body", req.body)
+  //   const { access_token } = req.body;
 
-    if (!access_token) {
-      return res.status(500).send('Error: missing information in save toke');
-    }
+  //   if (!access_token) {
+  //     return res.status(500).send('Error: missing information in save toke');
+  //   }
 
+  //   try {
+  //     const newUser = new User({ access_token });
+  //     await newUser.save();
+
+  //     // const token = jwt.sign({ id: newUser._id, username: newUser.username }, secretKey, { expiresIn: '1h' });
+  //     // res.cookie('token', username, { httpOnly: true, secure: true });
+  //     // return res.status(200).send(newUser);
+
+  //     return next();
+
+  //   } catch (err) {
+  //     return res.status(500).send(`Error in create user controller: ${err}`);
+  //   }
+  // },
+
+  async github(req, res, next) {
     try {
-      const newUser = new User({ access_token });
-      await newUser.save();
+        console.log('GitHub middleware hit');
+        const client_id = process.env.GITHUB_CLIENTID;  // Snake case
+        const client_secret = process.env.GITHUB_CLIENT_SECRET;  // Snake case
 
-      // const token = jwt.sign({ id: newUser._id, username: newUser.username }, secretKey, { expiresIn: '1h' });
-      // res.cookie('token', username, { httpOnly: true, secure: true });
+        const { code } = req.body;
+        console.log('Code in controller:', code);
 
-      // return res.status(200).send(newUser);
+        try {
 
-      return next();
+            const response = await axios.post('https://github.com/login/oauth/access_token', 
+                new URLSearchParams({
+                    client_id,
+                    client_secret,
+                    code
+                }), 
+                {
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        accept: 'application/json'
+                    }
+                }
+            );
 
+            const access_token = response.data.access_token;
+            console.log('Access Token:', access_token);
+            const user = new User({ access_token });
+            await user.save();
+            const userId = user._id;
+            console.log('userId is ', userId.toString());
+            res.locals.userId = userId.toString();
+            next()
+            //res.json({ access_token: accessToken });  
+            //return next()
+        } catch (err) {
+            console.error('Error exchanging code for token:', err);
+            next()
+            //res.status(500).json({ error: 'Error exchanging code for token' });
+        }
     } catch (err) {
-      return res.status(500).send(`Error in create user controller: ${err}`);
+        next(err);
     }
-  },
+}
 
-  async github(req, res, next){
-    try {
-
-
-      console.log('github middleware hit')
-      const clientID =  process.env.GITHUB_CLIENTID;
-      const clientSecret = process.env.GITHUB_CLIENT_SECRET; 
-
-      const requestToken = req.query.code
-      console.log(requestToken)
-
-    }
-    catch(err){}
-  }
 };
 
 module.exports = userController;

@@ -17,7 +17,7 @@ sessionController.createSession = async (req, res, next) => {
     const session = { 
       name: 'ssid', 
       value: userId,
-      url: 'http://localhost/', // Set cookie to localhost
+      url: 'http://localhost:3000/', // Set cookie to localhost
       expirationDate: Math.floor(Date.now() / 1000 + 30 * 24 * 60 * 60), // Set expiration date in one month 
     }
     

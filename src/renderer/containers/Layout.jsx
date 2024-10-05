@@ -72,18 +72,55 @@ const Layout = () => {
     const githubAuthUrl = `https://github.com/login/oauth/authorize?client_id=${client_id}&redirect_uri=${encodeURIComponent(redirect_uri)}&scope=${scope}`;
   
     window.location.href = githubAuthUrl;
-    
-    // window.api.startGitHubAuth()
-    //   .then(() => {
-    //     console.log('GitHub Token:', token);
-        
-    //   })
-    //   .catch(err => {
-    //     console.error('GitHub Auth Error:', err);
-    //   });
+
 
     //setLoggedIn(true);
   };
+
+  const handleGitHubCallback = async () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const code = urlParams.get('code'); 
+
+      if (code) {
+          //console.log('Code:', code);
+          //setLoggedIn(true);
+          //window.api.startGitHubAuth(code)
+          return code
+
+      } else {
+          console.error('Github code not found.');
+          return null
+      }  
+  };
+
+  const fetchCode = async () => {
+    const code = await handleGitHubCallback();
+    //console.log('code is this :)', code);
+
+    if (code) {
+       //console.log('does code exist?', code);
+  
+        const isLoggedIn = await window.api.startGitHubAuth(code);
+        console.log('status is', isLoggedIn)
+        setLoggedIn(true)
+
+    }
+};
+
+ fetchCode();
+
+  
+
+  // const githubOauth_submit = async() => {
+
+  //   console.log('handle git hub')
+  //   githubOauth()
+  //   const code = await handleGitHubCallback();
+  //   console.log('code is ', code)
+  //   window.api.startGitHubAuth()
+  // }
+
+
 
   // Function to make a post request to log in 
   const userSubmit = async (username, password) => {

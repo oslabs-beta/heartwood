@@ -76,9 +76,6 @@ function startServer() {
 // 'app.whenReady()' ensures that the code runs only when Electron has fully initialized
 app.whenReady().then(() => {
 
-
-
-
     mainWindow = new BrowserWindow({
       width: 800,
       height: 600,
@@ -121,15 +118,16 @@ app.whenReady().then(() => {
 
   //createWindow();
   startServer();
-  protocol.handle('localhost:3000', (request) => {
-    console.log('hit protocol')
+  // protocol not working yet
+  // protocol.handle('localhost:3000', (request) => {
+  //   console.log('hit protocol')
     
-    //const filePath = request.url.slice('localhost3000://'.length);
-    // Fetch the file from the local file system
-    //return net.fetch(url.pathToFileURL(path.join(__dirname, filePath)).toString());
-    //return mainWindow.loadFile(path.join(__dirname, '..', '..', 'dist', 'index.html')); 
-    return
-  });
+  //   //const filePath = request.url.slice('localhost3000://'.length);
+  //   // Fetch the file from the local file system
+  //   //return net.fetch(url.pathToFileURL(path.join(__dirname, filePath)).toString());
+  //   //return mainWindow.loadFile(path.join(__dirname, '..', '..', 'dist', 'index.html')); 
+  //   return
+  // });
 })
 
 
@@ -138,11 +136,24 @@ app.whenReady().then(() => {
 // handles github oAuth
 // -----------------------------------------
 
-ipcMain.handle('start-github-auth', async () => {
+ipcMain.handle('start-github-auth', async (event, {code}) => {
+
+  console.log('reached main.js github code is', code)
 
   try {
-    const token = await axios.post('http://localhost:3000/user/github');
+    const response = await axios.post('http://localhost:3000/user/github', {code: code});
+    const sessionObject = response.data; 
 
+    // Set a cookie 
+    session.defaultSession.cookies.set(sessionObject)
+      .then(() =>{
+        // Success
+        console.log('main.js login function - login success')
+      }, (error) =>{
+        console.log('login cookie is not working', error);
+      })
+
+    return true;
 
   }
   catch (err){
@@ -292,9 +303,15 @@ ipcMain.handle('signUp', async (event, { username, password, email }) => {
 
 ipcMain.handle('checkLoginStatus', async (event) => {
   try {
-    //await session.defaultSession.cookies.remove('http://localhost/', 'ssid');
 
-    const cookies = await session.defaultSession.cookies.get({ url: 'http://localhost/' });
+    // added to test cookie functionality, can be deleted later 
+    //await session.defaultSession.cookies.remove('http://localhost:3000/', 'ssid');
+
+    const cookies = await session.defaultSession.cookies.get({ url: 'http://localhost:3000/' });
+    console.log('cookie is ', cookies)
+    
+    // check if cookie exist 
+    //if (!cookies) return false
 
     const expirationDate = cookies[0].expirationDate;
     const expirationDateInMs = expirationDate * 1000; // Convert to Ms

@@ -27,14 +27,15 @@ router.post('/login', userController.login, sessionController.createSession, (re
 }); 
 
 // Route to Github login (save Token)
-router.post('/saveToken', userController.saveToken, sessionController.createSession, (req, res) => {
-  console.log('save token success')
-  res.status(200).json(res.locals.session);
-}); 
+// router.post('/saveToken', userController.saveToken, sessionController.createSession, (req, res) => {
+//   console.log('save token success')
+//   res.status(200).json(res.locals.session);
+// }); 
 
 // Route to gitHub Oauth
 router.post('/github', userController.github, sessionController.createSession, (req, res) => {
   console.log('github Oauth success')
+  res.status(200).json(res.locals.session);
 })
 
 
