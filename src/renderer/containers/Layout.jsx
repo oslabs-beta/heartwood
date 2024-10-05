@@ -8,9 +8,6 @@ import Login from '../components/Login.jsx';
 const Layout = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false); // Add login status state
-  
-  // const [username, setUserName] = useState('');
-  // const [password, setPassword] = useState('');
 
   const toggleDarkMode = () => {
     setIsDarkMode(!isDarkMode);
@@ -31,6 +28,26 @@ const Layout = () => {
     // });
   }, [isDarkMode]);
 
+  // Function to check if a user has an active session
+  useEffect(() => {
+    async function checkLoginStatus() {
+      console.log('checking if a user is logged in')
+      try {
+        // Call a function to main.js and get true or false 
+        const isLoggedIn = await window.api.checkLoginStatus();
+        console.log('status is', isLoggedIn)
+        // If return value is true, set LoggedIn as true. 
+        if (isLoggedIn) {
+          setLoggedIn(true);
+        }
+      } catch (error) {
+        console.error('Error checking login status:', error);
+      }
+    }
+  
+    checkLoginStatus();
+  }, []);
+
   const handleNotificationClick = () => {
     // Handle notification logic here
   };
@@ -39,19 +56,18 @@ const Layout = () => {
     window.api.startGitHubAuth()
       .then(() => {
         console.log('GitHub Token:', token);
-        
+
       })
       .catch(err => {
         console.error('GitHub Auth Error:', err);
       });
-      setLoggedIn(true);
+    setLoggedIn(true);
   };
 
+  // Function to make a post request to log in 
   const userSubmit = async (username, password) => {
     try {
-      console.log(username, password);
       const result = await window.api.login(username, password);
-      console.log('Login success, user value is:', result);
       setLoggedIn(true);
     } catch (error) {
       console.error('Login error:', error);
@@ -64,13 +80,15 @@ const Layout = () => {
         toggleDarkMode={toggleDarkMode}
         isDarkMode={isDarkMode}
         onNotificationClick={handleNotificationClick}
+        setLoggedIn={setLoggedIn}
       />
 
       {loggedIn ? (
-        <SideNav />  
-      ) : ( 
-        <Login githubOauth = {githubOauth}
-                userSubmit = {userSubmit}
+        <SideNav /> 
+      ) : (
+        <Login 
+          githubOauth={githubOauth}
+          userSubmit={userSubmit}
         />
       )}
 

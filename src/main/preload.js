@@ -29,6 +29,7 @@ contextBridge.exposeInMainWorld('api', {
   getDuration: () => ipcRenderer.invoke('getDuration'),  
   checkAuthToken: ()=> ipcRenderer.invoke('check-auth-token'),
   addCredential: (accessKey, secretAccessKey, region) => ipcRenderer.invoke('addCredential', accessKey, secretAccessKey, region),
+  checkLoginStatus: () => ipcRenderer.invoke('checkLoginStatus'),
 });
 
 

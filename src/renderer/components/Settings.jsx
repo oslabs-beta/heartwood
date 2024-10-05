@@ -17,6 +17,9 @@ const Settings = () => {
   const handleSecretAccessKeyInput = (e) => {
     setSecretAccessKey(e.target.value);
   };
+  const handleSecretAccessKeyInput = (e) => {
+    setSecretAccessKey(e.target.value);
+  };
 
   const handleRegionInput = (e) => {
     setRegion(e.target.value);
