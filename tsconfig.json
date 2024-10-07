@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "target": "ES6",  
+    "jsx": "react",  
+    "module": "commonjs",                              
+    "rootDir": "./src/server",
+    "sourceMap": true,                   
+    "outDir": "./build/server",
+    "removeComments": true, 
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "skipLibCheck": true
+  },
+  "include": ["src/server/**/*"],
+  "exclude": ["node_modules", "src/renderer"],
+}

@@ -4,7 +4,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 module.exports = {
   // Set the mode to development by default or use NODE_ENV 
   mode: process.env.NODE_ENV || 'development',
-  
+
   // Define the main entry points for the app
   entry: './src/renderer/index.js',
 
@@ -18,7 +18,6 @@ module.exports = {
   module: {
     rules: [
       {
-        // use babel-loader for JS and JSX files 
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
         loader: 'babel-loader',
@@ -27,11 +26,19 @@ module.exports = {
         },
       },
       {
-        // use style-loader, css-loader for CSS 
+        test: /\.(ts|tsx)$/,
+        exclude: /node_modules/,
+        use: 'ts-loader',
+      },
+      {
         test: /\.s?css$/,
         use: ['style-loader', 'css-loader', 'postcss-loader'],
       },
     ],
+  },
+
+  resolve: {
+    extensions: ['.js', '.jsx', '.ts', '.tsx'],
   },
 
   // Configure plugins 
@@ -58,61 +65,5 @@ module.exports = {
       },
     ],
     hot: true, // Enables hot reloading
-    // open: true, // Automatically opens the browser  
   },
-
-  resolve: {
-    extensions: ['.js', '.jsx'],
-  },
-
-  // Tell webpack this is electron renderer process 
-  // target: 'electron-renderer',
-
 }
-
-
-
-// module.exports = {
-//     mode: process.env.NODE_ENV || 'development',
-//     entry: ['./src/renderer/index.js'],
-//     output: {
-//         filename: 'bundle.js',
-//         path: path.resolve(__dirname, 'dist'),
-//     },
-//     module: {
-//         rules: [
-//             {
-//                 test: /\.js$/, // Applies babel to .js files
-//                 exclude: /node_modules/,
-//                 use: {
-//                     loader: 'babel-loader',
-//                 },
-//             },
-//             {
-//                 test: /\.css$/, // Apply CSS loader and inject styles
-//                 use: ['style-loader', 'css-loader'],
-//             },
-//         ],
-//     },
-//     plugins: [
-//         new HtmlWebpackPlugin({
-//             title: 'Development',
-//             template: './public/index.html',
-//         })
-//     ],
-//     devServer: {
-//         static: path.resolve(__dirname, 'dist'),
-//         port: 8080, // Port for the dev server
-//         proxy: {
-//             context: ['/api'],
-//             target: 'http://localhost:3000',
-//             secure: false,
-//         },
-
-//         open: true, // Open browser after server has been started
-//         hot: true, // Hot reloading
-//     }
-// };
-
-
-  

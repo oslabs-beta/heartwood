@@ -1,16 +1,12 @@
-// This file defines a Mongoose model for a User. 
-// Define the 'User' schema and create a model from the schema
-// Export the model
-const mongoose = require('mongoose');
+// Imports 
+import mongoose, { Document, Model, Schema } from 'mongoose';
 
+// Schema definition 
 const userSchema = new mongoose.Schema({
   username: String,
   password: String,
-  // username: {type: String, unique: true},
-  // password: {type: String, unique: true},
   email: String,
   access_token: String,
-  // AWS Credential
   awsCredential: {
     AWS_ACCESS_KEY_ID: {
       type: String,
@@ -31,10 +27,9 @@ const userSchema = new mongoose.Schema({
     url: String,
     expirationDate: {
       type: Number,
-      // get: v => Math.round(v),
-      // set: v => Math.round(v)
     }
   }
 });
-  
+
+// Model creation and export 
 module.exports =  mongoose.model('User', userSchema);

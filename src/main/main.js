@@ -57,7 +57,7 @@ const createWindow = () => {
 }
 
 function startServer() {
-  serverProcess = fork(path.join(__dirname, '..', 'server', 'server.js'));
+  serverProcess = fork(path.join(__dirname, '..', '..', 'build', 'server', 'server.js'));
   
   serverProcess.on('message', (message) => {
     console.log('Message from server:', message);
