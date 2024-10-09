@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "rootDir": "./src/renderer",
+    "outDir": "./dist/renderer"
+  },
+  "include": ["src/renderer/**/*"],
+  "exclude": ["node_modules", "src/main", "src/server"]
+}
