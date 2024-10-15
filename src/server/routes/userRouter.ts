@@ -2,7 +2,7 @@
 // Imports and Configuration
 // -----------------------------------------
 
-const express = require('express');
+import express, { Request, Response, NextFunction } from 'express';
 const path = require('path');
 const router = express.Router();
 
@@ -15,19 +15,19 @@ const sessionController = require('../controller/user/sessionController.js');
 // -----------------------------------------
 
 // Route to sign up
-router.post('/signUp', userController.createUser, sessionController.createSession, (req, res) => {
+router.post('/signUp', userController.createUser, sessionController.createSession, (req: Request, res: Response) => {
   console.log('sign up success');
   res.status(200).json(res.locals.session);
 });
 
 // Route to log in 
-router.post('/login', userController.login, sessionController.createSession, (req, res) => {
+router.post('/login', userController.login, sessionController.createSession, (req: Request, res: Response) => {
   console.log('login success, server.js')
   res.status(200).json(res.locals.session);
 }); 
 
 // Route to Github login (save Token)
-router.post('/saveToken', userController.saveToken, sessionController.createSession, (req, res) => {
+router.post('/saveToken', userController.saveToken, sessionController.createSession, (req: Request, res: Response) => {
   console.log('save token success')
   res.status(200).json(res.locals.session);
 }); 

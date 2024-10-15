@@ -14,29 +14,8 @@ const axios = require('axios');
 
 const { fork } = require('child_process');
 
-// [To do] Add this block for auto-reloading in development 
-// if (process.env.NODE_ENV === 'development') {
-//   try {
-//     require('electron-reloader')(module, {
-//       debug: true,
-//       watchRenderer: false
-//     });
-//   } catch (_) { console.log('Error'); }
-// }
-// const express = require('express');
-
-
-// const server = express();server.use(express.static(path.join(__dirname, '..', '..', 'dist')));
-
-// const http = require('http');
-// const httpServer = http.createServer(server);
-// httpServer.listen(PORT, () => {
-//   console.log(`Server running at http://localhost:8080`);
-// });
-
 let mainWindow;
 let serverProcess;
-
 
 // Declare a 'createWindow' function that loads 'index.html' into a new BrowserWindow instance
 // This function is responsible for creating the main application window
@@ -52,13 +31,15 @@ const createWindow = () => {
 
   // Load the 'index.html' file into the BrowserWindow
   // The bundled HTML file is located in the 'dist' directory, two levels up from the current directory
-  mainWindow.loadFile(path.join(__dirname, '..', '..', 'dist', 'index.html')); 
+  // mainWindow.loadFile(path.join(__dirname, '..', '..', 'dist', 'index.html')); 
+  mainWindow.loadFile(path.join(__dirname, '..', 'renderer', 'index.html'));
+
   //mainWindow.loadURL(`http://localhost:8080/`);
 }
 
 function startServer() {
-  serverProcess = fork(path.join(__dirname, '..', 'server', 'server.js'));
-  
+  serverProcess = fork(path.join(__dirname, '..', '..', 'dist', 'server', 'server.js'));
+
   serverProcess.on('message', (message) => {
     console.log('Message from server:', message);
   });
@@ -72,31 +53,6 @@ app.whenReady().then(() => {
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow()
   })
-
-  // // TEST: Register 'app' protocol 
-  // protocol.registerHttpProtocol('app', (request, callback) => {
-  //   callback({
-  //     url: request.url.replace('app://', 'http://')
-  //   });
-  // });
-
-  // COMMENTED OUT THE FOLLOWING FOR NOW
-  
-  // session.defaultSession.cookies.get({ name: 'auth_token' })
-  // .then(cookies => {
-  //   if (cookies.length > 0) {
-  //     console.log('User is already logged in');
-
-  //     mainWindow.webContents.send('login-status', { loggedIn: true });
-  //   } else {
-  //     console.log('No token found. User is not logged in.');
-
-  //     mainWindow.webContents.send('login-status', { loggedIn: false });
-  //   }
-  // })
-  // .catch(err => {
-  //   console.error('Error checking for auth token:', err);
-  // });
 
   createWindow();
   startServer();

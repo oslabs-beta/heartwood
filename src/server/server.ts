@@ -2,12 +2,14 @@
 // Imports and Configuration
 // -----------------------------------------
 
-const express = require('express');
+import express, { Request, Response, NextFunction } from 'express';
+import { CustomError } from './types';
+
 const app = express();
-const PORT = 3000;
+const PORT: number = 3000;
 const path = require('path');
 const cookieParser = require('cookie-parser');
-const { readFileSync } = require('fs');
+// const { readFileSync } = require('fs');
 
 // Import controllers and routers
 const awsRouter = require('./routes/awsRouter.js');
@@ -40,7 +42,7 @@ connectDB();
 // -----------------------------------------
 
 // Main route - serve the main HTML file
-app.get('/', (req, res) => {
+app.get('/', (req: Request, res: Response) => {
   res.sendFile(path.join(__dirname, '..', '..', 'dist', 'index.html'))
 }); 
 
@@ -61,7 +63,7 @@ app.use('*', (req, res) => {
 // -----------------------------------------
 
 // Global error handler
-app.use((err, req, res, next) => {
+app.use((err: CustomError, req: Request, res: Response, next: NextFunction) => {
   const defaultErr = {
     log: 'Express error handler caught unknown error',
     status: 500,
@@ -82,18 +84,3 @@ app.listen(PORT, () => {
 });
 
 module.exports = app;
-
-
-// Test routes for AWS Cloud Watch SDK
-// app.get('/awstest', awsTestController.awsTest, (req, res) => {
-//   res.send('sent from awstest route');
-// });
-
-// app.get('/awstest2', awsTestController.testGetMetricsData, (req, res) => {
-//   res.send('sent from awstest2 route')
-// })
-
-// app.get('/awstest3', awsTestController.testGetMetricsData2, (req, res) => {
-//   console.log('awstest3');
-//   res.send('sent from awstest3');
-// });

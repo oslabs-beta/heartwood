@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import HeaderBar from '../components/HeaderBar.jsx';
-import SideNav from './SideNav.jsx';
-import Login from '../components/Login.jsx';
+import HeaderBar from '../components/HeaderBar';
+import SideNav from './SideNav';
+import Login from '../components/Login';
 
 
 
