@@ -2,8 +2,8 @@ import React from "react";
 import { Line } from "react-chartjs-2";
 import { Chart, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, TimeScale } from 'chart.js';
 import 'chartjs-adapter-date-fns';
-
-const LineChart = ({ data, labels }) => {
+import { LineChartProps } from "../renderTypes";
+const LineChart: React.FC<LineChartProps> = ({ data, labels }) => {
  // ^ change this to pass in props later
 
     // Register chart components to be used on all charts
@@ -41,7 +41,7 @@ const LineChart = ({ data, labels }) => {
     plugins: {
       legend: {
         display: true, // Show/hide the legend
-        position: 'top',
+        position: 'top' as const,
       },
     //   title: {
     //     display: true,
@@ -53,9 +53,9 @@ const LineChart = ({ data, labels }) => {
         beginAtZero: true, // Start y-axis at 0
       },
       x: {
-        type: 'time', // enables time/date handling
+        type: 'time' as const, // enables time/date handling
         time: {
-          unit: 'hour',
+          unit: 'hour' as const, 
           tooltipFormat: 'PPpp', // pretty print date 
         },
       }
@@ -66,3 +66,11 @@ const LineChart = ({ data, labels }) => {
 };
 
 export default LineChart;
+
+// const obj = {
+//   position: 'top' // TS is inferring this to be position: string
+// }
+
+// const obj2 = {
+//   position: 'top' as const // TS inferring this be position: 'top'
+// }

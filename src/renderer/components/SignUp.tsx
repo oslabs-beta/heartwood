@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
+import { signUpProps, ApiResponse, Session } from '../renderTypes';
 
-const SignUp = ({ onSignUpSuccess, toggleSignUp, setLoggedIn }) => {
-  const [username, setUserName] = useState('');
-  const [password, setPassword] = useState('');
-  const [email, setEmail] = useState('');
+const SignUp: React.FC<signUpProps> = ({ onSignUpSuccess, toggleSignUp, setLoggedIn }) => {
+  const [username, setUserName] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [email, setEmail] = useState<string>('');
 
-  const createUser = async (username, password, email) => {
+  const createUser = async (username: string, password: string, email: string) => {
     try {
-      const result = await window.api.signUp(username, password, email);
+      const result: ApiResponse<Session> = await window.api.signUp(username, password, email);
       console.log('Signup success:', result);
 
       // Call the onSignUpSuccess prop to close the popup

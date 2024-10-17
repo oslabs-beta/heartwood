@@ -1,8 +1,9 @@
 import React from 'react';
 import { Chart, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Doughnut } from 'react-chartjs-2'
+import { DonutChartProps } from '../renderTypes';
 
-const DonutChart = ({data, labels}) => {
+const DonutChart: React.FC<DonutChartProps> = ({data, labels}) => {
 
     Chart.register(ArcElement, Tooltip, Legend);
 
@@ -27,7 +28,7 @@ const DonutChart = ({data, labels}) => {
         responsive: true,
         plugins: {
           legend: {
-            position: 'top', // Display the legend at the top
+            position: 'top' as const, // Display the legend at the top
           },
           tooltip: {
             enabled: true, // Enable tooltips on hover
