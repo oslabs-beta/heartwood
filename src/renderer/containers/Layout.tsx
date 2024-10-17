@@ -2,12 +2,13 @@ import React, { useState, useEffect } from 'react';
 import HeaderBar from '../components/HeaderBar';
 import SideNav from './SideNav';
 import Login from '../components/Login';
+import { ApiResponse, Session } from '../renderTypes';
 
 
 
-const Layout = () => {
-  const [isDarkMode, setIsDarkMode] = useState(false);
-  const [loggedIn, setLoggedIn] = useState(false); // Add login status state
+const Layout: React.FC = () => {
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
+  const [loggedIn, setLoggedIn] = useState<boolean>(false); // Add login status state
 
   const toggleDarkMode = () => {
     setIsDarkMode(!isDarkMode);
@@ -34,7 +35,7 @@ const Layout = () => {
       console.log('checking if a user is logged in')
       try {
         // Call a function to main.js and get true or false 
-        const isLoggedIn = await window.api.checkLoginStatus();
+        const isLoggedIn: ApiResponse<boolean> = await window.api.checkLoginStatus();
         console.log('status is', isLoggedIn)
         // If return value is true, set LoggedIn as true. 
         if (isLoggedIn) {
@@ -55,7 +56,7 @@ const Layout = () => {
   const githubOauth = () => {
     window.api.startGitHubAuth()
       .then(() => {
-        console.log('GitHub Token:', token);
+        // console.log('GitHub Token:', token);
 
       })
       .catch(err => {
@@ -65,9 +66,9 @@ const Layout = () => {
   };
 
   // Function to make a post request to log in 
-  const userSubmit = async (username, password) => {
+  const userSubmit = async (username: string, password: string) => {
     try {
-      const result = await window.api.login(username, password);
+      const result: ApiResponse<Session> = await window.api.login(username, password);
       setLoggedIn(true);
     } catch (error) {
       console.error('Login error:', error);

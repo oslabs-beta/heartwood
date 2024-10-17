@@ -2,39 +2,40 @@ import React, { useState, useEffect } from "react";
 import LineChart from "./LineChart";
 import DonutChart from "./DonutChart";
 import { FaSatelliteDish, FaFireAlt, FaBug, FaClock } from "react-icons/fa";
+import { CustomError, ApiResponse } from "../renderTypes";
 
-const Dashboard = () => {
-  const [invocationsData, setInvocations] = useState([]);
-  const [invocationsDataLabels, setInvocationsLabels] = useState([]);
-  const [errorData, setErrors] = useState([]);
-  const [errorDataLabels, setErrorLabels] = useState([]);
-  const [throttleData, setThrottles] = useState([]);
-  const [throttleDataLabels, setThrottleDataLabels] = useState([]);
-  const [durationData, setDuration] = useState([]);
-  const [durationDataLabels, setDurationDataLabels] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
+const Dashboard: React.FC = () => {
+  const [invocationsData, setInvocations] = useState<number[]>([]);
+  const [invocationsDataLabels, setInvocationsLabels] = useState<string[]>([]);
+  const [errorData, setErrors] = useState<number[]>([]);
+  const [errorDataLabels, setErrorLabels] = useState<string[]>([]);
+  const [throttleData, setThrottles] = useState<number[]>([]);
+  const [throttleDataLabels, setThrottleDataLabels] = useState<string[]>([]);
+  const [durationData, setDuration] = useState<number[]>([]);
+  const [durationDataLabels, setDurationDataLabels] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
   // helper function to calculate totals of each metric, using reduce to accumulate the values
-  const calculateTotals = (data) => {
+  const calculateTotals = (data: number[]): number => {
     if (!data || !Array.isArray(data)) return 0;
     return data.reduce((total, current) => total + current, 0);
   }
 
 // helper function to calculate average of specific metric (duration)
-  const calculateAverage = (data) => {
+  const calculateAverage = (data: number[]): number => {
     if (!data || !Array.isArray(data) || data.length === 0) return 0;
     const total = data.reduce((total, current) => total + current, 0);
     return total / data.length;
   }
 // helper function to calculate cost
-  const calculateCost = () => {
+  // const calculateCost = () => {
 
-  }
+  // }
 
   const getInvocationMetrics = async () => {
     try {
-      const result = await window.api.getInvocations();
+      const result: ApiResponse<number[]> = await window.api.getInvocations();
       console.log('Raw getInvocations result:', result);
       if (result && result.data && result.label) {
         setInvocations(result.data);
@@ -42,7 +43,7 @@ const Dashboard = () => {
       } else {
         throw new Error('Invalid data structure returned from getInvocations');
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error in dashboard invocation data:", error);
       setError(error.message);
     }
@@ -50,7 +51,7 @@ const Dashboard = () => {
 
   const getErrorMetrics = async () => {
     try {
-      const result = await window.api.getErrors();
+      const result: ApiResponse<number[]> = await window.api.getErrors();
       console.log('Raw getErrors result:', result);
       if (result && result.data && result.label) {
         setErrors(result.data);
@@ -58,7 +59,7 @@ const Dashboard = () => {
       } else {
         throw new Error('Invalid data structure returned from getErrors');
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error in dashboard errors data:", error);
       setError(error.message);
     }
@@ -66,7 +67,7 @@ const Dashboard = () => {
 
   const getThrottleMetrics = async () => {
     try {
-      const result = await window.api.getThrottles();
+      const result: ApiResponse<number[]> = await window.api.getThrottles();
       console.log('Raw getThrottles result:', result);
       if (result && result.data && result.label) {
         setThrottles(result.data);
@@ -74,7 +75,7 @@ const Dashboard = () => {
       } else {
         throw new Error('Invalid data structure returned from getErrors');
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error in dashboard throttles data:", error);
       setError(error.message);
     }
@@ -82,7 +83,7 @@ const Dashboard = () => {
 
   const getDurationMetrics = async () => {
     try {
-      const result = await window.api.getDuration();
+      const result: ApiResponse<number[]> = await window.api.getDuration();
       console.log('Raw getDuration result:', result);
       if (result && result.data && result.label) {
         setDuration(result.data);
@@ -90,7 +91,7 @@ const Dashboard = () => {
       } else {
         throw new Error('Invalid data structure returned from getDuration');
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error in dashboard duration data:", error);
       setError(error.message);
     }

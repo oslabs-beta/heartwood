@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Functions = () => {
+const Functions: React.FC = () => {
     return <div>Functions Content</div>;
 };
 

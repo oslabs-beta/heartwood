@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-
+import { LoginProps } from '../renderTypes';
 
 // const githubOauth = () => {
 //   window.api.startGitHubAuth()
@@ -22,10 +22,10 @@ import React, { useState } from 'react';
 //       }
 // }
 
-const Login = ({githubOauth, userSubmit}) => {
+const Login: React.FC<LoginProps> = ({githubOauth, userSubmit}) => {
     
-  const [username, setUserName] = useState('');
-  const [password, setPassword] = useState('');  
+  const [username, setUserName] = useState<string>('');
+  const [password, setPassword] = useState<string>('');  
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center">

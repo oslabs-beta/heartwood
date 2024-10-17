@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Logs = () => {
+const Logs: React.FC = () => {
     return <div>Logs Content</div>;
 };
 

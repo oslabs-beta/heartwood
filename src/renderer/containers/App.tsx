@@ -12,7 +12,7 @@ const App = () => {
   //   });
   // }, []);
 
-  const [theme, setTheme] = useState('light'); 
+  const [theme, setTheme] = useState<string>('light'); 
 
   return (
     <div className="App min-h-screen" data-theme={theme}>
