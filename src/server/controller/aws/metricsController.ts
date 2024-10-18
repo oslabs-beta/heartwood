@@ -3,6 +3,7 @@
 // -----------------------------------------
 import { Request, Response, NextFunction } from "express";
 const { CloudWatchClient, GetMetricDataCommand } = require("@aws-sdk/client-cloudwatch"); 
+const User = require('../../models/user');
 
 // -----------------------------------------
 // AWS getLambdaMetrics Controller
@@ -14,6 +15,8 @@ const getLambdaMetrics = {
   getInvocationCount: async (req: Request, res: Response, next: NextFunction) => {
       console.log('getInvocationCount middleware is hit')
   
+      // [TO DO] Get AWS credential from res.locals (saved in getCredentail middleware)
+
       // Check if necessary AWS environment variables are set 
       if (!process.env.AWS_ACCESS_KEY_ID || !process.env.AWS_SECRET_ACCESS_KEY || !process.env.AWS_REGION) {
         throw new Error('AWS credentials or region are not set in environment variables');

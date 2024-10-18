@@ -61,73 +61,97 @@ app.whenReady().then(() => {
 // -----------------------------------------
 // handles github oAuth
 // -----------------------------------------
+ipcMain.handle('start-github-auth', async (event, {code}) => {
 
-// github Oauth config, specific to our application 
-const githubOAuthConfig = {
-  clientId:  process.env.GITHUB_CLIENTID,
-  clientSecret: process.env.GITHUB_CLIENT_SECRET ,
-  authorizationUrl: 'https://github.com/login/oauth/authorize',
-  tokenUrl: 'https://github.com/login/oauth/access_token',
-  useBasicAuthorizationHeader: false,
-  redirectUri: 'http://localhost:3000'
-};
-// create oauth instance 
-const oauth2 = new OAuth2(githubOAuthConfig);
-//const githubOAuth = oauth2(githubOAuthConfig);
+  console.log('reached main.js github code is', code)
 
-ipcMain.handle('start-github-auth', async () => {
   try {
-    console.log('hit github oauth');
+    const response = await axios.post('http://localhost:3000/user/github', {code: code});
+    const sessionObject = response.data; 
 
-    try{
-      const token = await oauth2.getAccessToken({ scope: 'read:user' });
-      access_token = token.access_token;
+    // Set a cookie 
+    session.defaultSession.cookies.set(sessionObject)
+      .then(() =>{
+        // Success
+        console.log('main.js login function - login success')
+      }, (error) =>{
+        console.log('login cookie is not working', error);
+      })
 
-      try {
-        const response = await axios.post('http://localhost:3000/user/saveToken', { access_token});
-        return 
-      } catch (error) {
-        console.log('save token error', error);
-      }
-      
-          // Store the token in a cookie
-      session.defaultSession.cookies.set({
-      url: 'http://localhost3000',
-      name: 'auth_token',
-      value: token.accessToken,
-      expirationDate: Date.now() / 1000 + 3600, // expires in 1 hour
-      httpOnly: true,
-    });
+    return true;
 
-    console.log(token)
-
-
-
-    return token;
-    }
-    catch{ return
-
-    }
-
-
-        // Make a request to GitHub API to get the logged-in user's information
-        // const userInfoResponse = await axios.get('https://api.github.com/user', {
-        //   headers: {
-        //     Authorization: `Bearer ${token.accessToken}`,
-        //   },
-        // });
-    
-        // // Extract user information
-        // const userInfo = userInfoResponse.data;
-        
-        // console.log(userInfo)
-
-
-  } catch (err) {
-    console.error('OAuth error:', err);
-    throw err;
   }
-});
+  catch (err){
+    console.log('error for githubin main.js')
+  }
+})
+
+// // github Oauth config, specific to our application 
+// const githubOAuthConfig = {
+//   clientId:  process.env.GITHUB_CLIENTID,
+//   clientSecret: process.env.GITHUB_CLIENT_SECRET ,
+//   authorizationUrl: 'https://github.com/login/oauth/authorize',
+//   tokenUrl: 'https://github.com/login/oauth/access_token',
+//   useBasicAuthorizationHeader: false,
+//   redirectUri: 'http://localhost:3000'
+// };
+// // create oauth instance 
+// const oauth2 = new OAuth2(githubOAuthConfig);
+// //const githubOAuth = oauth2(githubOAuthConfig);
+
+// ipcMain.handle('start-github-auth', async () => {
+//   try {
+//     console.log('hit github oauth');
+
+//     try{
+//       const token = await oauth2.getAccessToken({ scope: 'read:user' });
+//       access_token = token.access_token;
+
+//       try {
+//         const response = await axios.post('http://localhost:3000/user/saveToken', { access_token});
+//         return 
+//       } catch (error) {
+//         console.log('save token error', error);
+//       }
+      
+//           // Store the token in a cookie
+//       session.defaultSession.cookies.set({
+//       url: 'http://localhost3000',
+//       name: 'auth_token',
+//       value: token.accessToken,
+//       expirationDate: Date.now() / 1000 + 3600, // expires in 1 hour
+//       httpOnly: true,
+//     });
+
+//     console.log(token)
+
+
+
+//     return token;
+//     }
+//     catch{ return
+
+//     }
+
+
+//         // Make a request to GitHub API to get the logged-in user's information
+//         // const userInfoResponse = await axios.get('https://api.github.com/user', {
+//         //   headers: {
+//         //     Authorization: `Bearer ${token.accessToken}`,
+//         //   },
+//         // });
+    
+//         // // Extract user information
+//         // const userInfo = userInfoResponse.data;
+        
+//         // console.log(userInfo)
+
+
+//   } catch (err) {
+//     console.error('OAuth error:', err);
+//     throw err;
+//   }
+// });
 
 // -----------------------------------------
 // handle login
@@ -202,8 +226,12 @@ ipcMain.handle('signUp', async (event, { username, password, email }) => {
 // -----------------------------------------
 
 ipcMain.handle('checkLoginStatus', async (event) => {
+  // added to test cookie functionality, can be deleted later 
+  //await session.defaultSession.cookies.remove('http://localhost:3000/', 'ssid');
   try {
-    const cookies = await session.defaultSession.cookies.get({ url: 'http://localhost/' });
+    const cookies = await session.defaultSession.cookies.get({ url: 'http://localhost:3000/' });
+    console.log(cookies)
+    if (!cookies[0]) return false 
 
     const expirationDate = cookies[0].expirationDate;
     const expirationDateInMs = expirationDate * 1000; // Convert to Ms
@@ -266,7 +294,11 @@ ipcMain.handle('addCredential', async (event, accessKey, secretAccessKey, region
 
 ipcMain.handle('getInvocations', async () => {
   try {
+    // [TO DO] get ssid from cookie here
+
+    // [TO DO] pass the ssid here 
     const response = await axios.get('http://localhost:3000/aws/metric/invocation');
+    
     console.log('Invocations response:', response.data);
     return response.data;
   } catch (error) {

@@ -14,6 +14,9 @@ const getLambdaMetrics = require('../controller/aws/metricsController.js');
 // AWS Credential Routes
 // -----------------------------------------
 
+// [TO DO] Add `getAwsCredential` middleware before calling each Metrics middelware
+
+
 // Route to add AWS credential information
 router.post('/credential/add',awsCredential.addAWSCredential, (req: Request, res: Response) => {
   return res.status(200).send('message');

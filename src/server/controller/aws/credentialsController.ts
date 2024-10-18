@@ -54,6 +54,11 @@ const awsCredential = {
     };
   },
 
+  // [TO DO] Middleware to get AWS credentials of the user based on ssid
+  getAWSCredential: async (req: Request, res: Response, next: NextFunction) => {
+
+  }
+
 };
 
 module.exports = awsCredential;

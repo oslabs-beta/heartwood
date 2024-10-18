@@ -54,16 +54,63 @@ const Layout: React.FC = () => {
   };
 
   const githubOauth = () => {
-    window.api.startGitHubAuth()
-      .then(() => {
-        // console.log('GitHub Token:', token);
-
-      })
-      .catch(err => {
-        console.error('GitHub Auth Error:', err);
-      });
-    setLoggedIn(true);
+    console.log('front end githubOau')
+    const client_id = "Ov23liX4a6wQpZlCpAu0";
+    const redirect_uri = 'http://localhost:3000'; 
+    const scope = 'user'; 
+    //const redirect_uri = window.location.href
+    //console.log(redirect_uri)
+   
+    const githubAuthUrl = `https://github.com/login/oauth/authorize?client_id=${client_id}&redirect_uri=${encodeURIComponent(redirect_uri)}&scope=${scope}`;
+  
+    window.location.href = githubAuthUrl;
+    //setLoggedIn(true);
   };
+
+  const handleGitHubCallback = async () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const code = urlParams.get('code'); 
+
+      if (code) {
+          //console.log('Code:', code);
+          //setLoggedIn(true);
+          //window.api.startGitHubAuth(code)
+          return code
+
+      } else {
+          console.error('Github code not found.');
+          return null
+      }  
+  };
+
+  const fetchCode = async () => {
+    const code = await handleGitHubCallback();
+    //console.log('code is this :)', code);
+
+    if (code) {
+       //console.log('does code exist?', code);
+  
+        const isLoggedIn = await window.api.startGitHubAuth(code);
+        console.log('status is', isLoggedIn)
+        setLoggedIn(true)
+
+    }
+};
+
+ fetchCode();
+
+
+  // const githubOauth = () => {
+  //   window.api.startGitHubAuth()
+  //     .then(() => {
+  //       // console.log('GitHub Token:', token);
+
+  //     })
+  //     .catch(err => {
+  //       console.error('GitHub Auth Error:', err);
+  //     });
+  //   setLoggedIn(true);
+  // };
 
   // Function to make a post request to log in 
   const userSubmit = async (username: string, password: string) => {
