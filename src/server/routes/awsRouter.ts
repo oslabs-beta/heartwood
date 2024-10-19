@@ -46,7 +46,7 @@ router.get('/metric/functionlist', getLambdaFunctions.getListFunctions, (req: Re
 });
 
 //Route to get Log Events 
-router.get('/metric/logevents', getLogEvents.getLambdaLogEvents, (req: Request, res: Response) => {
+router.get('/function/logevents', awsCredential.getAWSCredential, getLogEvents.getLambdaLogEvents, (req: Request, res: Response) => {
   return res.status(200).json(res.locals.lambdalogEvents)
 })
 

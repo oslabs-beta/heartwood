@@ -368,6 +368,23 @@ ipcMain.handle('getDuration', async () => {
   }
 });
 
+ipcMain.handle('getLambdaLogEvents', async () => {
+  try { 
+    const cookies = await session.defaultSession.cookies.get({ url: 'http://localhost/'})
+    const ssid: String = cookies[0].value;
+
+    const response = await axios.get('http://localhost:3000/aws/function/logevents', {
+      params: {
+        ssid: ssid,
+      }
+    });
+
+    return response.data;
+  } catch(error) {
+    console.log('Error in the LogEvents', error.message);
+  }
+})
+
 
 
 // Use 'process' globals's platform attribute to run code for each opearting system 

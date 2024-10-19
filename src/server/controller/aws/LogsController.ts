@@ -15,11 +15,13 @@ const getLogEvents = {
         let nextToken = null //initialize nextToken to null for invocation 
         console.log("LogEvent Controller is being hit")
 
+        const { AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_REGION} = res.locals.awsCredential;
+
         const client = new CloudWatchLogsClient({
-            region:process.env.AWS_REGION,
+            region:AWS_REGION,
             credentials: {
-                accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-                secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
+                accessKeyId: AWS_ACCESS_KEY_ID,
+                secretAccessKey: AWS_SECRET_ACCESS_KEY,
             }
         });
 
