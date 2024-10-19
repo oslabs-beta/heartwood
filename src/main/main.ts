@@ -1,7 +1,8 @@
 // -----------------------------------------
 // Import
 // -----------------------------------------
-import { app, BrowserWindow, ipcMain, session } from 'electron';
+
+import { app, BrowserWindow, IpcMain, ipcMain, session } from 'electron';
 import { IpcMainInvokeEvent } from 'electron';
 import { CustomError, LoginCredential, SingupCredential } from "./mainTypes";
 import path from 'node:path';
@@ -10,12 +11,13 @@ import { fork } from 'child_process';
 const OAuth2 = require('electron-oauth2');
 require('dotenv').config();
 
-let mainWindow;
-let serverProcess;
 
 // -----------------------------------------
 // Window Management
 // -----------------------------------------
+
+let mainWindow;
+let serverProcess;
 
 // Create and configure the main application window 
 const createWindow = () => {
@@ -94,7 +96,6 @@ ipcMain.handle('start-github-auth', async (event, {code}) => {
 
 // User login 
 ipcMain.handle('login', async (event: IpcMainInvokeEvent, { username, password }: LoginCredential): Promise<boolean> => {
-
   try {
     const response = await axios.post('http://localhost:3000/user/login', { username, password });
     const sessionObject = response.data; 
@@ -128,13 +129,12 @@ ipcMain.handle('checkLoginStatus', async (event: IpcMainInvokeEvent): Promise<bo
   try {
     const cookies = await session.defaultSession.cookies.get({ url: 'http://localhost:3000/' });
     
-    // if expirationDate is undefined, assign 0. It'll be always less than today
     const expirationDate = cookies[0].expirationDate ?? 0;
     const expirationDateInMs = expirationDate * 1000; // Convert to Ms
     const expirationDateTime = new Date(expirationDateInMs); // Convert to DataTime 
     const today = new Date();
 
-    console.log('expiration date time', expirationDateTime);
+    console.log('expiration date', expirationDateTime);
     console.log('today', today)
 
     if (expirationDateTime >= today) {
@@ -157,11 +157,9 @@ ipcMain.handle('checkLoginStatus', async (event: IpcMainInvokeEvent): Promise<bo
 // -----------------------------------------
 
 // Add AWS credential 
-ipcMain.handle('addCredential', async (event, accessKey, secretAccessKey, region) => {  
+ipcMain.handle('addCredential', async (event: IpcMainInvokeEvent, accessKey: string, secretAccessKey: string, region: string): Promise<void> => {  
   try {
-    const cookies = await session.defaultSession.cookies.get({ url: 'http://localhost/' });
-    const ssid = cookies[0].value;
-    // const ssid = await getSSIDFromCookie();
+    const ssid = await getSSIDFromCookie();
 
     const response = await axios.post('http://localhost:3000/aws/credential/add', {
       accessKey,
@@ -179,10 +177,7 @@ ipcMain.handle('addCredential', async (event, accessKey, secretAccessKey, region
 // Get AWS Lambda function's invocation metric 
 ipcMain.handle('getInvocations', async () => {
   try {
-    const cookies = await session.defaultSession.cookies.get({ url: 'http://localhost/' })
-    const ssid: String = cookies[0].value;
-    // const ssid = await getSSIDFromCookie();
-
+    const ssid = await getSSIDFromCookie();
 
     const response = await axios.get("http://localhost:3000/aws/metric/invocation", {
       params: {
@@ -201,10 +196,7 @@ ipcMain.handle('getInvocations', async () => {
 // Get AWS Lambda function's error metric
 ipcMain.handle('getErrors', async () => {
   try {
-    const cookies = await session.defaultSession.cookies.get({ url: 'http://localhost/' })
-    const ssid: String = cookies[0].value;
-    // const ssid = await getSSIDFromCookie();
-
+    const ssid = await getSSIDFromCookie();
 
     const response = await axios.get('http://localhost:3000/aws/metric/error', {
       params: {
@@ -223,10 +215,7 @@ ipcMain.handle('getErrors', async () => {
 // Get AWS Lambda function's throttle metric
 ipcMain.handle('getThrottles', async () => {
   try {
-    // // Get ssid from cookie 
-    const cookies = await session.defaultSession.cookies.get({ url: 'http://localhost/' })
-    const ssid: String = cookies[0].value;
-    // const ssid = await getSSIDFromCookie();
+    const ssid = await getSSIDFromCookie();
 
     const response = await axios.get('http://localhost:3000/aws/metric/throttle', {
       params: {
@@ -245,7 +234,6 @@ ipcMain.handle('getThrottles', async () => {
 // Get AWS Lambda function's duration metric
 ipcMain.handle('getDuration', async () => {
   try {
-    // Get ssid from cookie 
     const ssid = await getSSIDFromCookie();
 
     const response = await axios.get('http://localhost:3000/aws/metric/duration', {
