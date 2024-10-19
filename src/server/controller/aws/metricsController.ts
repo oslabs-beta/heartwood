@@ -85,7 +85,6 @@ const getLambdaMetrics = {
         label: response.MetricDataResults[0].Timestamps,
         data: response.MetricDataResults[0].Values
       }
-      console.log('res locals inv data:', res.locals.invocationData);
       // next();
     } catch (error) {
       console.error("Error fetching Lambda metrics:", error);
@@ -231,14 +230,12 @@ const getLambdaMetrics = {
     } catch (error) {
       console.error("Error fetching Lambda metrics:", error);
     }
-  console.log('stored object to res.locals.throttleData: ', res.locals.throttleData)
   return next();
   },
   
 
   // Middleware to get a selected Lambda function's duration \
   getDuration: async (req: Request, res: Response, next: NextFunction) => {
-    console.log('getInvocationCount middleware is hit')
   
     // Check if necessary AWS environment variables are set 
     // if (!process.env.AWS_ACCESS_KEY_ID || !process.env.AWS_SECRET_ACCESS_KEY || !process.env.AWS_REGION) {
@@ -301,12 +298,10 @@ const getLambdaMetrics = {
       // Send the command to AWS CloudWatch and await the response
       const response = await client.send(command);
       // Print out the response's datapoints to console
-      console.log(response.MetricDataResults)
       res.locals.durationData = {
         label: response.MetricDataResults[0].Timestamps,
         data: response.MetricDataResults[0].Values
       }
-      console.log('res locals inv data:', res.locals.durationData);
       // next();
     } catch (error) {
       console.error("Error fetching Lambda metrics:", error);

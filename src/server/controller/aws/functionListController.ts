@@ -3,7 +3,7 @@
 // // -----------------------------------------
 import { Request, Response, NextFunction } from "express";
 const { LambdaClient, ListFunctionsCommand} = require("@aws-sdk/client-lambda");
-
+const { CloudWatchLogsClient, DescribeLogStreamsCommand } = require("@aws-sdk/client-cloudwatch-logs"); 
 
 
 // // -----------------------------------------
@@ -11,13 +11,15 @@ const { LambdaClient, ListFunctionsCommand} = require("@aws-sdk/client-lambda");
 // // -----------------------------------------
 const getLambdaFunctions = {
     getListFunctions : async(req: Request, res: Response, next: NextFunction) => {
+
+        const { AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_REGION} = res.locals.awsCredential;
         let nextMarker = null;
         console.log("ListFunction is working")
         const client = new LambdaClient({
-          region: process.env.AWS_REGION,
+          region: AWS_REGION,
           credentials: {
-            accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-            secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
+            accessKeyId: AWS_ACCESS_KEY_ID,
+            secretAccessKey: AWS_SECRET_ACCESS_KEY,
           }
         });
         const input = {
@@ -41,6 +43,35 @@ const getLambdaFunctions = {
         return next();
     
       },
+
+      getLogStreamNames: async(req: Request, res: Response, next: NextFunction) => {
+        console.log('getLogStream controller is being hit')
+
+        const { AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_REGION} = res.locals.awsCredential;
+        //let nextMarker = null;
+        // const inputLogGroupName = req.body.logGroupName
+        const client = new CloudWatchLogsClient({
+            region: AWS_REGION,
+            credentials: {
+              accessKeyId: AWS_ACCESS_KEY_ID,
+              secretAccessKey: AWS_SECRET_ACCESS_KEY ,
+            }
+        });
+        const input = {
+            logGroupName: '/aws/lambda/heartwood-test-lambda-1'
+        }
+        const command = new DescribeLogStreamsCommand(input)
+        try{
+            const response = await client.send(command)
+            console.log("function response", response)
+            res.locals.logStreamName = response.logStreams[0].logSteamName;
+        }catch(error){
+            console.log("Error getting logstream name", error)
+        }
+        return next();
+    }
+
+
 
 }
 

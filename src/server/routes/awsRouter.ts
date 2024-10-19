@@ -11,6 +11,7 @@ const awsCredential = require('../controller/aws/credentialsController.js');
 const getLambdaMetrics = require('../controller/aws/metricsController.js');
 const getLambdaFunctions = require('../controller/aws/functionListController');
 const getLogEvents = require('../controller/aws/LogsController.js');
+const functionListController = require('../controller/aws/functionListController.js')
 
 // -----------------------------------------
 // AWS Credential Routes
@@ -46,8 +47,13 @@ router.get('/metric/functionlist', getLambdaFunctions.getListFunctions, (req: Re
 });
 
 //Route to get Log Events 
-router.get('/metric/logevents', getLogEvents.getLambdaLogEvents, (req: Request, res: Response) => {
-  return res.status(200).json(res.locals.lambdalogEvents)
-})
+router.get('/function/logevents', awsCredential.getAWSCredential, getLogEvents.getLambdaLogEvents, (req: Request, res: Response) => {
+  return res.status(200).json(res.locals.lambdaLogEvents);
+});
+
+//Route to get Log Stream Name
+router.get('/function/logstreams',functionListController.getLogStreamNames, (req: Request, res: Response) => {
+  return res.status(200).json(res.locals.logStreamName);
+});
 
 module.exports = router;

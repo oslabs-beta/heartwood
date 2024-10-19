@@ -62,7 +62,7 @@ const awsCredential = {
       const user = await User.findOne({ _id: ssid});
       res.locals.awsCredential = user.awsCredential;
 
-      return next();
+      next();
     }
         
     catch (error) {

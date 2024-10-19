@@ -62,7 +62,6 @@ app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit()
 });
 
-
 // -----------------------------------------
 // IPC Main Handlers - Authentication 
 // -----------------------------------------
@@ -272,6 +271,26 @@ ipcMain.handle('getDuration', async () => {
 });
 
 
+ipcMain.handle('getLambdaLogEvents', async () => {
+  try {
+    const ssid = await getSSIDFromCookie();
+    console.log("IPC cookies", ssid)
+
+    const response = await axios.get('http://localhost:3000/aws/function/logevents', {
+      params: {
+        ssid: ssid,
+      }
+    });
+
+    return response.data;
+  } catch (error:any) {
+    console.error('Log Events has an error', error.message);
+  }
+});
+
+
+
+
 // -----------------------------------------
 // Helper function 
 // -----------------------------------------
@@ -367,3 +386,246 @@ Note: testing Github oauth config code below
 //     throw err;
 //   }
 // });
+
+// -----------------------------------------
+// handle login
+// -----------------------------------------
+
+ipcMain.handle('login', async (event, { username, password }) => {
+
+  try {
+    const response = await axios.post('http://localhost:3000/user/login', { username, password });
+    const sessionObject = response.data; 
+
+    // Set a cookie 
+    session.defaultSession.cookies.set(sessionObject)
+      .then(() =>{
+        // Success
+        console.log('main.js login function - login success')
+      }, (error) =>{
+        console.log('login cookie is not working', error);
+      })
+
+    return true;
+    
+  } catch (error) {
+    console.error('Login failed:', error);
+    throw error;
+  }
+
+});
+
+// -----------------------------------------
+// handle sign up
+// -----------------------------------------
+
+ipcMain.handle('signUp', async (event, { username, password, email }) => {
+  try {
+    // Save user information to database, and receive a session object
+    const response = await axios.post('http://localhost:3000/user/signUp', { username, password, email });
+    const sessionObject = response.data; 
+
+    console.log('sessio object in signup Main', sessionObject)
+
+    // Set a cookie to the application 
+    session.defaultSession.cookies.set(sessionObject)
+      .then(() => {
+        // success
+        console.log('sucess to set a cookie');
+      }, (error) => {
+        console.log('failed to set a cookie', error);
+      })
+
+    // TEST CODE: Check if cookie is set to the application 
+    // session.defaultSession.cookies.get({ url: 'http://localhost/' })
+    //   .then((cookies) => {
+    //     // success to get cookie  
+    //     console.log('get cookie', cookies)
+    //   })
+    //   .catch((error) => {
+    //     console.log('Error to set cookie', error)
+    //   });
+
+    // return something to trigger leaving sign up widget 
+    return response.data;
+    
+  } catch (error) {
+    console.error('Sign up failed:', error);
+    throw error;
+  }
+});
+
+// -----------------------------------------
+// Check logged-in status
+// -----------------------------------------
+
+ipcMain.handle('checkLoginStatus', async (event) => {
+  // added to test cookie functionality, can be deleted later 
+  //await session.defaultSession.cookies.remove('http://localhost:3000/', 'ssid');
+  try {
+    const cookies = await session.defaultSession.cookies.get({ url: 'http://localhost:3000/' });
+    console.log(cookies)
+    if (!cookies[0]) return false 
+
+    const expirationDate = cookies[0].expirationDate;
+    const expirationDateInMs = expirationDate * 1000; // Convert to Ms
+    const expirationDateTime = new Date(expirationDateInMs); // Convert to DataTime 
+    const today = new Date();
+
+    console.log('expiration date time', expirationDateTime);
+    console.log('today', today)
+
+    if (expirationDateTime >= today) {
+      console.log("The expiration date is in the future.");
+      return true;
+    } else {
+      console.log("The expiration date has passed.");
+      return false;
+    };
+    
+    // return cookies[0].expirationDate > Date.now();
+    return false; // TEST
+  } catch (error) {
+    console.error('Error checking user login status', error);
+    return false; // Return false in case of error
+  }
+});
+
+
+// -----------------------------------------
+// handle AWS credential registration 
+// -----------------------------------------
+
+ipcMain.handle('addCredential', async (event, accessKey, secretAccessKey, region) => {  
+  try {
+    // Retrieve the ssid cookie 
+    const cookies = await session.defaultSession.cookies.get({ url: 'http://localhost/' });
+    const ssid = cookies[0].value;
+
+    // Send a POST request to add AWS credentials associated with the user's session
+    const response = await axios.post('http://localhost:3000/aws/credential/add', {
+      accessKey,
+      secretAccessKey,
+      region,
+      ssid,
+    }); 
+
+    // Consider returning the response data if needed by the caller
+    // return response.data 
+
+  } catch(error) {
+    console.error('Failed to add AWS credentials:', error);
+    // Consider returning error logs if needed by the caller
+    // return { success: false, error: error.message };
+  }
+})
+
+
+// -----------------------------------------
+// handle AWS metrics
+// -----------------------------------------
+
+
+ipcMain.handle('getInvocations', async () => {
+  try {
+    // Get ssid from cookie 
+    const cookies = await session.defaultSession.cookies.get({ url: 'http://localhost/' })
+    const ssid: String = cookies[0].value;
+
+    // Make a http request to get invocation metrics by passing ssid 
+    const response = await axios.get("http://localhost:3000/aws/metric/invocation", {
+      params: {
+        ssid: ssid,
+      }
+    });
+    
+    return response.data;
+
+  } catch (error) {
+    console.error('Error in getInvocations:', error.message);
+  }
+});
+
+ipcMain.handle('getErrors', async () => {
+  try {
+    // Get ssid from cookie 
+    const cookies = await session.defaultSession.cookies.get({ url: 'http://localhost/' })
+    const ssid: String = cookies[0].value;
+
+    const response = await axios.get('http://localhost:3000/aws/metric/error', {
+      params: {
+        ssid: ssid,
+      }
+    });
+
+    return response.data;
+
+  } catch (error) {
+    console.error('Error in getErrors:', error.message);
+  }
+});
+
+ipcMain.handle('getThrottles', async () => {
+  try {
+    // Get ssid from cookie 
+    const cookies = await session.defaultSession.cookies.get({ url: 'http://localhost/' })
+    const ssid: String = cookies[0].value;
+        
+    const response = await axios.get('http://localhost:3000/aws/metric/throttle', {
+      params: {
+        ssid: ssid,
+      }
+    });
+    
+    return response.data;
+  
+  } catch (error) {
+    console.error('Error in getThrottles:', error.message);
+  }
+});
+
+ipcMain.handle('getDuration', async () => {
+  try {
+    // Get ssid from cookie 
+    const cookies = await session.defaultSession.cookies.get({ url: 'http://localhost/' })
+    const ssid: String = cookies[0].value;
+
+    const response = await axios.get('http://localhost:3000/aws/metric/duration', {
+      params: {
+        ssid: ssid,
+      }
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error('Error in getDuration:', error.message);
+  }
+
+ipcMain.handle('getLambdaLogEvents', async () => {
+  try { 
+    const cookies = await session.defaultSession.cookies.get({ url: 'http://localhost/'})
+    const ssid: String = cookies[0].value;
+
+    const response = await axios.get('http://localhost:3000/aws/function/logevents', {
+      params: {
+        ssid: ssid,
+      }
+    });
+
+    return response.data;
+  } catch(error) {
+    console.log('Error in the LogEvents', error.message);
+  }
+})
+});
+
+
+
+// Use 'process' globals's platform attribute to run code for each opearting system 
+
+// Handle the 'window-all-closed' event
+// Quit the app when all windows are closed, except on macOS
+// On macOS, it's common for applications to stay active even without open windows
+app.on('window-all-closed', () => {
+  if (process.platform !== 'darwin') app.quit()
+});
