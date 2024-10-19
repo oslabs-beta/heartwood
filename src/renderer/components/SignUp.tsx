@@ -9,7 +9,6 @@ const SignUp: React.FC<signUpProps> = ({ onSignUpSuccess, toggleSignUp, setLogge
   const createUser = async (username: string, password: string, email: string) => {
     try {
       const result: ApiResponse<Session> = await window.api.signUp(username, password, email);
-      console.log('Signup success:', result);
 
       // Call the onSignUpSuccess prop to close the popup
       if (result) {
