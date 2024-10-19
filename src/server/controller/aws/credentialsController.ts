@@ -1,5 +1,5 @@
 // -----------------------------------------
-// Imports and Configuration
+// Import
 // -----------------------------------------
 import { Request, Response, NextFunction } from "express";
 const User = require('../../models/user');
@@ -54,7 +54,7 @@ const awsCredential = {
     };
   },
 
-  // [TO DO] Middleware to get AWS credentials of the user based on ssid
+  // Middleware to get AWS credentials for a user 
   getAWSCredential: async (req: Request, res: Response, next: NextFunction) => {
     const { ssid } = req.query;
 
