@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { LoginProps } from '../renderTypes';
+import { LoginProps } from '../rendererTypes';
 
 // const githubOauth = () => {
 //   window.api.startGitHubAuth()

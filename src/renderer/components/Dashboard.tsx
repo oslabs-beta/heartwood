@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import LineChart from "./LineChart";
 import DonutChart from "./DonutChart";
 import { FaSatelliteDish, FaFireAlt, FaBug, FaClock } from "react-icons/fa";
-import { CustomError, ApiResponse } from "../renderTypes";
+import { CustomError, ApiResponse } from "../rendererTypes";
 
 const Dashboard: React.FC = () => {
   const [invocationsData, setInvocations] = useState<number[]>([]);

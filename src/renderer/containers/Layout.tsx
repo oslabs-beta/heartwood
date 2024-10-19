@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import HeaderBar from '../components/HeaderBar';
 import SideNav from './SideNav';
 import Login from '../components/Login';
-import { ApiResponse, Session } from '../renderTypes';
+import { ApiResponse, Session } from '../rendererTypes';
 
 
 

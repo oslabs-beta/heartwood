@@ -2,7 +2,7 @@ import React from "react";
 import { Line } from "react-chartjs-2";
 import { Chart, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, TimeScale } from 'chart.js';
 import 'chartjs-adapter-date-fns';
-import { LineChartProps } from "../renderTypes";
+import { LineChartProps } from "../rendererTypes";
 const LineChart: React.FC<LineChartProps> = ({ data, labels }) => {
  // ^ change this to pass in props later
 
