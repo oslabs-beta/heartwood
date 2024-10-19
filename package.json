@@ -46,6 +46,8 @@
   },
   "dependencies": {
     "@aws-sdk/client-cloudwatch": "^3.650.0",
+    "@aws-sdk/client-cloudwatch-logs": "^3.675.0",
+    "@aws-sdk/client-lambda": "^3.675.0",
     "@aws-sdk/client-sts": "^3.637.0",
     "@aws-sdk/credential-providers": "^3.637.0",
     "@reduxjs/toolkit": "^2.2.6",

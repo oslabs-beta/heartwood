@@ -9,8 +9,8 @@ const { CloudWatchClient, GetMetricDataCommand } = require("@aws-sdk/client-clou
 // -----------------------------------------
 
 const getLambdaMetrics = {
-  
 
+  
   // Middleware to get a selected Lambda function's invocation count 
   getInvocationCount: async (req: Request, res: Response, next: NextFunction) => {
       console.log('getInvocationCount middleware is hit')
