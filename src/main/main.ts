@@ -253,11 +253,12 @@ ipcMain.handle('getDuration', async () => {
 // Helper function 
 // -----------------------------------------
 
+// Get SSID from cookie 
 const getSSIDFromCookie = async () => {
   const cookies = await session.defaultSession.cookies.get({ url: 'http://localhost/' })
   const ssid: String = cookies[0].value;
   return ssid;
-}
+};
 
 
 

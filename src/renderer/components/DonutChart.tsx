@@ -1,7 +1,7 @@
 import React from 'react';
 import { Chart, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Doughnut } from 'react-chartjs-2'
-import { DonutChartProps } from '../renderTypes';
+import { DonutChartProps } from '../rendererTypes';
 
 const DonutChart: React.FC<DonutChartProps> = ({data, labels}) => {
 

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { signUpProps, ApiResponse, Session } from '../renderTypes';
+import { signUpProps, ApiResponse, Session } from '../rendererTypes';
 
 const SignUp: React.FC<signUpProps> = ({ onSignUpSuccess, toggleSignUp, setLoggedIn }) => {
   const [username, setUserName] = useState<string>('');

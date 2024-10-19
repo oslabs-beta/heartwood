@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import SignUp from "./SignUp";
 import { FaMoon, FaSun, FaBell } from 'react-icons/fa';
-import { HeaderBarProps } from '../renderTypes';
+import { HeaderBarProps } from '../rendererTypes';
 
 const HeaderBar: React.FC<HeaderBarProps> = ({ toggleDarkMode, isDarkMode, onNotificationClick, setLoggedIn }) => {
   const [isSignUpOpen, setIsSignUpOpen] = useState<boolean>(false);
