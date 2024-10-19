@@ -83,21 +83,22 @@ const Layout: React.FC = () => {
       }  
   };
 
-  const fetchCode = async () => {
-    const code = await handleGitHubCallback();
-    //console.log('code is this :)', code);
+// commented out for now because pf type error. 
+//   const fetchCode = async () => {
+//     const code: any = await handleGitHubCallback();
+//     //console.log('code is this :)', code);
 
-    if (code) {
-       //console.log('does code exist?', code);
+//     if (code) {
+//        //console.log('does code exist?', code);
   
-        const isLoggedIn = await window.api.startGitHubAuth(code);
-        console.log('status is', isLoggedIn)
-        setLoggedIn(true)
+//         const isLoggedIn = await window.api.startGitHubAuth(code);
+//         console.log('status is', isLoggedIn)
+//         setLoggedIn(true)
 
-    }
-};
+//     }
+// };
 
- fetchCode();
+//  fetchCode();
 
 
   // const githubOauth = () => {

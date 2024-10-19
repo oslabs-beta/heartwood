@@ -294,47 +294,77 @@ ipcMain.handle('addCredential', async (event, accessKey, secretAccessKey, region
 
 ipcMain.handle('getInvocations', async () => {
   try {
-    // [TO DO] get ssid from cookie here
+    // Get ssid from cookie 
+    const cookies = await session.defaultSession.cookies.get({ url: 'http://localhost/' })
+    const ssid: String = cookies[0].value;
 
-    // [TO DO] pass the ssid here 
-    const response = await axios.get('http://localhost:3000/aws/metric/invocation');
+    // Make a http request to get invocation metrics by passing ssid 
+    const response = await axios.get("http://localhost:3000/aws/metric/invocation", {
+      params: {
+        ssid: ssid,
+      }
+    });
     
-    console.log('Invocations response:', response.data);
     return response.data;
+
   } catch (error) {
     console.error('Error in getInvocations:', error.message);
-    throw error;
   }
 });
 
 ipcMain.handle('getErrors', async () => {
   try {
-    const response = await axios.get('http://localhost:3000/aws/metric/error');
-    console.log('Errors response:', response.data);
+    // Get ssid from cookie 
+    const cookies = await session.defaultSession.cookies.get({ url: 'http://localhost/' })
+    const ssid: String = cookies[0].value;
+
+    const response = await axios.get('http://localhost:3000/aws/metric/error', {
+      params: {
+        ssid: ssid,
+      }
+    });
+
     return response.data;
+
   } catch (error) {
     console.error('Error in getErrors:', error.message);
-    throw error;
   }
 });
 
 ipcMain.handle('getThrottles', async () => {
   try {
-    const response = await axios.get('http://localhost:3000/aws/metric/throttle');
+    // Get ssid from cookie 
+    const cookies = await session.defaultSession.cookies.get({ url: 'http://localhost/' })
+    const ssid: String = cookies[0].value;
+        
+    const response = await axios.get('http://localhost:3000/aws/metric/throttle', {
+      params: {
+        ssid: ssid,
+      }
+    });
+    
     return response.data;
+  
   } catch (error) {
     console.error('Error in getThrottles:', error.message);
-    throw error;
   }
 });
 
 ipcMain.handle('getDuration', async () => {
   try {
-    const response = await axios.get('http://localhost:3000/aws/metric/duration');
+    // Get ssid from cookie 
+    const cookies = await session.defaultSession.cookies.get({ url: 'http://localhost/' })
+    const ssid: String = cookies[0].value;
+
+    const response = await axios.get('http://localhost:3000/aws/metric/duration', {
+      params: {
+        ssid: ssid,
+      }
+    });
+
     return response.data;
   } catch (error) {
     console.error('Error in getDuration:', error.message);
-    throw error;
   }
 });
 

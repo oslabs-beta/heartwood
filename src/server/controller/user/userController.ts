@@ -74,50 +74,50 @@ const userController = {
       }
   },
 
-  github: async (req: Request, res: Response, next: NextFunction) => {
-    try {
-        console.log('GitHub middleware hit');
-        const client_id = process.env.GITHUB_CLIENTID;  // Snake case
-        const client_secret = process.env.GITHUB_CLIENT_SECRET;  // Snake case
+//   github: async (req: Request, res: Response, next: NextFunction) => {
+//     try {
+//         console.log('GitHub middleware hit');
+//         const client_id = process.env.GITHUB_CLIENTID;  // Snake case
+//         const client_secret = process.env.GITHUB_CLIENT_SECRET;  // Snake case
 
-        const { code } = req.body;
-        console.log('Code in controller:', code);
+//         const { code } = req.body;
+//         console.log('Code in controller:', code);
 
-        try {
+//         try {
 
-            const response = await axios.post('https://github.com/login/oauth/access_token', 
-                new URLSearchParams({
-                    client_id,
-                    client_secret,
-                    code
-                }), 
-                {
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                        accept: 'application/json'
-                    }
-                }
-            );
+//             const response = await axios.post('https://github.com/login/oauth/access_token', 
+//                 new URLSearchParams({
+//                     client_id,
+//                     client_secret,
+//                     code
+//                 }), 
+//                 {
+//                     headers: {
+//                         'Content-Type': 'application/x-www-form-urlencoded',
+//                         accept: 'application/json'
+//                     }
+//                 }
+//             );
 
-            const access_token = response.data.access_token;
-            console.log('Access Token:', access_token);
-            const user = new User({ access_token });
-            await user.save();
-            const userId = user._id;
-            console.log('userId is ', userId.toString());
-            res.locals.userId = userId.toString();
-            next()
-            //res.json({ access_token: accessToken });  
-            //return next()
-        } catch (err) {
-            console.error('Error exchanging code for token:', err);
-            next()
-            //res.status(500).json({ error: 'Error exchanging code for token' });
-        }
-    } catch (err) {
-        next(err);
-    }
-}
+//             const access_token = response.data.access_token;
+//             console.log('Access Token:', access_token);
+//             const user = new User({ access_token });
+//             await user.save();
+//             const userId = user._id;
+//             console.log('userId is ', userId.toString());
+//             res.locals.userId = userId.toString();
+//             next()
+//             //res.json({ access_token: accessToken });  
+//             //return next()
+//         } catch (err) {
+//             console.error('Error exchanging code for token:', err);
+//             next()
+//             //res.status(500).json({ error: 'Error exchanging code for token' });
+//         }
+//     } catch (err) {
+//         next(err);
+//     }
+// }
 }; 
 
 module.exports = userController;

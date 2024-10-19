@@ -56,9 +56,24 @@ const awsCredential = {
 
   // [TO DO] Middleware to get AWS credentials of the user based on ssid
   getAWSCredential: async (req: Request, res: Response, next: NextFunction) => {
+    const { ssid } = req.query;
 
+    try {      
+      const user = await User.findOne({ _id: ssid});
+      res.locals.awsCredential = user.awsCredential;
+
+      return next();
+    }
+        
+    catch (error) {
+      // Pass error object to global error handler
+      const errObj = {
+        log: `failed to get AWS credential: ${error}`,
+        message: { err: 'failed to add AWS credential' },
+      };
+      return next(errObj);
+    }
   }
-
 };
 
 module.exports = awsCredential;
