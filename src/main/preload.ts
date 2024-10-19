@@ -19,7 +19,10 @@ window.addEventListener('DOMContentLoaded', () => {
 
 
 contextBridge.exposeInMainWorld('api', {
-  startGitHubAuth: () => ipcRenderer.invoke('start-github-auth'),
+  startGitHubAuth: (code) => {
+    console.log('code in preload is ',code)
+    ipcRenderer.invoke('start-github-auth', {code})
+  },
   //startAuth: () => ipcRenderer.invoke('start-auth'),
   login: (username, password) => ipcRenderer.invoke('login', { username, password }),
   signUp: (username, password, email) => ipcRenderer.invoke('signUp', { username, password, email }),
