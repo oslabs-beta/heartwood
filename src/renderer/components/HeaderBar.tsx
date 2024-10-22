@@ -2,19 +2,29 @@ import React, { useState } from 'react';
 import SignUp from "./SignUp";
 import { FaMoon, FaSun, FaBell } from 'react-icons/fa';
 import { HeaderBarProps } from '../rendererTypes';
+import { ApiResponse, Session } from '../rendererTypes';
 
-const HeaderBar: React.FC<HeaderBarProps> = ({ toggleDarkMode, isDarkMode, onNotificationClick, setLoggedIn }) => {
+const HeaderBar: React.FC<HeaderBarProps> = ({ toggleDarkMode, isDarkMode, onNotificationClick, loggedIn, setLoggedIn }) => {
   const [isSignUpOpen, setIsSignUpOpen] = useState<boolean>(false);
-
 
   const toggleSignUp = () => {
     setIsSignUpOpen(!isSignUpOpen);
   };
 
-
   const handleSignUpSuccess = () => {
     setIsSignUpOpen(false);
   };
+
+  const logout = async () => {
+    console.log('logout btn is clicked')
+    try {
+      await window.api.logout();
+      setLoggedIn(false);
+    }
+    catch(err){
+      console.error;
+    }
+  }
 
   return (
     <header className="flex justify-between items-center p-4 bg-base-100 shadow-md">
@@ -27,20 +37,24 @@ const HeaderBar: React.FC<HeaderBarProps> = ({ toggleDarkMode, isDarkMode, onNot
           <FaBell />
         </button>
         <div className="avatar flex space-x-2">
-          <button onClick={toggleSignUp} className="btn btn-secondary">
-            SignUp
-          </button>
+          {loggedIn ? (
+            <button onClick={logout} className="btn btn-secondary">
+              Logout
+            </button>
+          ) : (
+            <button onClick={toggleSignUp} className="btn btn-secondary">
+              SignUp
+            </button>
+          )}
         </div>
       </div>
+
       {isSignUpOpen && (
-        <div
-          className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
-        >
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div>
-            {/* TO DO: swithch SignUp and SignOut based on user's logged in status */}
-            <SignUp 
-              onSignUpSuccess={handleSignUpSuccess} 
-              toggleSignUp={toggleSignUp} 
+            <SignUp
+              onSignUpSuccess={handleSignUpSuccess}
+              toggleSignUp={toggleSignUp}
               setLoggedIn={setLoggedIn}
             />
           </div>

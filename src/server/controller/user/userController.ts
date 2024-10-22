@@ -12,12 +12,9 @@ const userController = {
     };
   
     try {
-      // Save user to database 
       const newUser = new User({ username, email, password });
       await newUser.save();
   
-      // Store user's id in res.locals
-      // console.log('newUser id is: ', newUser._id.toString());
       res.locals.userId = newUser._id.toString();
       
       return next();
@@ -38,15 +35,12 @@ const userController = {
   
     try {
       const user = await User.findOne({ username, password });
-  
       const userId = user._id;
       res.locals.userId = userId.toString();
   
       if (!user) {
         return res.status(404).send('User not found');
       }
-
-      console.log('user exists from login backend')
   
       return next();
   
@@ -56,7 +50,6 @@ const userController = {
   },
   
   saveToken: async (req: Request, res: Response, next: NextFunction) => {
-      // console.log("req.body", req.body)
       const { access_token } = req.body;
   
       if (!access_token) {

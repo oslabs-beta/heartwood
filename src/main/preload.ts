@@ -27,4 +27,5 @@ contextBridge.exposeInMainWorld('api', {
   checkAuthToken: () => ipcRenderer.invoke('check-auth-token'),
   addCredential: (accessKey: string, secretAccessKey: string, region: string) => ipcRenderer.invoke('addCredential', accessKey, secretAccessKey, region),
   checkLoginStatus: () => ipcRenderer.invoke('checkLoginStatus'),
+  logout: () => ipcRenderer.invoke('logout'),
 });

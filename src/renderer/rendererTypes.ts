@@ -21,6 +21,7 @@ export interface HeaderBarProps {
   toggleDarkMode: () => void;
   isDarkMode: boolean;
   onNotificationClick: () => void;
+  loggedIn: boolean;
   setLoggedIn: (loggedIn: boolean) => void;
 }
 
@@ -53,6 +54,7 @@ export interface Session {
     value: string,
     url: string,
     expirationDate?: string // date string??
+    
 }   
 
 /*
@@ -79,8 +81,9 @@ interface ElectronAPI {
   login: (username: string, password: string) => Promise<ApiResponse<Session>>
   startGitHubAuth: () => Promise<ApiResponse<Session>> // Temporary code. [TO DO] need to fix the function first, and revise the type. 
   addCredential: (accessKey: string, secretAccessKey:string, region:string) => Promise<ApiResponse<any>>
+  logout: () => Promise<ApiResponse<void>>;
   // Add functions here to configure types for response object (and interface for response data as well if necessary - e.g., `Session` interface)
-
+  
 }
 
 // Extend the global window interface 
