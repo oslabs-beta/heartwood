@@ -109,6 +109,7 @@ ipcMain.handle('login', async (event: IpcMainInvokeEvent, { username, password }
   }
 });
 
+
 // User signup 
 ipcMain.handle('signUp', async (event: IpcMainInvokeEvent, { username, password, email }: SingupCredential): Promise<boolean> => {
   try {
@@ -124,10 +125,14 @@ ipcMain.handle('signUp', async (event: IpcMainInvokeEvent, { username, password,
   }
 });
 
+
 // Check login status  
 ipcMain.handle('checkLoginStatus', async (event: IpcMainInvokeEvent): Promise<boolean> => {
   try {
     const cookies = await session.defaultSession.cookies.get({ url: 'http://localhost:3000/' });
+    await checkCookie(); // TEST CODE: check if cookie exists
+
+    if (!cookies[0]) return false;
     
     const expirationDate = cookies[0].expirationDate ?? 0;
     const expirationDateInMs = expirationDate * 1000; // Convert to Ms
@@ -144,13 +149,30 @@ ipcMain.handle('checkLoginStatus', async (event: IpcMainInvokeEvent): Promise<bo
       console.log("The expiration date has passed.");
       return false;
     };
-
+    
   } catch (error) {
     console.error('Error checking user login status', error);
     return false; // Return false in case of error
   }
 });
 
+// Logout
+ipcMain.handle('logout', async () => {
+  try {
+    const ssid = await getSSIDFromCookie();
+    const response = await axios.delete('http://localhost:3000/user/logout', {
+      params: {
+        ssid: ssid,
+      }
+    });
+
+    await session.defaultSession.cookies.remove('http://localhost:3000/', 'ssid');
+    await checkCookie(); // TEST CODE: check if cookie exists
+  }
+  catch(error:any){
+    console.error('Error in logout (main.ts):', error.message);
+  }
+})
 
 // -----------------------------------------
 // IPC Main Handlers - AWS 
@@ -183,6 +205,7 @@ ipcMain.handle('getInvocations', async () => {
       params: {
         ssid: ssid,
       }
+
     });
     
     return response.data;
@@ -260,6 +283,18 @@ const getSSIDFromCookie = async () => {
   return ssid;
 };
 
+
+// Check cookie
+const checkCookie = async () => {
+  console.log('checking Cookie...')
+  const cookies = await session.defaultSession.cookies.get({ url: 'http://localhost:3000/' });
+  cookies[0] ? console.log('cookie exists.', cookies) : console.log('cookie doesn\'t exist.'); 
+}
+
+
+// -----------------------------------------
+// IPC Main Handlers - logout
+// -----------------------------------------
 
 
 /*

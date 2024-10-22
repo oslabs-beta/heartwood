@@ -16,7 +16,7 @@ const getLambdaMetrics = require('../controller/aws/metricsController.js');
 
 // Route to add AWS credential information
 router.post('/credential/add',awsCredential.addAWSCredential, (req: Request, res: Response) => {
-  return res.status(200).send('message'); 
+  return res.status(200).send('credential added'); 
 });
 
 // Route to get AWS lambda's invocation count 

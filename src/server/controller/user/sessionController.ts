@@ -5,15 +5,9 @@ const sessionController = {
   // Middleware to create session and store to user collection 
   createSession: async (req: Request, res: Response, next: NextFunction) => {
   
-    console.log('createSession hit')
-    // Get userId from previous middleware
     const userId = res.locals.userId;
-  
-    console.log('userId in createSession middleware', userId);
-  
+    
     try {
-      // Create a new session
-      // set 'ssid' cookie with value of user id 
       const session = { 
         name: 'ssid', 
         value: userId,
@@ -21,26 +15,47 @@ const sessionController = {
         expirationDate: Math.floor(Date.now() / 1000 + 30 * 24 * 60 * 60), // Set expiration date in one month 
       }
       
-      // Find a User object with userId, and update session property in the database
       const updatedUser = await User.findByIdAndUpdate(
         userId,
         { $set: { session: session } },
         { new: true, runValidators: true }
       );
       
-      // Pass the session object to next middleware
       res.locals.session = updatedUser.session;
-  
-      console.log('session saved in res.local ', res.locals.session)
-  
+    
       return next();
   
     } catch (err) {
       // TO DO
 
     }
-  }
+  },
+
+  // Middleware to delete session from database
+  deleteSession: async (req: Request, res: Response, next: NextFunction) => {
   
+    const { ssid } = req.query;
+
+    try {  
+      const session = { 
+        name: 'ssid', 
+        value: '', //clear value
+        url: 'http://localhost/', 
+        expirationDate: '', // clear exp date
+      }
+
+      await User.findByIdAndUpdate(
+        ssid,
+        { $set: { session: session } },
+        { new: true, runValidators: true }
+      );
+
+      return next();
+    }
+    catch (err){
+      console.log('err in delete session middleware:', err)
+    }
+  }
 };
   
 

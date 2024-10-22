@@ -129,6 +129,7 @@ const Layout: React.FC = () => {
         toggleDarkMode={toggleDarkMode}
         isDarkMode={isDarkMode}
         onNotificationClick={handleNotificationClick}
+        loggedIn = {loggedIn}
         setLoggedIn={setLoggedIn}
       />
 
@@ -140,8 +141,6 @@ const Layout: React.FC = () => {
           userSubmit={userSubmit}
         />
       )}
-
-
     </div>
   );
 };
