@@ -34,7 +34,7 @@ const getLogEvents = {
             nextToken: nextToken,
             limit: 50,
             startFromHead: true || false,
-            unmask: true || false,
+            //unmask: true || false,
           };
           const command = new GetLogEventsCommand(input);
           
