@@ -13,7 +13,6 @@ const getLambdaMetrics = {
 
   // Middleware to get a selected Lambda function's invocation count 
   getInvocationCount: async (req: Request, res: Response, next: NextFunction) => {
-    console.log('getInvocationCount middleware is hit')
 
     /* For test, use the following lines to get awsCredential from .env file.     
       if (!process.env.AWS_ACCESS_KEY_ID || !process.env.AWS_SECRET_ACCESS_KEY || !process.env.AWS_REGION) {
@@ -32,24 +31,37 @@ const getLambdaMetrics = {
         secretAccessKey: AWS_SECRET_ACCESS_KEY
       }
     });
-  
-    // TO DO: Configure Input object
-    const input = { // GetMetricDataInput
-      MetricDataQueries: [ // MetricDataQueries // required
-        { // MetricDataQuery
-          Id: "invocations", // required
-          MetricStat: { // MetricStat
-            Metric: { // Metric
+
+    // Test
+    // let period = 60; // second 
+    // let duration = 24 * 60 * 60 * 1000; // millisecond - (hour * minutes * seconds * ms to s)
+    // let StartTime = new Date(Date.now() - duration);
+    // let EndTime = new Date();
+
+    // Get period (seconds) and duration (millisecond) from request body 
+    const { period, duration } = req.body;
+    let StartTime = new Date(Date.now() - duration);
+    let EndTime = new Date();
+
+    // GetMetricDataInput (https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/client/cloudwatch/command/GetMetricDataCommand/)
+    const input = { 
+      MetricDataQueries: [ 
+        { 
+          Id: "invocations", 
+          MetricStat: { 
+            Metric: { 
               Namespace: "AWS/Lambda", 
               MetricName: "Invocations",
-              Dimensions: [ // Dimensions
-                { // Dimension
-                  Name: "FunctionName", // required
-                  Value: "heartwood-test-lambda-1", // required
+              Dimensions: [ 
+                { 
+                  Name: "FunctionName", 
+                  Value: "heartwood-test-lambda-1", 
                 },
               ],
             },
-            Period: Number("3600"), // required
+            // Period: Number("3600"), // 1 hour (3,600 seconds)
+            //Period: Number("60"), // Is it second??
+            Period: period,
             Stat: "Sum", // required
             Unit: "Count",
             // Unit: "Seconds" || "Microseconds" || "Milliseconds" || "Bytes" || "Kilobytes" || "Megabytes" || "Gigabytes" || "Terabytes" || "Bits" || "Kilobits" || "Megabits" || "Gigabits" || "Terabits" || "Percent" || "Count" || "Bytes/Second" || "Kilobytes/Second" || "Megabytes/Second" || "Gigabytes/Second" || "Terabytes/Second" || "Bits/Second" || "Kilobits/Second" || "Megabits/Second" || "Gigabits/Second" || "Terabits/Second" || "Count/Second" || "None",
@@ -61,8 +73,8 @@ const getLambdaMetrics = {
           // AccountId: "STRING_VALUE",
         },
       ],
-      StartTime: new Date(Date.now() - 24 * 60 * 60 * 1000), // required
-      EndTime: new Date(), // required
+      StartTime: StartTime, // required
+      EndTime: EndTime, // required
       // NextToken: "STRING_VALUE",
       // ScanBy: "TimestampDescending" || "TimestampAscending",
       // MaxDatapoints: Number("int"), // If you omit this, the default of 100,800 is used.

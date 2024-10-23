@@ -69,7 +69,7 @@ const awsCredential = {
       // Pass error object to global error handler
       const errObj = {
         log: `failed to get AWS credential: ${error}`,
-        message: { err: 'failed to add AWS credential' },
+        message: { err: 'failed to get AWS credential' },
       };
       return next(errObj);
     }
