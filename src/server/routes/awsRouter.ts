@@ -42,7 +42,7 @@ router.get('/metric/duration', awsCredential.getAWSCredential, getLambdaMetrics.
 });
 
 //Route to get the list of Lambda Functions 
-router.get('/metric/functionlist', getLambdaFunctions.getListFunctions, (req: Request, res: Response) => {
+router.get('/metric/functionlist', awsCredential.getAWSCredential, getLambdaFunctions.getListFunctions, (req: Request, res: Response) => {
   return res.status(200).json(res.locals.nameData);
 });
 
@@ -55,5 +55,10 @@ router.get('/function/logevents', awsCredential.getAWSCredential, getLogEvents.g
 router.get('/function/logstreams',functionListController.getLogStreamNames, (req: Request, res: Response) => {
   return res.status(200).json(res.locals.logStreamName);
 });
+
+//Route to get the Logs using dynamic data pulling first the Function names then using that information to pull the LogStream Names then using both of those to get Logs
+// router.get('/function/logevents/finallogs', functionListController.getListFunctions, functionListController.getLogStreamNames, getLogEvents.getLambdaLogEvents, (req: Request, res:Response) => {
+//   return res.status(200).json(res.locals.lambdaLogEvents);
+// });
 
 module.exports = router;
