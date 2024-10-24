@@ -459,7 +459,7 @@ ipcMain.handle('signUp', async (event, { username, password, email }) => {
 // Check logged-in status
 // -----------------------------------------
 
-ipcMain.handle('checkLoginStatus', async (event) => {
+ipcMain.handle('checkLoginStatus', async (event :IpcMainInvokeEvent): Promise<boolean> => {
   // added to test cookie functionality, can be deleted later 
   //await session.defaultSession.cookies.remove('http://localhost:3000/', 'ssid');
   try {
@@ -496,7 +496,7 @@ ipcMain.handle('checkLoginStatus', async (event) => {
 // handle AWS credential registration 
 // -----------------------------------------
 
-ipcMain.handle('addCredential', async (event, accessKey, secretAccessKey, region) => {  
+ipcMain.handle('addCredential', async (event: IpcMainInvokeEvent, accessKey: string, secretAccessKey: string, region: string): Promise<void> => {  
   try {
     // Retrieve the ssid cookie 
     const cookies = await session.defaultSession.cookies.get({ url: 'http://localhost/' });
@@ -541,7 +541,7 @@ ipcMain.handle('getInvocations', async () => {
     
     return response.data;
 
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error in getInvocations:', error.message);
   }
 });
@@ -560,7 +560,7 @@ ipcMain.handle('getErrors', async () => {
 
     return response.data;
 
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error in getErrors:', error.message);
   }
 });
@@ -579,7 +579,7 @@ ipcMain.handle('getThrottles', async () => {
     
     return response.data;
   
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error in getThrottles:', error.message);
   }
 });
@@ -597,7 +597,7 @@ ipcMain.handle('getDuration', async () => {
     });
 
     return response.data;
-  } catch (error) {
+  } catch (error:any) {
     console.error('Error in getDuration:', error.message);
   }
 
@@ -613,7 +613,7 @@ ipcMain.handle('getLambdaLogEvents', async () => {
     });
 
     return response.data;
-  } catch(error) {
+  } catch(error:any) {
     console.log('Error in the LogEvents', error.message);
   }
 })
