@@ -55,7 +55,7 @@ const LineChart: React.FC<LineChartProps> = ({ data, labels }) => {
       x: {
         type: 'time' as const, // enables time/date handling
         time: {
-          unit: 'hour' as const, 
+          unit: 'day' as const, // this needs to be changed depends on the period/duration user wants to disply 
           tooltipFormat: 'PPpp', // pretty print date 
         },
       }

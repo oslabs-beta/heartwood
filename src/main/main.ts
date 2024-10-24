@@ -197,15 +197,15 @@ ipcMain.handle('addCredential', async (event: IpcMainInvokeEvent, accessKey: str
 
 
 // Get AWS Lambda function's invocation metric 
-ipcMain.handle('getInvocations', async () => {
+ipcMain.handle('getInvocations', async (event: IpcMainInvokeEvent, period: number, duration: number) => {
   try {
     const ssid = await getSSIDFromCookie();
-
     const response = await axios.get("http://localhost:3000/aws/metric/invocation", {
       params: {
         ssid: ssid,
-      }
-
+        period: period,
+        duration: duration,
+      },
     });
     
     return response.data;
@@ -217,13 +217,15 @@ ipcMain.handle('getInvocations', async () => {
 
 
 // Get AWS Lambda function's error metric
-ipcMain.handle('getErrors', async () => {
+ipcMain.handle('getErrors', async (event: IpcMainInvokeEvent, period: number, duration: number) => {
   try {
     const ssid = await getSSIDFromCookie();
 
     const response = await axios.get('http://localhost:3000/aws/metric/error', {
       params: {
         ssid: ssid,
+        period: period,
+        duration: duration,
       }
     });
 
@@ -236,13 +238,15 @@ ipcMain.handle('getErrors', async () => {
 
 
 // Get AWS Lambda function's throttle metric
-ipcMain.handle('getThrottles', async () => {
+ipcMain.handle('getThrottles', async (event: IpcMainInvokeEvent, period: number, duration: number) => {
   try {
     const ssid = await getSSIDFromCookie();
 
     const response = await axios.get('http://localhost:3000/aws/metric/throttle', {
       params: {
         ssid: ssid,
+        period: period,
+        duration: duration,
       }
     });
     
@@ -255,13 +259,15 @@ ipcMain.handle('getThrottles', async () => {
 
 
 // Get AWS Lambda function's duration metric
-ipcMain.handle('getDuration', async () => {
+ipcMain.handle('getDuration', async (event: IpcMainInvokeEvent, period: number, duration: number) => {
   try {
     const ssid = await getSSIDFromCookie();
 
     const response = await axios.get('http://localhost:3000/aws/metric/duration', {
       params: {
         ssid: ssid,
+        period: period,
+        duration: duration,
       }
     });
 
