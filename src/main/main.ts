@@ -62,7 +62,6 @@ app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit()
 });
 
-
 // -----------------------------------------
 // IPC Main Handlers - Authentication 
 // -----------------------------------------
@@ -272,6 +271,26 @@ ipcMain.handle('getDuration', async () => {
 });
 
 
+ipcMain.handle('getLambdaLogEvents', async () => {
+  try {
+    const ssid = await getSSIDFromCookie();
+    console.log("IPC cookies", ssid)
+
+    const response = await axios.get('http://localhost:3000/aws/function/logevents', {
+      params: {
+        ssid: ssid,
+      }
+    });
+
+    return response.data;
+  } catch (error:any) {
+    console.error('Log Events has an error', error.message);
+  }
+});
+
+
+
+
 // -----------------------------------------
 // Helper function 
 // -----------------------------------------
@@ -292,78 +311,11 @@ const checkCookie = async () => {
 }
 
 
-// -----------------------------------------
-// IPC Main Handlers - logout
-// -----------------------------------------
+// Use 'process' globals's platform attribute to run code for each opearting system 
 
-
-/*
-Note: testing Github oauth config code below 
-*/
-
-// // github Oauth config, specific to our application 
-// const githubOAuthConfig = {
-//   clientId:  process.env.GITHUB_CLIENTID,
-//   clientSecret: process.env.GITHUB_CLIENT_SECRET ,
-//   authorizationUrl: 'https://github.com/login/oauth/authorize',
-//   tokenUrl: 'https://github.com/login/oauth/access_token',
-//   useBasicAuthorizationHeader: false,
-//   redirectUri: 'http://localhost:3000'
-// };
-// // create oauth instance 
-// const oauth2 = new OAuth2(githubOAuthConfig);
-// //const githubOAuth = oauth2(githubOAuthConfig);
-
-// ipcMain.handle('start-github-auth', async () => {
-//   try {
-//     console.log('hit github oauth');
-
-//     try{
-//       const token = await oauth2.getAccessToken({ scope: 'read:user' });
-//       access_token = token.access_token;
-
-//       try {
-//         const response = await axios.post('http://localhost:3000/user/saveToken', { access_token});
-//         return 
-//       } catch (error) {
-//         console.log('save token error', error);
-//       }
-      
-//           // Store the token in a cookie
-//       session.defaultSession.cookies.set({
-//       url: 'http://localhost3000',
-//       name: 'auth_token',
-//       value: token.accessToken,
-//       expirationDate: Date.now() / 1000 + 3600, // expires in 1 hour
-//       httpOnly: true,
-//     });
-
-//     console.log(token)
-
-
-
-//     return token;
-//     }
-//     catch{ return
-
-//     }
-
-
-//         // Make a request to GitHub API to get the logged-in user's information
-//         // const userInfoResponse = await axios.get('https://api.github.com/user', {
-//         //   headers: {
-//         //     Authorization: `Bearer ${token.accessToken}`,
-//         //   },
-//         // });
-    
-//         // // Extract user information
-//         // const userInfo = userInfoResponse.data;
-        
-//         // console.log(userInfo)
-
-
-//   } catch (err) {
-//     console.error('OAuth error:', err);
-//     throw err;
-//   }
-// });
+// Handle the 'window-all-closed' event
+// Quit the app when all windows are closed, except on macOS
+// On macOS, it's common for applications to stay active even without open windows
+app.on('window-all-closed', () => {
+  if (process.platform !== 'darwin') app.quit()
+});
