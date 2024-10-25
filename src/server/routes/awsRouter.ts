@@ -42,8 +42,8 @@ router.get('/metric/duration', awsCredential.getAWSCredential, getLambdaMetrics.
 });
 
 //Route to get the list of Lambda Functions 
-router.get('/metric/functionlist', awsCredential.getAWSCredential, getLambdaFunctions.getListFunctions, (req: Request, res: Response) => {
-  return res.status(200).json(res.locals.nameData);
+router.get('/metric/functionlist', getLambdaFunctions.getListFunctions, (req: Request, res: Response) => {
+  return res.status(200).json(res.locals.functiongroupData);
 });
 
 //Route to get Log Events 
