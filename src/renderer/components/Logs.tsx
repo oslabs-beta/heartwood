@@ -5,20 +5,37 @@ interface Log {
   timestamp: string;
 }
 
+type Functions = string[];
+
 const Logs: React.FC = () => {
   const [logFilter, setLogFilter] = useState<"all" | "reports">("all");
   const [logs, setLogs] = useState<Log[]>([]);
+  const [functions, setFunctions] = useState<Functions[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedFunction, setSelectedFunction] = useState("");
   const [timePeriod, setTimePeriod] = useState<"1D" | "7D" | "14D" | "30D">("1D");
   
 
-  // Available static function names for the dropdown
-  const functionNames = ["exfunc1", "exfunc2", "exfunc3"];
+  const getFunctionList = async () => {
+    try {
+      const result = await window.api.getFunctionNameList();
+      if (result && Array.isArray(result)) {
+        setFunctions(result);
+      } else {
+        throw new Error("Invalid data structure returned from getFunctionList");
+      }
+    } catch (error: any) {
+      console.log("Error in get function list data", error);
+    }
+  }
 
   // Fetch logs when the component mounts
   useEffect(() => {
-    getLogs();
+    getLogs(); 
+  }, []);
+
+  useEffect(() => {
+    getFunctionList(); 
   }, []);
 
   // function to fetch logs from the backend (static right now, pass in selected function?)
@@ -66,7 +83,7 @@ const Logs: React.FC = () => {
               className="select select-bordered w-full flex-grow mb-3 xl:mb-0"
             >
               <option value="">Select function</option>
-              {functionNames.map((funcName, index) => (
+              {functions.map((funcName, index) => (
                 <option key={index} value={funcName}>
                   {funcName}
                 </option>

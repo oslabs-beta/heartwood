@@ -84,6 +84,7 @@ interface ElectronAPI {
   addCredential: (accessKey: string, secretAccessKey:string, region:string) => Promise<ApiResponse<any>>
   logout: () => Promise<ApiResponse<void>>;
   getLambdaLogEvents: () => Promise<ApiResponse<any>>;
+  getFunctionNameList: () => Promise<ApiResponse<any>>;
   // Add functions here to configure types for response object (and interface for response data as well if necessary - e.g., `Session` interface)
   
 }

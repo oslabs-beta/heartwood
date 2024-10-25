@@ -26,15 +26,15 @@ const getLogEvents = {
         });
         let nextToken = null;//initialize nextToken to null for invocation 
 
-        const funcName =  req.body.funcName;
+        // const funcName =  req.body.funcName;
 
-        const inputForLogStreamCommand = {
-          logGroupName: "/aws/lambda" + funcName, 
-        }
+        // const inputForLogStreamCommand = {
+        //   logGroupName: "/aws/lambda" + funcName, 
+        // }
 
-        const getLogStreamsCommand = new DescribeLogStreamsCommand(inputForLogStreamCommand);
-        const getLogStreamCommandResults = await client.send(getLogStreamsCommand);
-        const logStreams = getLogStreamCommandResults.logStreams;
+        // const getLogStreamsCommand = new DescribeLogStreamsCommand(inputForLogStreamCommand);
+        // const getLogStreamCommandResults = await client.send(getLogStreamsCommand);
+        // const logStreams = getLogStreamCommandResults.logStreams;
 
         //console.log('logStreams is', logStreams)
         const input = { // GetLogEventsRequest
