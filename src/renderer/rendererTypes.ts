@@ -44,6 +44,12 @@ export interface signUpProps {
 
 export type formEvent = React.ChangeEvent<HTMLInputElement>;
 
+export interface Credentials {
+  accessKey: string,
+  secretAccessKey: string,
+  maskedSecretAccessKey: string,
+  region: string,
+}
 
 /*
 Response object interface

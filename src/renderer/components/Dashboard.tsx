@@ -158,7 +158,7 @@ const Dashboard: React.FC = () => {
       <div className="w-full px-14 pb-8">
         <div className="card shadow-xl w-full bg-gradient-to-r from-primary via-secondary to-accent text-base-300">
           <div className="card-body">
-            <p className="text-3xl">Welcome to Your Dashboard, {userName}</p>
+            <p className="text-3xl">Welcome to Your Dashboard, {userName || 'User'}</p>
           </div>
         </div>
       </div>
