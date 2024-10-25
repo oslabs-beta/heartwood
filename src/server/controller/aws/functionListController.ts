@@ -18,7 +18,7 @@ const getLambdaFunctions = {
         const client = new LambdaClient({
           region: AWS_REGION, // will need to change this
           credentials: {
-            accessKeyId: AWS_ACCESS_KEY_ID, // need change when commiting 
+            accessKeyId: AWS_ACCESS_KEY_ID , // need change when commiting 
             secretAccessKey: AWS_SECRET_ACCESS_KEY, // need change when committing
           }
         });
