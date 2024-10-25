@@ -295,7 +295,25 @@ ipcMain.handle('getLambdaLogEvents', async () => {
 });
 
 
+// -----------------------------------------
+// IPC Main Handlers - Others 
+// -----------------------------------------
 
+ipcMain.handle('getUserName', async () => {
+  try {
+    const ssid = await getSSIDFromCookie();
+    const response = await axios.get('http://localhost:3000/user/username', {
+      params: {
+        ssid: ssid,
+      }
+    });
+    return {
+      data: response.data
+    };
+  } catch (error: any) {
+    console.error('Failed to get username', error.message);
+  }
+});
 
 // -----------------------------------------
 // Helper function 
