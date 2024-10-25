@@ -134,6 +134,9 @@ const Dashboard: React.FC = () => {
   const totalErrors = calculateTotals(errorData);
   const totalThrottles = calculateTotals(throttleData);
   const averageDuration = calculateAverage(durationData);
+  
+  // TEST: passing x-axis to LineChart arguments (static for now)
+  const xaxis = 'day'; // once drop down is created, this will be replaced 
 
   return (
     <div className="bg-base-100 min-h-screen text-base-content">
@@ -196,7 +199,7 @@ const Dashboard: React.FC = () => {
         <div className="card shadow-lg bg-base-200 p-6">
           <p className="text-lg font-semibold mb-4">Invocations</p>
           <div className="w-full h-72">
-            <LineChart data={invocationsData} labels={invocationsDataLabels} />
+            <LineChart data={invocationsData} labels={invocationsDataLabels} xaxis={xaxis} />
           </div>
         </div>
 
@@ -204,7 +207,7 @@ const Dashboard: React.FC = () => {
         <div className="card shadow-lg bg-base-200 p-6">
           <p className="text-lg font-semibold mb-4">Errors</p>
           <div className="w-full h-72">
-            <LineChart data={errorData} labels={errorDataLabels} />
+            <LineChart data={errorData} labels={errorDataLabels}  xaxis={xaxis} />
           </div>
         </div>
 
@@ -212,7 +215,7 @@ const Dashboard: React.FC = () => {
         <div className="card shadow-lg bg-base-200 p-6">
           <p className="text-lg font-semibold mb-4">Throttles</p>
           <div className="w-full h-72">
-            <LineChart data={throttleData} labels={throttleDataLabels} />
+            <LineChart data={throttleData} labels={throttleDataLabels}  xaxis={xaxis} />
           </div>
         </div>
 
@@ -220,7 +223,7 @@ const Dashboard: React.FC = () => {
         <div className="card shadow-lg bg-base-200 p-6">
           <p className="text-lg font-semibold mb-4">Duration</p>
           <div className="w-full h-72">
-            <LineChart data={durationData} labels={durationDataLabels} />
+            <LineChart data={durationData} labels={durationDataLabels}  xaxis={xaxis} />
           </div>
         </div>
       </div>

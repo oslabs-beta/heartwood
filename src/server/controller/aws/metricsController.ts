@@ -216,11 +216,17 @@ const getLambdaMetrics = {
     } catch (error) {
       console.error("Error fetching Lambda metrics:", error);
     }
+  return next();
   },
   
 
   // Middleware to get a selected Lambda function's duration \
   getDuration: async (req: Request, res: Response, next: NextFunction) => {
+  
+    // Check if necessary AWS environment variables are set 
+    // if (!process.env.AWS_ACCESS_KEY_ID || !process.env.AWS_SECRET_ACCESS_KEY || !process.env.AWS_REGION) {
+    //   throw new Error('AWS credentials or region are not set in environment variables');
+    // }
 
     // Get aws credential from res.locals.awsCredential
     const { AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_REGION } = res.locals.awsCredential;
@@ -277,6 +283,7 @@ const getLambdaMetrics = {
       }
       return next();
 
+      // next();
     } catch (error) {
       console.error("Error fetching Lambda metrics:", error);
     }

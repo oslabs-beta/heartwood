@@ -9,6 +9,9 @@ const router = express.Router();
 // Import AWS credential controller
 const awsCredential = require('../controller/aws/credentialsController.js');
 const getLambdaMetrics = require('../controller/aws/metricsController.js');
+const getLambdaFunctions = require('../controller/aws/functionListController');
+const getLogEvents = require('../controller/aws/LogsController.js');
+const functionListController = require('../controller/aws/functionListController.js')
 
 // -----------------------------------------
 // AWS Credential Routes
@@ -38,5 +41,24 @@ router.get('/metric/duration', awsCredential.getAWSCredential, getLambdaMetrics.
   return res.status(200).json(res.locals.durationData);
 });
 
+//Route to get the list of Lambda Functions 
+router.get('/metric/functionlist', awsCredential.getAWSCredential, getLambdaFunctions.getListFunctions, (req: Request, res: Response) => {
+  return res.status(200).json(res.locals.nameData);
+});
+
+//Route to get Log Events 
+router.get('/function/logevents', awsCredential.getAWSCredential, getLogEvents.getLambdaLogEvents, (req: Request, res: Response) => {
+  return res.status(200).json(res.locals.lambdaLogEvents);
+});
+
+//Route to get Log Stream Name
+router.get('/function/logstreams',functionListController.getLogStreamNames, (req: Request, res: Response) => {
+  return res.status(200).json(res.locals.logStreamName);
+});
+
+//Route to get the Logs using dynamic data pulling first the Function names then using that information to pull the LogStream Names then using both of those to get Logs
+// router.get('/function/logevents/finallogs', functionListController.getListFunctions, functionListController.getLogStreamNames, getLogEvents.getLambdaLogEvents, (req: Request, res:Response) => {
+//   return res.status(200).json(res.locals.lambdaLogEvents);
+// });
 
 module.exports = router;
