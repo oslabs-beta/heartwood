@@ -13,8 +13,9 @@ const Logs: React.FC = () => {
   const [functions, setFunctions] = useState<Functions[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedFunction, setSelectedFunction] = useState("");
-  const [timePeriod, setTimePeriod] = useState<"1D" | "7D" | "14D" | "30D">("1D");
-  
+  const [timePeriod, setTimePeriod] = useState<"1D" | "7D" | "14D" | "30D">(
+    "1D"
+  );
 
   const getFunctionList = async () => {
     try {
@@ -27,20 +28,21 @@ const Logs: React.FC = () => {
     } catch (error: any) {
       console.log("Error in get function list data", error);
     }
-  }
+  };
 
-  // Fetch logs when the component mounts
+  // Fetch logs when the selected function changes
   useEffect(() => {
-    getLogs(); 
+      getLogs();
   }, []);
 
   useEffect(() => {
-    getFunctionList(); 
+    getFunctionList();
   }, []);
 
   // function to fetch logs from the backend (static right now, pass in selected function?)
   const getLogs = async () => {
     try {
+
       const result = await window.api.getLambdaLogEvents();
       // console.log("getLogs result is", result);
       // check if result exists and if its correct data type (arr)
@@ -54,20 +56,41 @@ const Logs: React.FC = () => {
     }
   };
 
+    // Helper function to get the time range in milliseconds for the selected period
+    const getTimeRangeInMillis = () => {
+      const now = Date.now();
+      switch (timePeriod) {
+        case "1D":
+          return now - 24 * 60 * 60 * 1000; // Last 1 day
+        case "7D":
+          return now - 7 * 24 * 60 * 60 * 1000; // Last 7 days
+        case "14D":
+          return now - 14 * 24 * 60 * 60 * 1000; // Last 14 days
+        case "30D":
+          return now - 30 * 24 * 60 * 60 * 1000; // Last 30 days
+        default:
+          return now;
+      }
+    };
   
   // Sort logs by timestamp (newest first)
   const sortedLogs = [...logs].sort(
     (a, b) => Number(b.timestamp) - Number(a.timestamp)
   );
 
-  // Combined filter logic for log type, search term
+  // Combined filter logic for log type, search term, and time period
   const filteredLogs = sortedLogs.filter((log) => {
     const matchesLogFilter =
       logFilter === "all" || log.message.includes("REPORT");
     const matchesSearchTerm =
       searchTerm === "" ||
       log.message.toLowerCase().includes(searchTerm.toLowerCase());
-    return matchesLogFilter && matchesSearchTerm;
+
+    // Filter by timestamp (time period)
+    const logTimestamp = Number(log.timestamp); 
+    const withinTimePeriod = logTimestamp >= getTimeRangeInMillis();
+
+    return matchesLogFilter && matchesSearchTerm && withinTimePeriod;
   });
 
   return (
@@ -79,7 +102,10 @@ const Logs: React.FC = () => {
           <div className="relative w-full max-w-xs">
             <select
               value={selectedFunction}
-              onChange={(e) => setSelectedFunction(e.target.value)}
+              onChange={(e) => {
+                setSelectedFunction(e.target.value);
+                console.log("Selected function:", e.target.value); // Check selected value
+              }}
               className="select select-bordered w-full flex-grow mb-3 xl:mb-0"
             >
               <option value="">Select function</option>
@@ -116,13 +142,19 @@ const Logs: React.FC = () => {
             </button>
           </div>
 
-          {/* Time period dropdown (not yet implemented) */}
-          <select className="select select-bordered w-48">
-            <option value="1D">1 Day</option>
-            <option value="7D">7 Days</option>
-            <option value="14D">14 Days</option>
-            <option value="30D">30 Days</option>
-          </select>
+          {/* Time period dropdown */}
+          <div className="relative w-full max-w-xs">
+            <select
+              value={timePeriod}
+              onChange={(e) => setTimePeriod(e.target.value as "1D" | "7D" | "14D" | "30D")}
+              className="select select-bordered w-full"
+            >
+              <option value="1D">1 Day</option>
+              <option value="7D">7 Days</option>
+              <option value="14D">14 Days</option>
+              <option value="30D">30 Days</option>
+            </select>
+          </div>
         </div>
 
         {/* Logs display */}
@@ -145,4 +177,3 @@ const Logs: React.FC = () => {
 };
 
 export default Logs;
-

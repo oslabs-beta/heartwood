@@ -278,6 +278,7 @@ ipcMain.handle('getDuration', async (event: IpcMainInvokeEvent, period: number, 
 
 
 ipcMain.handle('getLambdaLogEvents', async () => {
+
   try {
     const ssid = await getSSIDFromCookie();
     //console.log("IPC cookies", ssid)

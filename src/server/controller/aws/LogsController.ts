@@ -97,3 +97,4 @@ const getLogEvents = {
 
 
 module.exports = getLogEvents;
+
