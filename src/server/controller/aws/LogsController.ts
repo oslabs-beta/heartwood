@@ -2,7 +2,7 @@
 // Imports and Configuration
 // -----------------------------------------
 import { Request, Response, NextFunction } from "express";
-const { CloudWatchLogsClient, GetLogEventsCommand } = require("@aws-sdk/client-cloudwatch-logs");
+const { CloudWatchLogsClient, GetLogEventsCommand, DescribeLogStreamsCommand } = require("@aws-sdk/client-cloudwatch-logs");
 
 
 
@@ -14,6 +14,7 @@ const getLogEvents = {
     getLambdaLogEvents : async(req: Request, res: Response, next: NextFunction) =>{ 
         //console.log("LogEvent Controller is being hit")
        const { AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_REGION } = res.locals.awsCredential;
+       //const { funcName } = req.body.funcName;
 
 
         const client = new CloudWatchLogsClient({
@@ -25,6 +26,17 @@ const getLogEvents = {
         });
         let nextToken = null;//initialize nextToken to null for invocation 
 
+        // const funcName =  req.body.funcName;
+
+        // const inputForLogStreamCommand = {
+        //   logGroupName: "/aws/lambda" + funcName, 
+        // }
+
+        // const getLogStreamsCommand = new DescribeLogStreamsCommand(inputForLogStreamCommand);
+        // const getLogStreamCommandResults = await client.send(getLogStreamsCommand);
+        // const logStreams = getLogStreamCommandResults.logStreams;
+
+        //console.log('logStreams is', logStreams)
         const input = { // GetLogEventsRequest
             logGroupName: "/aws/lambda/heartwood-test-lambda-1", // source account 
             //logGroupIdentifier:"arn:aws:iam::941377123042:user/heartwood2",
@@ -40,6 +52,7 @@ const getLogEvents = {
           
           try{
             const response = await client.send(command);
+            //console.log('logStreams is', logStreams)
             if(response.events && response.events.length > 0){
               let storedLambdaLogs: any[] = []; //intialize a new array to store object keys
               response.events.forEach((event: { timestamp: any; message: any; ingestionTime: any; }) => {
@@ -84,3 +97,4 @@ const getLogEvents = {
 
 
 module.exports = getLogEvents;
+

@@ -38,6 +38,11 @@ router.delete('/logout', sessionController.deleteSession, (req: Request, res: Re
   res.status(200).send('delete success');
 });
 
+// Route to get user name
+router.get('/username', userController.getUserName, (req: Request, res: Response) => {
+  res.status(200).json(res.locals.userName);
+})
+
 // Route to gitHub Oauth
 // router.post('/github', userController.github, sessionController.createSession, (req: Request, res: Response) => {
 //   console.log('github Oauth success')

@@ -278,9 +278,10 @@ ipcMain.handle('getDuration', async (event: IpcMainInvokeEvent, period: number, 
 
 
 ipcMain.handle('getLambdaLogEvents', async () => {
+
   try {
     const ssid = await getSSIDFromCookie();
-    console.log("IPC cookies", ssid)
+    //console.log("IPC cookies", ssid)
 
     const response = await axios.get('http://localhost:3000/aws/function/logevents', {
       params: {
@@ -295,7 +296,42 @@ ipcMain.handle('getLambdaLogEvents', async () => {
 });
 
 
+//IPC for passing SSID to the getting the aws function 
+ipcMain.handle('getFunctionNameList', async() => {
+  try {
+    const ssid = await getSSIDFromCookie();
 
+    const response = await axios.get('http://localhost:3000/aws/metric/functionlist', {
+      params: {
+        ssid: ssid,
+      }
+    }); 
+
+    return response.data;
+  } catch(error: any) {
+    console.log('FunctionList IPC main has error', error.message)
+  }
+})
+
+// -----------------------------------------
+// IPC Main Handlers - Others 
+// -----------------------------------------
+
+ipcMain.handle('getUserName', async () => {
+  try {
+    const ssid = await getSSIDFromCookie();
+    const response = await axios.get('http://localhost:3000/user/username', {
+      params: {
+        ssid: ssid,
+      }
+    });
+    return {
+      data: response.data
+    };
+  } catch (error: any) {
+    console.error('Failed to get username', error.message);
+  }
+});
 
 // -----------------------------------------
 // Helper function 

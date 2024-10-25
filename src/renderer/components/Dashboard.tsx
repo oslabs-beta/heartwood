@@ -15,6 +15,7 @@ const Dashboard: React.FC = () => {
   const [durationDataLabels, setDurationDataLabels] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [userName, setUserName] = useState<string>();
 
   // helper function to calculate totals of each metric, using reduce to accumulate the values
   const calculateTotals = (data: number[]): number => {
@@ -22,13 +23,14 @@ const Dashboard: React.FC = () => {
     return data.reduce((total, current) => total + current, 0);
   }
 
-// helper function to calculate average of specific metric (duration)
+  // helper function to calculate average of specific metric (duration)
   const calculateAverage = (data: number[]): number => {
     if (!data || !Array.isArray(data) || data.length === 0) return 0;
     const total = data.reduce((total, current) => total + current, 0);
     return total / data.length;
   }
-// helper function to calculate cost
+
+  // helper function to calculate cost
   // const calculateCost = () => {
 
   // }
@@ -111,6 +113,19 @@ const Dashboard: React.FC = () => {
   };
 
   useEffect(() => {
+    const getUserName = async() => {
+      try {
+        const result: ApiResponse<string> = await window.api.getUserName();
+        setUserName(result.data);
+      } catch (error: any) {
+        console.error("Error to get user name in the dashboard");
+        setError(error.message);
+      }
+    }
+    getUserName();
+  }, []);
+
+  useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
       try {
@@ -143,7 +158,7 @@ const Dashboard: React.FC = () => {
       <div className="w-full px-14 pb-8">
         <div className="card shadow-xl w-full bg-gradient-to-r from-primary via-secondary to-accent text-base-300">
           <div className="card-body">
-            <p className="text-3xl">Welcome to Your Dashboard, User</p>
+            <p className="text-3xl">Welcome to Your Dashboard, {userName || 'User'}</p>
           </div>
         </div>
       </div>
@@ -230,6 +245,7 @@ const Dashboard: React.FC = () => {
     </div>
   );
 };
+
 export default Dashboard;
 
 

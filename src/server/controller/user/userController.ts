@@ -67,6 +67,17 @@ const userController = {
       }
   },
 
+  getUserName: async (req: Request, res: Response, next: NextFunction) => {
+    const { ssid } = req.query;
+    try {
+      const user = await User.findOne({ _id: ssid });
+      res.locals.userName = user.username;
+      return next();
+    } catch (error) {
+      return res.status(500).send(`Error in getUsername controller: ${error}`);
+    }
+  }
+
 //   github: async (req: Request, res: Response, next: NextFunction) => {
 //     try {
 //         console.log('GitHub middleware hit');

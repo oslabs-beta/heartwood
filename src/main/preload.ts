@@ -28,5 +28,7 @@ contextBridge.exposeInMainWorld('api', {
   addCredential: (accessKey: string, secretAccessKey: string, region: string) => ipcRenderer.invoke('addCredential', accessKey, secretAccessKey, region),
   checkLoginStatus: () => ipcRenderer.invoke('checkLoginStatus'),
   logout: () => ipcRenderer.invoke('logout'),
-  getLambdaLogEvents: () => ipcRenderer.invoke('getLambdaLogEvents')
+  getLambdaLogEvents: () => ipcRenderer.invoke('getLambdaLogEvents'),
+  getFunctionNameList: () => ipcRenderer.invoke('getFunctionNameList'),
+  getUserName: () => ipcRenderer.invoke('getUserName')
 });

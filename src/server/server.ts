@@ -27,7 +27,7 @@ const connectDB = require('./config/db'); // Import the database connection func
 app.use(express.static(path.resolve(__dirname, '..', '..', 'dist')));
 // Parse JSON bodies
 app.use(express.json());
-// Parse cookies 
+// Parse cookies  
 app.use(cookieParser());
 
 

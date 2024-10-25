@@ -44,6 +44,12 @@ export interface signUpProps {
 
 export type formEvent = React.ChangeEvent<HTMLInputElement>;
 
+export interface Credentials {
+  accessKey: string,
+  secretAccessKey: string,
+  maskedSecretAccessKey: string,
+  region: string,
+}
 
 /*
 Response object interface
@@ -72,7 +78,7 @@ export interface ApiResponse<T> {
 
 // ElectronAPI types
 interface ElectronAPI {
-    // TODO: revise arguments for AWS functions (e.g., getInvocation) 
+  // TODO: revise arguments for AWS functions (e.g., getInvocation) 
   getInvocations: (period: number, duration: number) => Promise<ApiResponse<any>>; // Temp any, check returned data to specify later
   getErrors: (period: number, duration: number) => Promise<ApiResponse<any>>;
   getThrottles: (period: number, duration: number) => Promise<ApiResponse<any>>;
@@ -84,7 +90,8 @@ interface ElectronAPI {
   addCredential: (accessKey: string, secretAccessKey:string, region:string) => Promise<ApiResponse<any>>
   logout: () => Promise<ApiResponse<void>>;
   getLambdaLogEvents: () => Promise<ApiResponse<any>>;
-  // Add functions here to configure types for response object (and interface for response data as well if necessary - e.g., `Session` interface)
+  getFunctionNameList: () => Promise<ApiResponse<any>>;
+  getUserName: () => Promise<ApiResponse<string>>;
   
 }
 
