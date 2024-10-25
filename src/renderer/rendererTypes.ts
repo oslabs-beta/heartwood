@@ -28,6 +28,7 @@ export interface HeaderBarProps {
 export interface LineChartProps {
   data: number[];
   labels: string[];
+  xaxis: 'day' | 'week' | 'month' | 'year';
 }
 
 export interface LoginProps {
@@ -72,10 +73,10 @@ export interface ApiResponse<T> {
 // ElectronAPI types
 interface ElectronAPI {
     // TODO: revise arguments for AWS functions (e.g., getInvocation) 
-  getInvocations: () => Promise<ApiResponse<any>>; // Temp any, check returned data to specify later
-  getErrors: () => Promise<ApiResponse<any>>;
-  getThrottles: () => Promise<ApiResponse<any>>;
-  getDuration: () => Promise<ApiResponse<any>>;
+  getInvocations: (period: number, duration: number) => Promise<ApiResponse<any>>; // Temp any, check returned data to specify later
+  getErrors: (period: number, duration: number) => Promise<ApiResponse<any>>;
+  getThrottles: (period: number, duration: number) => Promise<ApiResponse<any>>;
+  getDuration: (period: number, duration: number) => Promise<ApiResponse<any>>;
   checkLoginStatus: () => Promise<ApiResponse<boolean>>;
   signUp: (username: string, password: string, email: string) => Promise<ApiResponse<Session>>
   login: (username: string, password: string) => Promise<ApiResponse<Session>>

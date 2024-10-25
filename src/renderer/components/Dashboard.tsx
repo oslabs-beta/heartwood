@@ -33,9 +33,22 @@ const Dashboard: React.FC = () => {
 
   // }
 
+  // TEST - Dynamic period/duration: 
+  // Create variables to statically pass period and duration to each function to get AWS metrics. 
+
+  // TODO: 
+  // 1. Create states to track user's selection for period, duration. 
+  // 2. Change useEffect to run these functions whenever the state is updated. 
+  // 3. Update each function's parameter to get period/duration from state (before user's selection, use default value for period/duration). 
+  // 4. Update UI to get user's input from pulldown menu for period and duration. 
+
+  // TEST CODE: 
+  const period = 3600;
+  const duration = 24 * 60 * 60 * 1000 * 30;
+
   const getInvocationMetrics = async () => {
-    try {
-      const result: ApiResponse<number[]> = await window.api.getInvocations();
+    try {      
+      const result: ApiResponse<number[]> = await window.api.getInvocations(period, duration);
       console.log('Raw getInvocations result:', result);
       if (result && result.data && result.label) {
         setInvocations(result.data);
@@ -51,7 +64,7 @@ const Dashboard: React.FC = () => {
 
   const getErrorMetrics = async () => {
     try {
-      const result: ApiResponse<number[]> = await window.api.getErrors();
+      const result: ApiResponse<number[]> = await window.api.getErrors(period, duration);
       console.log('Raw getErrors result:', result);
       if (result && result.data && result.label) {
         setErrors(result.data);
@@ -67,7 +80,7 @@ const Dashboard: React.FC = () => {
 
   const getThrottleMetrics = async () => {
     try {
-      const result: ApiResponse<number[]> = await window.api.getThrottles();
+      const result: ApiResponse<number[]> = await window.api.getThrottles(period, duration);
       console.log('Raw getThrottles result:', result);
       if (result && result.data && result.label) {
         setThrottles(result.data);
@@ -83,7 +96,7 @@ const Dashboard: React.FC = () => {
 
   const getDurationMetrics = async () => {
     try {
-      const result: ApiResponse<number[]> = await window.api.getDuration();
+      const result: ApiResponse<number[]> = await window.api.getDuration(period, duration);
       console.log('Raw getDuration result:', result);
       if (result && result.data && result.label) {
         setDuration(result.data);
@@ -121,6 +134,9 @@ const Dashboard: React.FC = () => {
   const totalErrors = calculateTotals(errorData);
   const totalThrottles = calculateTotals(throttleData);
   const averageDuration = calculateAverage(durationData);
+  
+  // TEST: passing x-axis to LineChart arguments (static for now)
+  const xaxis = 'day'; // once drop down is created, this will be replaced 
 
   return (
     <div className="bg-base-100 min-h-screen text-base-content">
@@ -183,7 +199,7 @@ const Dashboard: React.FC = () => {
         <div className="card shadow-lg bg-base-200 p-6">
           <p className="text-lg font-semibold mb-4">Invocations</p>
           <div className="w-full h-72">
-            <LineChart data={invocationsData} labels={invocationsDataLabels} />
+            <LineChart data={invocationsData} labels={invocationsDataLabels} xaxis={xaxis} />
           </div>
         </div>
 
@@ -191,7 +207,7 @@ const Dashboard: React.FC = () => {
         <div className="card shadow-lg bg-base-200 p-6">
           <p className="text-lg font-semibold mb-4">Errors</p>
           <div className="w-full h-72">
-            <LineChart data={errorData} labels={errorDataLabels} />
+            <LineChart data={errorData} labels={errorDataLabels}  xaxis={xaxis} />
           </div>
         </div>
 
@@ -199,7 +215,7 @@ const Dashboard: React.FC = () => {
         <div className="card shadow-lg bg-base-200 p-6">
           <p className="text-lg font-semibold mb-4">Throttles</p>
           <div className="w-full h-72">
-            <LineChart data={throttleData} labels={throttleDataLabels} />
+            <LineChart data={throttleData} labels={throttleDataLabels}  xaxis={xaxis} />
           </div>
         </div>
 
@@ -207,7 +223,7 @@ const Dashboard: React.FC = () => {
         <div className="card shadow-lg bg-base-200 p-6">
           <p className="text-lg font-semibold mb-4">Duration</p>
           <div className="w-full h-72">
-            <LineChart data={durationData} labels={durationDataLabels} />
+            <LineChart data={durationData} labels={durationDataLabels}  xaxis={xaxis} />
           </div>
         </div>
       </div>

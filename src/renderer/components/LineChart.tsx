@@ -3,9 +3,9 @@ import { Line } from "react-chartjs-2";
 import { Chart, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, TimeScale } from 'chart.js';
 import 'chartjs-adapter-date-fns';
 import { LineChartProps } from "../rendererTypes";
-const LineChart: React.FC<LineChartProps> = ({ data, labels }) => {
+const LineChart: React.FC<LineChartProps> = ({ data, labels, xaxis }) => {
  // ^ change this to pass in props later
-
+  //console.log(xaxis)
     // Register chart components to be used on all charts
     Chart.register(
         // TimeScale,
@@ -55,7 +55,7 @@ const LineChart: React.FC<LineChartProps> = ({ data, labels }) => {
       x: {
         type: 'time' as const, // enables time/date handling
         time: {
-          unit: 'hour' as const, 
+          unit: xaxis, // this needs to be changed depends on the period/duration user wants to disply 
           tooltipFormat: 'PPpp', // pretty print date 
         },
       }
