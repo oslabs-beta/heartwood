@@ -44,7 +44,7 @@ export interface signUpProps {
   setLoggedIn: (loggedIn: boolean) => void;
 }
 
-export type formEvent = React.ChangeEvent<HTMLInputElement>;
+export type FormEvent = React.ChangeEvent<HTMLInputElement | HTMLSelectElement>;
 
 export interface Credentials {
   accessKey: string,
