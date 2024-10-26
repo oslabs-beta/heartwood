@@ -313,6 +313,21 @@ ipcMain.handle('getFunctionNameList', async() => {
   }
 })
 
+ipcMain.handle('getLambdaLogStreams', async() => {
+  try {
+    const ssid = await getSSIDFromCookie();
+
+    const response = await axios.get('http://localhost:3000/aws/function/logstreams', {
+      params: {
+        ssid: ssid,
+      }
+    });
+    return response.data
+  } catch(error: any) {
+    console.log('LogstreamIPC has an error', error.message)
+  }
+})
+
 // -----------------------------------------
 // IPC Main Handlers - Others 
 // -----------------------------------------
@@ -332,6 +347,9 @@ ipcMain.handle('getUserName', async () => {
     console.error('Failed to get username', error.message);
   }
 });
+
+
+
 
 // -----------------------------------------
 // Helper function 

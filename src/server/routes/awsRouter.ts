@@ -10,7 +10,7 @@ const router = express.Router();
 const awsCredential = require('../controller/aws/credentialsController.js');
 const getLambdaMetrics = require('../controller/aws/metricsController.js');
 const getLambdaFunctions = require('../controller/aws/functionListController');
-const getLogEvents = require('../controller/aws/LogsController.js');
+const getLogs = require('../controller/aws/LogsController.js');
 const functionListController = require('../controller/aws/functionListController.js')
 
 // -----------------------------------------
@@ -37,22 +37,23 @@ router.get('/metric/throttle', awsCredential.getAWSCredential, getLambdaMetrics.
   return res.status(200).json(res.locals.throttleData);
 });
 
+// Route to get AWS lambda's duration
 router.get('/metric/duration', awsCredential.getAWSCredential, getLambdaMetrics.getDuration, (req: Request, res: Response) => {
   return res.status(200).json(res.locals.durationData);
 });
 
-//Route to get the list of Lambda Functions 
+// Route to get the list of Lambda Functions 
 router.get('/metric/functionlist', awsCredential.getAWSCredential, getLambdaFunctions.getListFunctions, (req: Request, res: Response) => {
   return res.status(200).json(res.locals.functiongroupData);
 });
 
-//Route to get Log Events 
-router.get('/function/logevents', awsCredential.getAWSCredential, getLogEvents.getLambdaLogEvents, (req: Request, res: Response) => {
+// Route to get Log Events 
+router.get('/function/logevents', awsCredential.getAWSCredential, getLogs.getLambdaLogEvents, (req: Request, res: Response) => {
   return res.status(200).json(res.locals.lambdaLogEvents);
 });
 
-//Route to get Log Stream Name
-router.get('/function/logstreams',functionListController.getLogStreamNames, (req: Request, res: Response) => {
+// Route to get Log Stream Name
+router.get('/function/logstreams',awsCredential.getAWSCredential, getLogs.getLogStreamNames, (req: Request, res: Response) => {
   return res.status(200).json(res.locals.logStreamName);
 });
 

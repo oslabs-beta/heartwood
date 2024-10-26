@@ -49,40 +49,6 @@ const getLambdaFunctions = {
     
       },
 
-      getLogStreamNames: async(req: Request, res: Response, next: NextFunction) => {
-        console.log('getLogStream controller is being hit')
-
-        const { AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_REGION} = res.locals.awsCredential;
-        // const {lambdagroupname} = res.locals.lambdaloggroupname
-    
-        //let nextMarker = null;
-        // const inputLogGroupName = req.body.logGroupName
-        const client = new CloudWatchLogsClient({
-            region: AWS_REGION, // need to change when committing
-            credentials: {
-              accessKeyId: AWS_ACCESS_KEY_ID, // change when committing 
-              secretAccessKey: AWS_SECRET_ACCESS_KEY,
-            }
-        });
-        const input = {
-            logGroupName: '/aws/lambda/heartwood-test-lambda-1' // this will be queried back from the front end
-        }
-        const command = new DescribeLogStreamsCommand(input)
-        try{
-            const response = await client.send(command); 
-            let storedlambdastreams: any [] = []; // storing values
-            for(let i = 0; i < response.logStreams.length; i++){
-              storedlambdastreams.push(response.logStreams[i].logStreamName)
-            }
-            console.log("function response", response.logStreams)
-            res.locals.logStreamName = storedlambdastreams
-        }catch(error){
-            console.log("Error getting logstream name", error)
-        }
-        return next();
-    }
-
-
 
 }
 
