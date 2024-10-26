@@ -91,9 +91,10 @@ interface ElectronAPI {
   startGitHubAuth: () => Promise<ApiResponse<Session>> // Temporary code. [TO DO] need to fix the function first, and revise the type. 
   addCredential: (accessKey: string, secretAccessKey:string, region:string) => Promise<ApiResponse<any>>
   logout: () => Promise<ApiResponse<void>>;
-  getLambdaLogEvents: () => Promise<ApiResponse<any>>;
+  getLambdaLogEvents: (functionName: string, logStreamName: string) => Promise<ApiResponse<any>>;
   getFunctionNameList: () => Promise<ApiResponse<any>>;
   getUserName: () => Promise<ApiResponse<string>>;
+  getLambdaLogStreams: (functionName: string) => Promise<ApiResponse<any>>;
   
 }
 
