@@ -18,6 +18,12 @@ const getLogs = {
     const { functionName } = req.query;
     const logGroupName = `/aws/lambda/${functionName}`;
 
+    console.log('req.query ', req.query);
+    console.log('req.query.functionName', req.query.functionName);
+    console.log('functionName variable is ', functionName);
+    console.log('logGroupName variable is ', logGroupName);
+    
+
     const client = new CloudWatchLogsClient({
       region: AWS_REGION,
       credentials: {
