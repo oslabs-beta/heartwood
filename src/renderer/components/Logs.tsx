@@ -12,7 +12,7 @@ const Logs: React.FC = () => {
   const [logFilter, setLogFilter] = useState<"all" | "reports">("all");
   const [logs, setLogs] = useState<Log[]>([]);
   const [filteredLogs, setFilteredLogs] = useState<Log[]>([]);
-  const [functions, setFunctions] = useState<Functions[]>([]);
+  const [functions, setFunctions] = useState<Functions>([]);
   const [logStreams, setLogStreams] = useState<LogStreams[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedFunction, setSelectedFunction] = useState("");

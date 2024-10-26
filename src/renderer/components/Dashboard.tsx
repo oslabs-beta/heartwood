@@ -4,6 +4,8 @@ import DonutChart from "./DonutChart";
 import { FaSatelliteDish, FaFireAlt, FaBug, FaClock } from "react-icons/fa";
 import { CustomError, ApiResponse, Xaxis } from "../rendererTypes";
 
+type Functions = string[];
+
 const Dashboard: React.FC = () => {
   const [invocationsData, setInvocations] = useState<number[]>([]);
   const [invocationsDataLabels, setInvocationsLabels] = useState<string[]>([]);
@@ -16,9 +18,12 @@ const Dashboard: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [userName, setUserName] = useState<string>();
-  const [timePeriod, setTimePeriod] = useState<string>("3600"); // Default value: 1 hour (seconds)
-  const [dateRange, setDateRange] = useState<string>("86400000"); // Default value: 1 day (milliseconds)
+  const [timePeriod, setTimePeriod] = useState<string>("86400"); // Default value: 1 day (seconds)
+  const [dateRange, setDateRange] = useState<string>("2592000000"); // Default value: 1 month (milliseconds)
   const [xaxis, setXaxis] = useState<Xaxis>('day');
+  const [functions, setFunctions] = useState<Functions>([]);
+  const [selectedFunction, setSelectedFunction] = useState("");
+  const [isFunctionInitialized, setIsFunctionInitialized] = useState<boolean>(false); 
 
   // helper function to calculate totals of each metric, using reduce to accumulate the values
   const calculateTotals = (data: number[]): number => {
@@ -32,11 +37,25 @@ const Dashboard: React.FC = () => {
     const total = data.reduce((total, current) => total + current, 0);
     return total / data.length;
   }
-  
+
+  // helper function to get functions list
+  const getFunctionList = async () => {
+    try {
+      const result = await window.api.getFunctionNameList();
+      console.log('result is', result)
+      if (result && Array.isArray(result)) {
+        setFunctions(result);
+      } else {
+        throw new Error("Invalid data structure returned from getFunctionList");
+      }
+    } catch (error: any) {
+      console.log("Error in get function list data", error);
+    }
+  };
+
   const getInvocationMetrics = async () => {
     try {      
-      const result: ApiResponse<number[]> = await window.api.getInvocations(timePeriod, dateRange);
-      console.log('Raw getInvocations result:', result);
+      const result: ApiResponse<number[]> = await window.api.getInvocations(timePeriod, dateRange, selectedFunction);
       if (result && result.data && result.label) {
         setInvocations(result.data);
         setInvocationsLabels(result.label);
@@ -51,7 +70,7 @@ const Dashboard: React.FC = () => {
 
   const getErrorMetrics = async () => {
     try {
-      const result: ApiResponse<number[]> = await window.api.getErrors(timePeriod, dateRange);
+      const result: ApiResponse<number[]> = await window.api.getErrors(timePeriod, dateRange, selectedFunction);
       console.log('Raw getErrors result:', result);
       if (result && result.data && result.label) {
         setErrors(result.data);
@@ -67,13 +86,13 @@ const Dashboard: React.FC = () => {
 
   const getThrottleMetrics = async () => {
     try {
-      const result: ApiResponse<number[]> = await window.api.getThrottles(timePeriod, dateRange);
+      const result: ApiResponse<number[]> = await window.api.getThrottles(timePeriod, dateRange, selectedFunction);
       console.log('Raw getThrottles result:', result);
       if (result && result.data && result.label) {
         setThrottles(result.data);
         setThrottleDataLabels(result.label);
       } else {
-        throw new Error('Invalid data structure returned from getErrors');
+        throw new Error('Invalid data structure returned from getThrottle');
       }
     } catch (error: any) {
       console.error("Error in dashboard throttles data:", error);
@@ -83,7 +102,7 @@ const Dashboard: React.FC = () => {
 
   const getDurationMetrics = async () => {
     try {
-      const result: ApiResponse<number[]> = await window.api.getDuration(timePeriod, dateRange);
+      const result: ApiResponse<number[]> = await window.api.getDuration(timePeriod, dateRange, selectedFunction);
       console.log('Raw getDuration result:', result);
       if (result && result.data && result.label) {
         setDuration(result.data);
@@ -111,9 +130,27 @@ const Dashboard: React.FC = () => {
     getUserName();
   }, []);
 
+  // Get function list 
+  useEffect(() => {
+    getFunctionList();
+  }, []);
+
+  // Set default function value to selectedFunction 
+  useEffect(() => {
+    console.log('Setting initial selected function:', functions[0]);
+    setSelectedFunction(functions[0]);
+    setIsFunctionInitialized(true);
+  }, [functions])
+
   // Get each metric and set xaxis 
   useEffect(() => {
     const fetchData = async () => {
+      // Only proceed if function is initialized
+      if (!isFunctionInitialized || !selectedFunction) {
+        console.log('Waiting for function initialization...');
+        return;
+      }
+
       setIsLoading(true);
       try {
         await Promise.all([getInvocationMetrics(), getErrorMetrics(), getThrottleMetrics(), getDurationMetrics()]);
@@ -134,7 +171,7 @@ const Dashboard: React.FC = () => {
     };
 
     fetchData();
-  }, [timePeriod, dateRange]);
+  }, [timePeriod, dateRange, selectedFunction, isFunctionInitialized]);
 
   // Show 'loading' while waiting for data 
   if (isLoading) return <div>Loading...</div>;
@@ -200,6 +237,21 @@ const Dashboard: React.FC = () => {
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Function names dropdown */}
+      <div className="relative w-full max-w-[350px]">
+        <select
+          value={selectedFunction}
+          onChange={(e) => setSelectedFunction(e.target.value)}
+          className="select select-bordered w-full"
+        >
+        {functions.map((funcName, index) => (
+          <option key={index} value={funcName}>
+            {funcName}
+          </option>
+        ))}
+        </select>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-8 px-4">
