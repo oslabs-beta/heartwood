@@ -3,15 +3,17 @@ const mongoose = require('mongoose');
 require('dotenv').config();
 
 // save this to .env later 
-const uri = process.env.MONGO_URI;
+const URI = process.env.MONGO_URI;
 
 const connectDB = async () => {
 
-  mongoose.connect(uri);
+  mongoose.connect(URI);
 
   mongoose.connection.once('open', () => {
     console.log('Connected to MongoDB Atlas');
-  }).on('error', (error) => {
+  });
+  
+  mongoose.connection.on('error', (error: Error) => {
     console.error('Connection error:', error);
   });
 
