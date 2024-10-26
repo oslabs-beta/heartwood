@@ -61,7 +61,6 @@ const awsCredential = {
     try {      
       const user = await User.findOne({ _id: ssid});
       res.locals.awsCredential = user.awsCredential;
-      console.log('middleware for cookies', res.locals.awsCredential)
 
       return next();
     }

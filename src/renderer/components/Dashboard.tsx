@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import LineChart from "./LineChart";
 import DonutChart from "./DonutChart";
 import { FaSatelliteDish, FaFireAlt, FaBug, FaClock } from "react-icons/fa";
-import { CustomError, ApiResponse } from "../rendererTypes";
+import { CustomError, ApiResponse, Xaxis } from "../rendererTypes";
 
 const Dashboard: React.FC = () => {
   const [invocationsData, setInvocations] = useState<number[]>([]);
@@ -16,6 +16,9 @@ const Dashboard: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [userName, setUserName] = useState<string>();
+  const [timePeriod, setTimePeriod] = useState<string>("3600"); // Default value: 1 hour (seconds)
+  const [dateRange, setDateRange] = useState<string>("86400000"); // Default value: 1 day (milliseconds)
+  const [xaxis, setXaxis] = useState<Xaxis>('day');
 
   // helper function to calculate totals of each metric, using reduce to accumulate the values
   const calculateTotals = (data: number[]): number => {
@@ -29,28 +32,10 @@ const Dashboard: React.FC = () => {
     const total = data.reduce((total, current) => total + current, 0);
     return total / data.length;
   }
-
-  // helper function to calculate cost
-  // const calculateCost = () => {
-
-  // }
-
-  // TEST - Dynamic period/duration: 
-  // Create variables to statically pass period and duration to each function to get AWS metrics. 
-
-  // TODO: 
-  // 1. Create states to track user's selection for period, duration. 
-  // 2. Change useEffect to run these functions whenever the state is updated. 
-  // 3. Update each function's parameter to get period/duration from state (before user's selection, use default value for period/duration). 
-  // 4. Update UI to get user's input from pulldown menu for period and duration. 
-
-  // TEST CODE: 
-  const period = 3600;
-  const duration = 24 * 60 * 60 * 1000 * 30;
-
+  
   const getInvocationMetrics = async () => {
     try {      
-      const result: ApiResponse<number[]> = await window.api.getInvocations(period, duration);
+      const result: ApiResponse<number[]> = await window.api.getInvocations(timePeriod, dateRange);
       console.log('Raw getInvocations result:', result);
       if (result && result.data && result.label) {
         setInvocations(result.data);
@@ -66,7 +51,7 @@ const Dashboard: React.FC = () => {
 
   const getErrorMetrics = async () => {
     try {
-      const result: ApiResponse<number[]> = await window.api.getErrors(period, duration);
+      const result: ApiResponse<number[]> = await window.api.getErrors(timePeriod, dateRange);
       console.log('Raw getErrors result:', result);
       if (result && result.data && result.label) {
         setErrors(result.data);
@@ -82,7 +67,7 @@ const Dashboard: React.FC = () => {
 
   const getThrottleMetrics = async () => {
     try {
-      const result: ApiResponse<number[]> = await window.api.getThrottles(period, duration);
+      const result: ApiResponse<number[]> = await window.api.getThrottles(timePeriod, dateRange);
       console.log('Raw getThrottles result:', result);
       if (result && result.data && result.label) {
         setThrottles(result.data);
@@ -98,7 +83,7 @@ const Dashboard: React.FC = () => {
 
   const getDurationMetrics = async () => {
     try {
-      const result: ApiResponse<number[]> = await window.api.getDuration(period, duration);
+      const result: ApiResponse<number[]> = await window.api.getDuration(timePeriod, dateRange);
       console.log('Raw getDuration result:', result);
       if (result && result.data && result.label) {
         setDuration(result.data);
@@ -112,6 +97,7 @@ const Dashboard: React.FC = () => {
     }
   };
 
+  // Get username 
   useEffect(() => {
     const getUserName = async() => {
       try {
@@ -125,11 +111,20 @@ const Dashboard: React.FC = () => {
     getUserName();
   }, []);
 
+  // Get each metric and set xaxis 
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
       try {
         await Promise.all([getInvocationMetrics(), getErrorMetrics(), getThrottleMetrics(), getDurationMetrics()]);
+        
+        // set xaxis based on data range 
+        if (Number(dateRange) <= 86400000) { // < 1 day
+          setXaxis('hour');
+        } else {
+          setXaxis('day');
+        }
+
       } catch (error) {
         console.error("Error fetching data:", error);
         setError("Failed to fetch dashboard data");
@@ -139,8 +134,9 @@ const Dashboard: React.FC = () => {
     };
 
     fetchData();
-  }, []);
+  }, [timePeriod, dateRange]);
 
+  // Show 'loading' while waiting for data 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
@@ -150,9 +146,6 @@ const Dashboard: React.FC = () => {
   const totalThrottles = calculateTotals(throttleData);
   const averageDuration = calculateAverage(durationData);
   
-  // TEST: passing x-axis to LineChart arguments (static for now)
-  const xaxis = 'day'; // once drop down is created, this will be replaced 
-
   return (
     <div className="bg-base-100 min-h-screen text-base-content">
       <div className="w-full px-14 pb-8">
@@ -210,6 +203,40 @@ const Dashboard: React.FC = () => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-8 px-4">
+
+        {/* Time period dropdown */}  
+          <div className="flex items-center gap-4">
+          <p className="text-lg font-semibold mb-4">Period : </p>    
+          <div className="relative w-full max-w-xs">
+            <select
+              value={timePeriod}
+              onChange={(e) => setTimePeriod(e.target.value as "3600" | "10800" | "43200" | "86400" )}
+              className="select select-bordered w-full"
+            >
+              <option value="3600">1 Hour</option>
+              <option value="10800">3 Hours</option>
+              <option value="43200">12 Hours</option>
+              <option value="86400">1 Day</option>
+            </select>
+          </div>
+        </div>
+
+        {/* Date range dropdown */}
+        <div className="flex items-center gap-4">
+          <p className="text-lg font-semibold mb-4">Date Range : </p>    
+          <div className="relative w-full max-w-xs">
+            <select
+              value={dateRange}
+              onChange={(e) => setDateRange(e.target.value as "86400000" | "604800000" | "2592000000" )}
+              className="select select-bordered w-full"
+            >
+              <option value="86400000">1 Day</option>
+              <option value="604800000">1 Week</option>
+              <option value="2592000000">1 Month</option>
+            </select>
+          </div>
+        </div>
+
         {/* Invocations Chart */}
         <div className="card shadow-lg bg-base-200 p-6">
           <p className="text-lg font-semibold mb-4">Invocations</p>
@@ -249,14 +276,14 @@ const Dashboard: React.FC = () => {
 export default Dashboard;
 
 
-        {/* Donut Chart Section */}
-        {/* <div className="lg:w-1/2">
-          <div className="card shadow-lg bg-base-200 p-6">
-            <p className="text-lg font-semibold text-base-content mb-4">
-              Invocations per Function
-            </p>
-            <div className="h-72 flex justify-center items-center">
-              <DonutChart data={donutChartData} labels={donutChartLabels} />
-            </div>
-          </div>
-        </div> */}
+  {/* Donut Chart Section */}
+  {/* <div className="lg:w-1/2">
+    <div className="card shadow-lg bg-base-200 p-6">
+      <p className="text-lg font-semibold text-base-content mb-4">
+        Invocations per Function
+      </p>
+      <div className="h-72 flex justify-center items-center">
+        <DonutChart data={donutChartData} labels={donutChartLabels} />
+      </div>
+    </div>
+  </div> */}
