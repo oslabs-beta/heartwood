@@ -23,22 +23,22 @@ router.post('/credential/add',awsCredential.addAWSCredential, (req: Request, res
 });
 
 // Route to get AWS lambda's invocation count 
-router.get('/metric/invocation', awsCredential.getAWSCredential, getLambdaMetrics.getInvocationCount, (req: Request, res: Response) => {
+router.get('/metric/invocation', awsCredential.getAWSCredential, getLambdaMetrics.setCloudWatchClient, getLambdaMetrics.getInvocationCount, (req: Request, res: Response) => {
   return res.status(200).json(res.locals.invocationData);
 });
 
 // Route to get AWS lambda's error count 
-router.get('/metric/error', awsCredential.getAWSCredential, getLambdaMetrics.getErrorCount, (req: Request, res: Response) => {
+router.get('/metric/error', awsCredential.getAWSCredential, getLambdaMetrics.setCloudWatchClient, getLambdaMetrics.getErrorCount, (req: Request, res: Response) => {
   return res.status(200).json(res.locals.errorData);
 });
 
 // Route to get AWS lambda's throttle count 
-router.get('/metric/throttle', awsCredential.getAWSCredential, getLambdaMetrics.getThrottleCount, (req: Request, res: Response) => {
+router.get('/metric/throttle', awsCredential.getAWSCredential, getLambdaMetrics.setCloudWatchClient, getLambdaMetrics.getThrottleCount, (req: Request, res: Response) => {
   return res.status(200).json(res.locals.throttleData);
 });
 
 // Route to get AWS lambda's duration
-router.get('/metric/duration', awsCredential.getAWSCredential, getLambdaMetrics.getDuration, (req: Request, res: Response) => {
+router.get('/metric/duration', awsCredential.getAWSCredential, getLambdaMetrics.setCloudWatchClient, getLambdaMetrics.getDuration, (req: Request, res: Response) => {
   return res.status(200).json(res.locals.durationData);
 });
 

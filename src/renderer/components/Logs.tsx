@@ -1,25 +1,17 @@
 import React, { useState, useEffect } from "react";
+import { Functions, LogStreams, Log } from "../rendererTypes";
 
-interface Log {
-  message: string;
-  timestamp: string;
-}
-
-type Functions = string[];
-type LogStreams = string[];
 
 const Logs: React.FC = () => {
   const [logFilter, setLogFilter] = useState<"all" | "reports">("all");
   const [logs, setLogs] = useState<Log[]>([]);
   const [filteredLogs, setFilteredLogs] = useState<Log[]>([]);
-  const [functions, setFunctions] = useState<Functions[]>([]);
+  const [functions, setFunctions] = useState<Functions>([]);
   const [logStreams, setLogStreams] = useState<LogStreams[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedFunction, setSelectedFunction] = useState("");
   const [selectedLogStream, setSelectedLogStream] = useState(""); 
-  const [timePeriod, setTimePeriod] = useState<"1D" | "7D" | "14D" | "30D">(
-    "30D"
-  );
+  const [timePeriod, setTimePeriod] = useState<"1D" | "7D" | "14D" | "30D">("30D");
 
   const getFunctionList = async () => {
     try {
