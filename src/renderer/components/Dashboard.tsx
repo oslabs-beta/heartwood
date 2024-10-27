@@ -2,9 +2,7 @@ import React, { useState, useEffect } from "react";
 import LineChart from "./LineChart";
 import DonutChart from "./DonutChart";
 import { FaSatelliteDish, FaFireAlt, FaBug, FaClock } from "react-icons/fa";
-import { CustomError, ApiResponse, Xaxis } from "../rendererTypes";
-
-type Functions = string[];
+import { CustomError, ApiResponse, Xaxis, Functions } from "../rendererTypes";
 
 const Dashboard: React.FC = () => {
   const [invocationsData, setInvocations] = useState<number[]>([]);
@@ -25,20 +23,20 @@ const Dashboard: React.FC = () => {
   const [selectedFunction, setSelectedFunction] = useState("");
   const [isFunctionInitialized, setIsFunctionInitialized] = useState<boolean>(false); 
 
-  // helper function to calculate totals of each metric, using reduce to accumulate the values
+  // function to calculate totals of each metric, using reduce to accumulate the values
   const calculateTotals = (data: number[]): number => {
     if (!data || !Array.isArray(data)) return 0;
     return data.reduce((total, current) => total + current, 0);
   }
 
-  // helper function to calculate average of specific metric (duration)
+  // function to calculate average of specific metric (duration)
   const calculateAverage = (data: number[]): number => {
     if (!data || !Array.isArray(data) || data.length === 0) return 0;
     const total = data.reduce((total, current) => total + current, 0);
     return total / data.length;
   }
 
-  // helper function to get functions list
+  // function to get functions list
   const getFunctionList = async () => {
     try {
       const result = await window.api.getFunctionNameList();
@@ -149,7 +147,7 @@ const Dashboard: React.FC = () => {
       if (!isFunctionInitialized || !selectedFunction) {
         console.log('Waiting for function initialization...');
         return;
-      }
+      };
 
       setIsLoading(true);
       try {
@@ -239,25 +237,26 @@ const Dashboard: React.FC = () => {
         </div>
       </div>
 
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-8 px-4">
       {/* Function names dropdown */}
-      <div className="relative w-full max-w-[350px]">
-        <select
-          value={selectedFunction}
-          onChange={(e) => setSelectedFunction(e.target.value)}
-          className="select select-bordered w-full"
-        >
-        {functions.map((funcName, index) => (
-          <option key={index} value={funcName}>
-            {funcName}
-          </option>
-        ))}
-        </select>
+        <div className="relative w-full max-w-[350px]">
+          <select
+            value={selectedFunction}
+            onChange={(e) => setSelectedFunction(e.target.value)}
+            className="select select-bordered w-full"
+          >
+          {functions.map((funcName, index) => (
+            <option key={index} value={funcName}>
+              {funcName}
+            </option>
+          ))}
+          </select>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-8 px-4">
-
         {/* Time period dropdown */}  
-          <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4">
           <p className="text-lg font-semibold mb-4">Period : </p>    
           <div className="relative w-full max-w-xs">
             <select

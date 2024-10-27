@@ -8,6 +8,10 @@ export type CustomError = {
   message: string | { err: string };
 };
 
+export type Functions = string[];
+
+export type LogStreams = string[];
+
 /*
 Props interface 
 */
@@ -43,6 +47,12 @@ export interface signUpProps {
   toggleSignUp: () => void;
   setLoggedIn: (loggedIn: boolean) => void;
 }
+
+export interface Log {
+  message: string;
+  timestamp: string;
+}
+
 
 export type FormEvent = React.ChangeEvent<HTMLInputElement | HTMLSelectElement>;
 
