@@ -182,14 +182,15 @@ const Dashboard: React.FC = () => {
   const averageDuration = calculateAverage(durationData);
   
   return (
-    <div className="bg-base-100 min-h-screen text-base-content">
-      <div className="w-full px-14 pb-8">
-        <div className="card shadow-xl w-full bg-gradient-to-r from-primary via-secondary to-accent text-base-300">
-          <div className="card-body">
+    <div className="bg-base-100 min-h-screen text-base-content flex flex-col">
+      {/* This wraps all content to make sure consistent padding and alignment */}
+      <div className="w-full px-4 py-6">
+        {/* Header Card */}
+        <div className="card shadow-xl w-full bg-gradient-to-r from-primary via-secondary to-accent text-base-300 mb-8">
+          <div className="card-body p-6">
             <p className="text-3xl">Welcome to Your Dashboard, {userName || 'User'}</p>
           </div>
         </div>
-      </div>
   
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 flex-1">
         {/* Total Invocations */}
@@ -320,6 +321,7 @@ const Dashboard: React.FC = () => {
           </div>
         </div>
       </div>
+    </div>
     </div>
   );
 };
