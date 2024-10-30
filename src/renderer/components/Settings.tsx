@@ -1,7 +1,5 @@
 
-import React, { createElement, useState } from 'react';
-import { useEffect } from 'react';
-import { Button, Form } from 'react-bootstrap';
+import React, { createElement, useState, useEffect } from 'react';
 import { Credentials } from "../rendererTypes";
 
 const Settings: React.FC = () => {
@@ -13,6 +11,13 @@ const Settings: React.FC = () => {
     region: '',
   });
 
+  // State to store user details
+  const [userDetails, setUserDetails] = useState({
+    name: '',
+    email: 'user@example.com', // fetch this from db?
+    newPassword: '',
+    confirmPassword: '',
+  })
   // Function to handle user's input 
   const handleAccessKeyInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCredentialInput({
@@ -85,22 +90,34 @@ const Settings: React.FC = () => {
   ];
 
   return (
-    <div className="flex justify-center md:flex-wrap p-6 bg-white rounded-lg shadow-lg">
-      <Form onSubmit={awsSubmit}>
-        <Form.Group className="aws-1 bg-white" controlId="awsAccessKey">
-          <Form.Label class="text-md font-semibold mb-2 text-base-content">Access Key</Form.Label>
-          <Form.Control className="input input-bordered mb-3 w-full" type="text" value={credentialInput.accessKey} onChange={handleAccessKeyInput} placeholder="Enter Access Key" />
-        </Form.Group>
+    <div className="flex justify-center items-center h-screen p-6 bg-base-200">
+      <form onSubmit={awsSubmit} className="w-full max-w-md p-8 bg-base-100 rounded-lg shadow-lg">
+        <div className="form-control">
+          <label className="label text-base-content font-semibold">Access Key</label>
+          <input
+            type="text"
+            className="input input-bordered mb-3"
+            value={credentialInput.accessKey}
+            onChange={handleAccessKeyInput}
+            placeholder="Enter Access Key"
+          />
+        </div>
 
-        <Form.Group className="aws-1 bg-white" controlId="secretKey">
-          <Form.Label class="text-md font-semibold mb-2 text-base-content">Secret Key</Form.Label>
-          <Form.Control className="input input-bordered mb-3 w-full" type="text" value={credentialInput.maskedSecretAccessKey} onChange={handleSecretAccessKeyInput} placeholder="Enter Secret Access Key" />
-        </Form.Group>
+        <div className="form-control">
+          <label className="label text-base-content font-semibold">Secret Key</label>
+          <input
+            type="text"
+            className="input input-bordered mb-3"
+            value={credentialInput.maskedSecretAccessKey}
+            onChange={handleSecretAccessKeyInput}
+            placeholder="Enter Secret Access Key"
+          />
+        </div>
 
-        <Form.Group className="aws-1 bg-white" controlId="region">
-          <Form.Label className="text-md font-semibold mb-2 text-base-content">Region</Form.Label>
-          <Form.Select
-            className="select select-bordered mb-3 w-full"
+        <div className="form-control">
+          <label className="label text-base-content font-semibold">Region</label>
+          <select
+            className="select select-bordered mb-3"
             value={credentialInput.region}
             onChange={handleRegionInput}
           >
@@ -110,17 +127,17 @@ const Settings: React.FC = () => {
                 {region.label}
               </option>
             ))}
-          </Form.Select>
-        </Form.Group>
+          </select>
+        </div>
 
-        <div className="flex justify-center space-y-4 mt-4">
-          <button className="btn w-full rounded-md" type="submit">
+        <div className="flex justify-center mt-4">
+          <button className="btn btn-primary w-full" type="submit">
             Submit
           </button>
         </div>
-      </Form>
+      </form>
     </div>
-  )
+  );
 };
 
 export default Settings;
