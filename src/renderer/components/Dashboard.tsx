@@ -3,6 +3,7 @@ import LineChart from "./LineChart";
 import DonutChart from "./DonutChart";
 import { FaSatelliteDish, FaFireAlt, FaBug, FaClock } from "react-icons/fa";
 import { CustomError, ApiResponse, Xaxis, Functions } from "../rendererTypes";
+import LoadingSpinner from "./LoadingSpinner";
 
 const Dashboard: React.FC = () => {
   const [invocationsData, setInvocations] = useState<number[]>([]);
@@ -172,7 +173,7 @@ const Dashboard: React.FC = () => {
   }, [timePeriod, dateRange, selectedFunction, isFunctionInitialized]);
 
   // Show 'loading' while waiting for data 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <div><LoadingSpinner /></div>;
   if (error) return <div>Error: {error}</div>;
 
   // calculate the totals of each metric by passing in respective data into helper function
