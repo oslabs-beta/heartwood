@@ -31,10 +31,15 @@ module.exports = {
         test: /\.s?css$/,
         use: ['style-loader', 'css-loader', 'postcss-loader'],
       },
+      // Add this block for image file support
+    {
+      test: /\.(png|jpe?g|gif|svg)$/i,
+      type: 'asset/resource', // Use the asset module for managing images
+    },
     ],
   },
   resolve: {
-    extensions: ['.js', '.jsx', '.ts', '.tsx'],
+    extensions: ['.js', '.jsx', '.ts', '.tsx',],
   },
   plugins: [
     new HtmlWebpackPlugin({

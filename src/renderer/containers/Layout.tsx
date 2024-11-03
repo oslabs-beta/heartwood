@@ -10,6 +10,8 @@ const Layout: React.FC = () => {
   const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
   const [loggedIn, setLoggedIn] = useState<boolean>(false); // Add login status state
 
+
+
   const toggleDarkMode = () => {
     setIsDarkMode(!isDarkMode);
     document.documentElement.setAttribute('data-theme', isDarkMode ? 'retro' : 'coffee');
