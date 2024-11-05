@@ -192,7 +192,22 @@ const Dashboard: React.FC = () => {
             <p className="text-3xl">Welcome to Your Dashboard, {userName || 'User'}</p>
           </div>
         </div>
-  
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-8 py-4">
+      {/* Function names dropdown */}
+        <div className="relative w-full max-w-[350px]">
+          <select
+            value={selectedFunction}
+            onChange={(e) => setSelectedFunction(e.target.value)}
+            className="select select-bordered w-full"
+          >
+          {functions.map((funcName, index) => (
+            <option key={index} value={funcName}>
+              {funcName}
+            </option>
+          ))}
+          </select>
+        </div>
+      </div>
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 flex-1">
         {/* Total Invocations */}
         <div className="card bg-base-200 shadow-lg p-2 flex items-center space-x-2">
@@ -236,23 +251,6 @@ const Dashboard: React.FC = () => {
               <p className="text-xl font-bold">{averageDuration.toFixed(2)} ms</p>
             </div>
           </div>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-8 px-4">
-      {/* Function names dropdown */}
-        <div className="relative w-full max-w-[350px]">
-          <select
-            value={selectedFunction}
-            onChange={(e) => setSelectedFunction(e.target.value)}
-            className="select select-bordered w-full"
-          >
-          {functions.map((funcName, index) => (
-            <option key={index} value={funcName}>
-              {funcName}
-            </option>
-          ))}
-          </select>
         </div>
       </div>
 
