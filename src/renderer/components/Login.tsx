@@ -29,7 +29,7 @@ const Login: React.FC<LoginProps> = ({githubOauth, userSubmit}) => {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center">
-      <div className="card w-full max-w-md p-8 shadow-lg bg-white">
+      <div className="card w-full max-w-md p-8 shadow-lg bg-base-100 border-gray-300">
         <h2 className="text-2xl font-bold text-center mb-6">Login</h2>
 
         <label className="input input-bordered flex items-center gap-2 mb-4">
@@ -64,7 +64,7 @@ const Login: React.FC<LoginProps> = ({githubOauth, userSubmit}) => {
         </label>
 
         <label className="submit flex items-center gap-2">
-          <button className="btn  w-full rounded" onClick={() => userSubmit(username, password)}>Submit</button>
+          <button className="btn btn-secondary w-full rounded" onClick={() => userSubmit(username, password)}>Submit</button>
         </label>
 
         <div className="relative flex py-5 items-center">
@@ -74,7 +74,7 @@ const Login: React.FC<LoginProps> = ({githubOauth, userSubmit}) => {
         </div>
 
 
-        <button id="githubBtn" className="btn btn-primary rounded flex items-center justify-center gap-2 w-full" onClick={githubOauth}>
+        <button id="githubBtn" className="btn btn-accent rounded flex items-center justify-center gap-2 w-full" onClick={githubOauth}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"

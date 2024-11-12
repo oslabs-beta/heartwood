@@ -29,12 +29,10 @@ To test with static period/duration variable, use the following lines to get aws
 
 
 const getLambdaMetrics = {
-
-  // Middleware to get a selected Lambda function's invocation count 
-  getInvocationCount: async (req: Request, res: Response, next: NextFunction) => {
-
+  // Middleware to create cloudWatchClient 
+  setCloudWatchClient: async (req: Request, res: Response, next: NextFunction) => {
     const { AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_REGION } = res.locals.awsCredential;
-  
+
     const client = new CloudWatchClient({ 
       region: AWS_REGION,
       credentials: {
@@ -43,8 +41,19 @@ const getLambdaMetrics = {
       }
     });
 
-    // Get period (seconds) and duration (millisecond) from req query
-    const { period, duration }: any = req.query; // [TO DO] Refactor type
+    res.locals.client = client;
+
+    return next();
+
+  },
+
+  // Middleware to get a selected Lambda function's invocation count 
+  getInvocationCount: async (req: Request, res: Response, next: NextFunction) => {
+
+    const client = res.locals.client;
+
+    // Get period (seconds), duration (millisecond), and function name from req query
+    const { period, duration, functionName }: any = req.query; 
 
     let StartTime = new Date(Date.now() - duration);
     let EndTime = new Date();
@@ -61,7 +70,7 @@ const getLambdaMetrics = {
               Dimensions: [ 
                 { 
                   Name: "FunctionName", 
-                  Value: "heartwood-test-lambda-1", 
+                  Value: functionName,
                 },
               ],
             },
@@ -96,20 +105,10 @@ const getLambdaMetrics = {
   // Middleware to get a selected Lambda function's error count 
   getErrorCount: async (req: Request, res: Response, next: NextFunction) => {
     
-    // Get aws credential from res.locals.awsCredential
-    const { AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_REGION } = res.locals.awsCredential;
-    
-    // Initialize a new cloudWatch client with credentials from environment variables
-    const client = new CloudWatchClient({ 
-      region: AWS_REGION,
-      credentials: {
-        accessKeyId: AWS_ACCESS_KEY_ID,
-        secretAccessKey: AWS_SECRET_ACCESS_KEY
-      }
-    });
+    const client = res.locals.client;
 
-    // Get period (seconds) and duration (millisecond) from request body 
-    const { period, duration }: any = req.query;
+    const { period, duration, functionName }: any = req.query; 
+
     let StartTime = new Date(Date.now() - duration);
     let EndTime = new Date();
 
@@ -124,7 +123,7 @@ const getLambdaMetrics = {
               Dimensions: [ 
                 {
                   Name: "FunctionName", 
-                  Value: "heartwood-test-lambda-1", 
+                  Value: functionName, 
                 },
               ],
             },
@@ -148,6 +147,9 @@ const getLambdaMetrics = {
         label: response.MetricDataResults[0].Timestamps,
         data: response.MetricDataResults[0].Values,
       }
+
+      console.log('res.locals.errorData', res.locals.errorData)
+
       return next();
 
     } catch (error) {
@@ -159,22 +161,15 @@ const getLambdaMetrics = {
   // Middleware to get a selected Lambda function's throttle count 
   getThrottleCount: async (req: Request, res: Response, next: NextFunction) => {
   
-    // Get aws credential from res.locals.awsCredential
-    const { AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_REGION } = res.locals.awsCredential;
-  
-    // Initialize a new cloudWatch client with credentials from environment variables
-    const client = new CloudWatchClient({ 
-      region: AWS_REGION,
-      credentials: {
-        accessKeyId: AWS_ACCESS_KEY_ID,
-        secretAccessKey: AWS_SECRET_ACCESS_KEY
-      }
-    });
+    const client = res.locals.client;
 
     // Get period (seconds) and duration (millisecond) from request body 
-    const { period, duration }: any = req.query;
+    const { period, duration, functionName }: any = req.query; 
+
     let StartTime = new Date(Date.now() - duration);
     let EndTime = new Date();
+
+    console.log('funcname', functionName)
 
     const input = {
       MetricDataQueries: [ 
@@ -187,7 +182,7 @@ const getLambdaMetrics = {
               Dimensions: [ 
                 { 
                   Name: "FunctionName",
-                  Value: "heartwood-test-lambda-1", 
+                  Value: functionName, 
                 },
               ],
             },
@@ -211,6 +206,7 @@ const getLambdaMetrics = {
         label: response.MetricDataResults[0].Timestamps,
         data: response.MetricDataResults[0].Values,
       }
+      console.log('trhottle', res.locals.throttleData)
       return next();
 
     } catch (error) {
@@ -223,25 +219,10 @@ const getLambdaMetrics = {
   // Middleware to get a selected Lambda function's duration \
   getDuration: async (req: Request, res: Response, next: NextFunction) => {
   
-    // Check if necessary AWS environment variables are set 
-    // if (!process.env.AWS_ACCESS_KEY_ID || !process.env.AWS_SECRET_ACCESS_KEY || !process.env.AWS_REGION) {
-    //   throw new Error('AWS credentials or region are not set in environment variables');
-    // }
+    const client = res.locals.client;
 
-    // Get aws credential from res.locals.awsCredential
-    const { AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_REGION } = res.locals.awsCredential;
-    
-    // Initialize a new cloudWatch client with credentials from environment variables
-    const client = new CloudWatchClient({ 
-      region: AWS_REGION,
-      credentials: {
-        accessKeyId: AWS_ACCESS_KEY_ID,
-        secretAccessKey: AWS_SECRET_ACCESS_KEY
-      }
-    });
-    
-    // Get period (seconds) and duration (millisecond) from request body 
-    const { period, duration }: any = req.query;
+    const { period, duration, functionName }: any = req.query; 
+
     let StartTime = new Date(Date.now() - duration);
     let EndTime = new Date();
 
@@ -256,7 +237,7 @@ const getLambdaMetrics = {
               Dimensions: [ 
                 { 
                   Name: "FunctionName", 
-                  Value: "heartwood-test-lambda-1", 
+                  Value: functionName, 
                 },
               ],
             },

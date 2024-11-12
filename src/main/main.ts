@@ -196,7 +196,7 @@ ipcMain.handle('addCredential', async (event: IpcMainInvokeEvent, accessKey: str
 
 
 // Get AWS Lambda function's invocation metric 
-ipcMain.handle('getInvocations', async (event: IpcMainInvokeEvent, period: string, duration: string) => {
+ipcMain.handle('getInvocations', async (event: IpcMainInvokeEvent, period: string, duration: string, selectedFunction: string) => {
   try {
     const ssid = await getSSIDFromCookie();
     const response = await axios.get("http://localhost:3000/aws/metric/invocation", {
@@ -204,6 +204,7 @@ ipcMain.handle('getInvocations', async (event: IpcMainInvokeEvent, period: strin
         ssid: ssid,
         period: period,
         duration: duration,
+        functionName: selectedFunction,
       },
     });
     
@@ -216,7 +217,7 @@ ipcMain.handle('getInvocations', async (event: IpcMainInvokeEvent, period: strin
 
 
 // Get AWS Lambda function's error metric
-ipcMain.handle('getErrors', async (event: IpcMainInvokeEvent, period: string, duration: string) => {
+ipcMain.handle('getErrors', async (event: IpcMainInvokeEvent, period: string, duration: string, selectedFunction: string) => {
   try {
     const ssid = await getSSIDFromCookie();
 
@@ -225,6 +226,7 @@ ipcMain.handle('getErrors', async (event: IpcMainInvokeEvent, period: string, du
         ssid: ssid,
         period: period,
         duration: duration,
+        functionName: selectedFunction,
       }
     });
 
@@ -237,7 +239,7 @@ ipcMain.handle('getErrors', async (event: IpcMainInvokeEvent, period: string, du
 
 
 // Get AWS Lambda function's throttle metric
-ipcMain.handle('getThrottles', async (event: IpcMainInvokeEvent, period: string, duration: string) => {
+ipcMain.handle('getThrottles', async (event: IpcMainInvokeEvent, period: string, duration: string, selectedFunction: string) => {
   try {
     const ssid = await getSSIDFromCookie();
 
@@ -246,6 +248,7 @@ ipcMain.handle('getThrottles', async (event: IpcMainInvokeEvent, period: string,
         ssid: ssid,
         period: period,
         duration: duration,
+        functionName: selectedFunction,
       }
     });
     
@@ -258,7 +261,7 @@ ipcMain.handle('getThrottles', async (event: IpcMainInvokeEvent, period: string,
 
 
 // Get AWS Lambda function's duration metric
-ipcMain.handle('getDuration', async (event: IpcMainInvokeEvent, period: string, duration: string) => {
+ipcMain.handle('getDuration', async (event: IpcMainInvokeEvent, period: string, duration: string, selectedFunction: string) => {
   try {
     const ssid = await getSSIDFromCookie();
 
@@ -267,6 +270,7 @@ ipcMain.handle('getDuration', async (event: IpcMainInvokeEvent, period: string, 
         ssid: ssid,
         period: period,
         duration: duration,
+        functionName: selectedFunction,
       }
     });
 
@@ -277,7 +281,7 @@ ipcMain.handle('getDuration', async (event: IpcMainInvokeEvent, period: string, 
 });
 
 
-ipcMain.handle('getLambdaLogEvents', async () => {
+ipcMain.handle('getLambdaLogEvents', async (event: IpcMainInvokeEvent, functionName: string, logStreamName: string) => {
 
   try {
     const ssid = await getSSIDFromCookie();
@@ -286,6 +290,8 @@ ipcMain.handle('getLambdaLogEvents', async () => {
     const response = await axios.get('http://localhost:3000/aws/function/logevents', {
       params: {
         ssid: ssid,
+        functionName: functionName,
+        logStreamName: logStreamName
       }
     });
 
@@ -313,6 +319,22 @@ ipcMain.handle('getFunctionNameList', async() => {
   }
 })
 
+ipcMain.handle('getLambdaLogStreams', async(event: IpcMainInvokeEvent, functionName: string) => {
+  try {
+    const ssid = await getSSIDFromCookie();
+    console.log('function name in main is', functionName)
+    const response = await axios.get('http://localhost:3000/aws/function/logstreams', {
+      params: {
+        ssid: ssid,
+        functionName: functionName,
+      }
+    });
+    return response.data
+  } catch(error: any) {
+    console.log('LogstreamIPC has an error', error.message)
+  }
+})
+
 // -----------------------------------------
 // IPC Main Handlers - Others 
 // -----------------------------------------
@@ -332,6 +354,9 @@ ipcMain.handle('getUserName', async () => {
     console.error('Failed to get username', error.message);
   }
 });
+
+
+
 
 // -----------------------------------------
 // Helper function 

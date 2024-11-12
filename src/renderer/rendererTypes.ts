@@ -8,6 +8,10 @@ export type CustomError = {
   message: string | { err: string };
 };
 
+export type Functions = string[];
+
+export type LogStreams = string[];
+
 /*
 Props interface 
 */
@@ -44,7 +48,13 @@ export interface signUpProps {
   setLoggedIn: (loggedIn: boolean) => void;
 }
 
-export type formEvent = React.ChangeEvent<HTMLInputElement>;
+export interface Log {
+  message: string;
+  timestamp: string;
+}
+
+
+export type FormEvent = React.ChangeEvent<HTMLInputElement | HTMLSelectElement>;
 
 export interface Credentials {
   accessKey: string,
@@ -81,19 +91,20 @@ export interface ApiResponse<T> {
 // ElectronAPI types
 interface ElectronAPI {
   // TODO: revise arguments for AWS functions (e.g., getInvocation) 
-  getInvocations: (period: string, duration: string) => Promise<ApiResponse<any>>; // Temp any, check returned data to specify later
-  getErrors: (period: string, duration: string) => Promise<ApiResponse<any>>;
-  getThrottles: (period: string, duration: string) => Promise<ApiResponse<any>>;
-  getDuration: (period: string, duration: string) => Promise<ApiResponse<any>>;
+  getInvocations: (period: string, duration: string, selectedFunction: string) => Promise<ApiResponse<any>>; // Temp any, check returned data to specify later
+  getErrors: (period: string, duration: string, selectedFunction: string) => Promise<ApiResponse<any>>;
+  getThrottles: (period: string, duration: string, selectedFunction: string) => Promise<ApiResponse<any>>;
+  getDuration: (period: string, duration: string, selectedFunction: string) => Promise<ApiResponse<any>>;
   checkLoginStatus: () => Promise<ApiResponse<boolean>>;
   signUp: (username: string, password: string, email: string) => Promise<ApiResponse<Session>>
   login: (username: string, password: string) => Promise<ApiResponse<Session>>
   startGitHubAuth: () => Promise<ApiResponse<Session>> // Temporary code. [TO DO] need to fix the function first, and revise the type. 
   addCredential: (accessKey: string, secretAccessKey:string, region:string) => Promise<ApiResponse<any>>
   logout: () => Promise<ApiResponse<void>>;
-  getLambdaLogEvents: () => Promise<ApiResponse<any>>;
+  getLambdaLogEvents: (functionName: string, logStreamName: string) => Promise<ApiResponse<any>>;
   getFunctionNameList: () => Promise<ApiResponse<any>>;
   getUserName: () => Promise<ApiResponse<string>>;
+  getLambdaLogStreams: (functionName: string) => Promise<ApiResponse<any>>;
   
 }
 
