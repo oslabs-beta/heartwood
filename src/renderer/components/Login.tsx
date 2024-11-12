@@ -67,13 +67,13 @@ const Login: React.FC<LoginProps> = ({githubOauth, userSubmit}) => {
           <button className="btn btn-secondary w-full rounded" onClick={() => userSubmit(username, password)}>Submit</button>
         </label>
 
-        <div className="relative flex py-5 items-center">
+        {/*<div className="relative flex py-5 items-center">
           <div className="flex-grow border-t border-gray-300"></div>
           <span className="mx-4 text-gray-500">or</span>
           <div className="flex-grow border-t border-gray-300"></div>
         </div>
 
-
+        
         <button id="githubBtn" className="btn btn-accent rounded flex items-center justify-center gap-2 w-full" onClick={githubOauth}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -88,7 +88,7 @@ const Login: React.FC<LoginProps> = ({githubOauth, userSubmit}) => {
             />
           </svg>
           Login via GitHub
-        </button>
+        </button> */}
       </div>
     </div>
   );
