@@ -54,7 +54,7 @@ Being the forefront runner in the cloud computing space. We know how important A
 To use this project, ensure you have the following set up:
 
 - AWS Account: A valid AWS account with access to AWS Lambda and CloudWatch services.
-- IAM User: Create or use an IAM user with the following permissions (as shown in the screenshot):
+- IAM User: Create or use an IAM user with the following permissions:
   - AWSLambda_ReadOnlyAccess: Provides read-only access to AWS Lambda.
   - CloudWatchLogsReadOnlyAccess: Allows read-only access to CloudWatch Logs.
   - CloudWatchReadOnlyAccess: Allows read-only access to CloudWatch.
