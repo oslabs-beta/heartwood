@@ -86,13 +86,13 @@ const Logs: React.FC = () => {
       .filter((log) => {
         const matchesLogFilter = logFilter === "all" || log.message.includes("REPORT");
         const matchesSearchTerm = !searchTerm || log.message.toLowerCase().includes(searchTerm.toLowerCase());
-        const withinTimePeriod = Number(log.timestamp) >= getTimeRangeInMillis();
-        return matchesLogFilter && matchesSearchTerm && withinTimePeriod;
+        // const withinTimePeriod = Number(log.timestamp) >= getTimeRangeInMillis();
+        return matchesLogFilter && matchesSearchTerm // && withinTimePeriod;
       })
       .sort((a, b) => Number(b.timestamp) - Number(a.timestamp));
 
     setFilteredLogs(filtered);
-  }, [logs, logFilter, searchTerm, timePeriod]);
+  }, [logs, logFilter, searchTerm]);
 
   return (
     <div className="container flex flex-col w-full overflow-auto p-4">
@@ -148,7 +148,7 @@ const Logs: React.FC = () => {
           </div>
   
           {/* Time period dropdown */}
-          <div className="relative w-full max-w-[100px]">
+          {/* <div className="relative w-full max-w-[100px]">
             <select
               value={timePeriod}
               onChange={(e) =>
@@ -161,7 +161,7 @@ const Logs: React.FC = () => {
               <option value="14D">14D</option>
               <option value="30D">30D</option>
             </select>
-          </div>
+          </div> */}
           {/* Search bar */}
           <div className="relative w-full max-w-xs">
             <input
