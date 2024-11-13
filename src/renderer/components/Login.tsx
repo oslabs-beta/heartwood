@@ -71,10 +71,10 @@ const Login: React.FC<LoginProps> = ({githubOauth, userSubmit}) => {
           <div className="flex-grow border-t border-gray-300"></div>
           <span className="mx-4 text-gray-500">or</span>
           <div className="flex-grow border-t border-gray-300"></div>
-        </div>
+        </div> */}
 
 
-        <button id="githubBtn" className="btn btn-accent rounded flex items-center justify-center gap-2 w-full" onClick={githubOauth}>
+        {/* <button id="githubBtn" className="btn btn-accent rounded flex items-center justify-center gap-2 w-full" onClick={githubOauth}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
