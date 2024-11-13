@@ -50,11 +50,21 @@ Being the forefront runner in the cloud computing space. We know how important A
 ## Getting Started
 
 ### Prerequisites
-- A valid AWS account with access to AWS Lambda and CloudWatch services
- - IAM User (Read cloudwatch credentials + Read lambda permissions)
+
+To use this project, ensure you have the following set up:
+
+- AWS Account: A valid AWS account with access to AWS Lambda and CloudWatch services.
+- IAM User: Create or use an IAM user with the following permissions (as shown in the screenshot):
+  - AWSLambda_ReadOnlyAccess: Provides read-only access to AWS Lambda.
+  - CloudWatchLogsReadOnlyAccess: Allows read-only access to CloudWatch Logs.
+  - CloudWatchReadOnlyAccess: Allows read-only access to CloudWatch.
+- Access Keys: Obtain the access key and secret access key for your IAM user. These are necessary to authenticate with AWS services.
+- Register AWS Credentials:
+  - After signing up or logging in to the application, navigate to the settings page.
+  - Register your IAM user’s AWS credentials (access key and secret access key) and specify the AWS region.
 
  ### Installation
- - TODO
+ - To be updated: This section is currently a work in progress and will be updated soon.
 
 
  ## Technology Stack
