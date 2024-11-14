@@ -13,6 +13,7 @@
 - [Getting Started](#getting-started)
     - [Prerequisites](#prerequisites)
     - [Installation](#installation)
+- [User Guide](#user-guide)
 - [Technology Stack](#technology-stack)
 - [Roadmap](#roadmap)
 - [Contributing](#contributing)
@@ -66,6 +67,31 @@ To use this project, ensure you have the following set up:
  ### Installation
  - To be updated: This section is currently a work in progress and will be updated soon.
 
+
+## User Guide
+### Registration
+-  Create an account for Heartwood by entering your information and then register your AWS credentials within the Settings page.
+<p align="center">
+  <img src="assets/signupgif.gif" alt="Sign-Up Process" width="900"/>
+</p>
+
+### Lambda Functions Overview
+- Head over to the functions page after entering your AWS credentials to view all the functions available for the AWS user. 
+<p align="center">
+  <img src="assets/functionsgif.gif" alt="Lambda Functions Overview" width="900"/>
+</p>
+
+### Metrics Dashboard
+- On the dashboard, you can explore detailed metrics for your AWS Lambda functions with flexible filtering options by time period and date range. Key metrics displayed include invocation count, error rate, throttle events, and execution duration, providing a comprehensive view of your function’s performance and activity. 
+<p align="center">
+  <img src="assets/dashboardgif.gif" alt="Metrics Dashboard" width="900"/>
+</p>
+
+### Live Logs Streaming
+- On the logs page, you can view real-time log streams for each AWS Lambda function, with options to filter by All logs/Reports and search for specific logs. This allows you to monitor function activity as it happens, troubleshoot issues, and gain insights into performance directly from live logs.
+<p align="center">
+  <img src="assets/logsgif.gif" alt="Logs Streaming" width="900"/>
+</p>
 
  ## Technology Stack
 <a href="https://reactjs.org/" target="_blank">
