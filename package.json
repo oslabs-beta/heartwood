@@ -3,9 +3,24 @@
   "version": "1.0.0",
   "description": "",
   "main": "./dist/main/main.js",
+  "build": {
+    "appId": "io.heartwood.app",
+    "directories": {
+      "output": "release"
+    },
+    "mac": {
+      "category": "public.app-category.developer-tools"
+    },
+    "win": {
+      "target": "portable"
+    },
+    "linux": {
+      "target": "AppImage"
+    }
+  },
   "scripts": {
     "start": "electron-forge start",
-    "electron": "electron .", 
+    "electron": "electron .",
     "build": "npm run build:main && npm run build:renderer && npm run build:server",
     "build:renderer": "webpack --config webpack.config.js",
     "build:main": "tsc -p tsconfig.main.json",
@@ -17,8 +32,11 @@
     "dev:electron": "cross-env NODE_ENV=development nodemon --watch dist/main --watch dist/server -e js --exec \"electron .\"",
     "dev:nodemon": "nodemon --watch dist/server -e js --exec \"node dist/server/server.js\"",
     "package": "electron-forge package",
-    "make": "electron-forge make"
+    "make": "electron-forge make",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
   },
+  "postinstall": "electron-builder install-app-deps",
   "author": "",
   "license": "ISC",
   "devDependencies": {
