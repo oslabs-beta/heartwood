@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 require('dotenv').config();
 
 // save this to .env later 
-const URI = process.env.MONGO_URI;
+const URI = process.env.MONGO_URI; // TODO: Get Mongo_URI in the packaged app
 
 const connectDB = async () => {
 

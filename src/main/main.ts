@@ -34,11 +34,37 @@ const createWindow = () => {
 }
 
 function startServer() {
-  serverProcess = fork(path.join(__dirname, '..', '..', 'dist', 'server', 'server.js'));
+  // const serverPath = path.join(app.getAppPath(), 'dist', 'server', 'server.js');
+  // serverProcess = fork(serverPath);
 
-  serverProcess.on('message', (message: any) => {
+  // serverProcess.on('message', (message) => {
+  //   console.log('Message from server:', message);
+  // });
+
+  // serverProcess.on('error', (error) => {
+  //   console.error('Failed to start server:', error);
+  // });
+
+  let serverPath;
+  
+  if (process.env.NODE_ENV === 'production') {
+    // In production, use app.getAppPath() to get the path to the packaged resources
+    serverPath = path.join(app.getAppPath(), 'server', 'server.js');
+  } else {
+    // In development, use a relative path to the source directory
+    serverPath = path.join(__dirname, '..', '..', 'dist', 'server', 'server.js');
+  }
+
+  serverProcess = fork(serverPath);
+
+  serverProcess.on('message', (message) => {
     console.log('Message from server:', message);
   });
+
+  serverProcess.on('error', (error) => {
+    console.error('Failed to start server:', error);
+  });
+
 }
 
 
